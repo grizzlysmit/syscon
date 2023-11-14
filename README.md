@@ -39,7 +39,9 @@ where
 
           * `<prefix>`                 If present only list those keys starting with that prefix.  
           * `-c|--color|--colour`      Is a flag to tell the program to use colour in the output.
-          * `-l|--page-length[=Int]`   Sets  the page length after which a new header will be placed in the output. takes a int value (i.e. `--page-length=20`) (default 50).
+          * `-l|--page-length[=Int]`   Sets  the page length after which a new header will be placed
+                                       in the output. takes a int value (i.e. `--page-length=20`)
+                                       (default 50).
           * `-p|--pattern=<Str>`       If supplied will filer the output based on the raku regex `<Str>` (default is `--pattern='^ .* $'`).
           * `-e|--ecma-pattern=<Str>`  Same as `--pattern` above except the pattern is in EcmaScript or JavaScript regex language. `--pattern` trumps this one if present, and is preferred due to imperfections in the `ECMA262Regex` modules translations of it to raku regex.
 
