@@ -65,8 +65,8 @@ where
  - `delete`  `<key>`   `[-o|--comment-out]`      Deletes or comments out a mapping. Where:
 
           * `-o|--comment-out`         Tells us to only comment the entry out rather than delete it.
-                                       **TODO: add a function to uncomment it and a function to find
-                                       all the commented out entries.**
+                                       TODO: add a function to uncomment it and a function to find
+                                       all the commented out entries.
 
  - `del` `<key>`   `[-o|--comment-out]`  Just an alias to delete.
  - `comment` `<key>` `<comment>`       adds comment `<comment>` to entry `<key>`.
