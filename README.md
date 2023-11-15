@@ -3,7 +3,7 @@ This is my syscon project
 
 ## introduction
 
-The pururpose of this code is to keep track of a lot of servers, and use them easily. There are four main functions  to use the servers.
+The purpose of this code is to keep track of a lot of servers, and use them easily. There are four main functions  to use the servers.
 
  1. syscon.raku ssh `<key>` 
  1. syscon.raku ping `<key>` 
@@ -15,6 +15,8 @@ where
  - `[<args> ...]`     is a list of zero or more files to either get or put (using `scp`).
  - `[-r|--recursive]` is a pair of flages which if present will cause the file to be copied recursively,  good for coping directories and their content.
 
+
+ ### Utility functions
 
 There are 10 utility functions:
  1. syscon.raku edit configs                                                                                                             
@@ -77,7 +79,7 @@ where
                                                         By default alias lacks that permission.
 
 
-## Vanity functions
+### Vanity functions
 
  1. syscon.raku tidy file                                                                                                                
  1. syscon.raku sort file                                                                                                                
@@ -91,7 +93,7 @@ where
  - `help` `-n|--nocolor|--nocolour`       Display usage by default coloured. unless `-n|--nocolor|--nocolour` are present in which case plain text will be output.
 
 
-## Global options   -?|-h|--help
+### Global options   -?|-h|--help
 
 The global help option of `-?|-h|--help` display coloured usage details.
 
