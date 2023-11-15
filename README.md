@@ -1,4 +1,4 @@
-This is my syscon project
+This is my SysCon project
 =========================
 
  - [Introduction](#introduction)
@@ -16,9 +16,9 @@ The purpose of this code is to keep track of a lot of servers, and use them easi
  1. syscon.raku put home `<key>` `[<args> ...]` `[-r|--recursive]`
  
 where 
- - `<key>`            is a key that idedentifies the the server. 
+ - `<key>`            is a key that identifies the server. 
  - `[<args> ...]`     is a list of zero or more files to either get or put (using `scp`).
- - `[-r|--recursive]` is a pair of flages which if present will cause the file to be copied recursively,  good for coping directories and their content.
+ - `[-r|--recursive]` is a pair of flag's which if present will cause the file to be copied recursively,  good for coping directories and their content.
 
 
  ### Utility functions
