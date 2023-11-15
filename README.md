@@ -1,7 +1,12 @@
 This is my syscon project
 =========================
 
-## introduction
+ - [Introduction](#introduction)
+ - [Utility functions](#utility-functions)
+ - [Vanity functions](#vanity-functions)
+ - [Global options   -?|-h|--help](#global-options-----h--help)
+
+## Introduction
 
 The purpose of this code is to keep track of a lot of servers, and use them easily. There are four main functions  to use the servers.
 
