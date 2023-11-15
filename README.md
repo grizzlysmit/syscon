@@ -42,8 +42,12 @@ where
           * `-l|--page-length[=Int]`   Sets  the page length after which a new header will be placed
                                        in the output. takes a int value (i.e. `--page-length=20`)
                                        (default 50).
-          * `-p|--pattern=<Str>`       If supplied will filer the output based on the raku regex `<Str>` (default is `--pattern='^ .* $'`).
-          * `-e|--ecma-pattern=<Str>`  Same as `--pattern` above except the pattern is in EcmaScript or JavaScript regex language. `--pattern` trumps this one if present, and is preferred due to imperfections in the `ECMA262Regex` modules translations of it to raku regex.
+          * `-p|--pattern=<Str>`       If supplied will filer the output based on the raku regex
+                                       `<Str>` (default is `--pattern='^ .* $'`).
+          * `-e|--ecma-pattern=<Str>`  Same as `--pattern` above except the pattern is in EcmaScript
+                                       or JavaScript regex language. `--pattern` trumps this one if
+                                       present, and is preferred due to imperfections in the
+                                       `ECMA262Regex` modules translations of it to raku regex.
 
  - `list all`        Is the same as `list keys` except it shows you what the keys map to, **key `=>` host**, means key maps to host **host**,  where as **key --> target** is an alias with **target** being another key, this is like a symbolic link for hosts.
  - `list host`       Is the same again but the `<prefix>` and `--pattern` etc apply to the host side of the terms.
@@ -53,7 +57,8 @@ where
           * `<key>`                    Is the key to add.
           * `<host>`                   Is the host to add.
           * `<port>`                   Is an optional port (defaults to 22 if not present).
-          * `-s|--set|--force`         If present tell the program to replace any mapping that already exist for `<key>`.
+          * `-s|--set|--force`         If present tell the program to replace any mapping that
+                                       already exist for `<key>`.
           * `-c|--comment=<Str>`       If present supplies the comment string for the entry.
 
  - `delete`  `<key>`   `[-o|--comment-out]`      Deletes or comments out a mapping.
