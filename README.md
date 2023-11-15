@@ -53,7 +53,7 @@ where
  - `list all`        Is the same as `list keys` except it shows you what the keys map to, **key `=>` host**, means key maps to host **host**,  where as **key --> target** is an alias with **target** being another key, this is like a symbolic link for hosts.
  - `list host`       Is the same again but the `<prefix>` and `--pattern` etc apply to the host side of the terms.
  - `list by both`    Is the same again but the `<prefix>` and `--pattern` etc apply to both the key and the host.
- - `add` `<key>` `<host>` `[<port>]`  `[-s|--set|--force]` `[-c|--comment=<Str>]`      Allows you to add a new **key `=>` host` pair to the `~/.local/share/syscon/hosts.h_ts` file,  where:
+ - `add` `<key>` `<host>` `[<port>]`  `[-s|--set|--force]` `[-c|--comment=<Str>]`      Allows you to add a new **key `=>` host** pair to the `~/.local/share/syscon/hosts.h_ts` file,  where:
 
           * `<key>`                    Is the key to add.
           * `<host>`                   Is the host to add.
