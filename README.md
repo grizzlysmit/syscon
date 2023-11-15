@@ -2,6 +2,7 @@ This is my SysCon project
 =========================
 
  - [Introduction](#introduction)
+ - [The work horse functions](#the-work-horse-functions)
  - [Utility functions](#utility-functions)
  - [Vanity functions](#vanity-functions)
  - [Global options   -?|-h|--help](#global-options-----h--help)
@@ -9,6 +10,8 @@ This is my SysCon project
 ## Introduction
 
 The purpose of this code is to keep track of a lot of servers, and use them easily. There are four main functions  to use the servers.
+
+## The work horse functions
 
  1. syscon.raku ssh `<key>` 
  1. syscon.raku ping `<key>` 
@@ -23,7 +26,7 @@ where
  - `ping`             says **ping** the server denoted by `<key>`.
 
 
- ### Utility functions
+ ## Utility functions
 
 There are 10 utility functions:
  1. syscon.raku edit configs                                                                                                             
@@ -87,7 +90,7 @@ where
                                                         By default alias lacks that permission.
 
 
-### Vanity functions
+## Vanity functions
 
  1. syscon.raku tidy file                                                                                                                
  1. syscon.raku sort file                                                                                                                
@@ -101,7 +104,7 @@ where
  - `help` `-n|--nocolor|--nocolour`       Display usage by default coloured. unless `-n|--nocolor|--nocolour` are present in which case plain text will be output.
 
 
-### Global options   -?|-h|--help
+## Global options   -?|-h|--help
 
 The global help option of `-?|-h|--help` display coloured usage details.
 
