@@ -31,7 +31,8 @@ There are 10 utility functions:
 where 
  - `edit configs`      Is a function for low level configuration of the two con fig files `~/.local/share/syscon/hosts.h_ts` and `~/.local/share/syscon/editors` it will open the files in your prefered editor `gvim` for me you can specify the editor to use in the `~/.local/share/syscon/editors` file,  it will use the first one theat is available. or you can specify the editor to use using these environment variables:
 
-          * `GUI_EDITOR`   A vartiable I created for specifing ones preferred GUI editor. This takes precedence.
+          * `GUI_EDITOR`   A vartiable I created for specifing ones preferred GUI editor.
+                           This takes precedence.
           * `VISUAL`       A standard variable used to indicate a prefered editor.
           * `EDITOR`       Another standard variable to denote a preffered editor.
 
