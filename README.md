@@ -77,4 +77,22 @@ where
                                                         By default alias lacks that permission.
 
 
+## Vanity functions
+
+ 1. syscon.raku tidy file                                                                                                                
+ 1. syscon.raku sort file                                                                                                                
+ 1. syscon.raku show file    `[-c|--color|--colour]`                                                                                       
+ 1. syscon.raku help    `[-n|--nocolor|--nocolour]` 
+
+
+ - `tidy file`                            Tidies `~/.local/share/syscon/hosts.h_ts` so that every thing lines up pretty and neat.
+ - `sort file`                            Sorts the file into order so that the keys will be ordered.
+ - `show file`                            Shows the contents of the file.
+ - `help` `-n|--nocolor|--nocolour`       Display usage by default coloured. unless `-n|--nocolor|--nocolour` are present in which case plain text will be output.
+
+
+## Global options   -?|-h|--help
+
+The global help option of `-?|-h|--help` display coloured usage details.
+
 
