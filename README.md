@@ -26,7 +26,7 @@ There are 10 utility functions:
  1. syscon.raku delete `<key>`   `[-o|--comment-out]`                                                                                        
  1. syscon.raku del `<key>`   `[-o|--comment-out]`                                                                                           
  1. syscon.raku comment `<key>` `<comment>`                                                                                                  
- 1. syscon.raku alias `<key>` `<target>`   `[-s|--set|--force]` `[-d|--really-force|--overwrite-dirs]` `[-c|--comment=<Str>]`                      
+ 1. syscon.raku alias `<key>` `<target>`   `[-s|--set|--force]` `[-d|--really-force|--overwrite-hosts]` `[-c|--comment=<Str>]`                      
 
 where 
  - `edit configs`      Is a function for low level configuration of the two con fig files `~/.local/share/syscon/hosts.h_ts` and `~/.local/share/syscon/editors` it will open the files in your prefered editor `gvim` for me you can specify the editor to use in the `~/.local/share/syscon/editors` file,  it will use the first one theat is available. or you can specify the editor to use using these environment variables:
@@ -62,8 +62,19 @@ where
                                        already exist for `<key>`.
           * `-c|--comment=<Str>`       If present supplies the comment string for the entry.
 
- - `delete`  `<key>`   `[-o|--comment-out]`      Deletes or comments out a mapping.
+ - `delete`  `<key>`   `[-o|--comment-out]`      Deletes or comments out a mapping. Where:
 
+          * `-o|--comment-out`         Tells us to only comment the entry out rather than delete it.
+                                       **TODO: add a function to uncomment it and a function to find
+                                       all the commented out entries.**
+
+ - `del` `<key>`   `[-o|--comment-out]`  Just an alias to delete.
+ - `comment` `<key>` `<comment>`       adds comment `<comment>` to entry `<key>`.
+ - `alias` `<key>` `<target>`   `[-s|--set|--force]` `[-d|--really-force|--overwrite-hosts]` `[-c|--comment=<Str>]`     Adds an alias to the file,  where:
+
+          * `-s|--set|--force`                          Allows for overiting existing aliases.
+          * `-d|--really-force|--overwrite-hosts`       Alows for overwriting **key `=>` host** pairs.
+                                                        By default alias lacks that permission.
 
 
 

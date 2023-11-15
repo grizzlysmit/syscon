@@ -1531,7 +1531,7 @@ sub add-comment(Str:D $key, Str:D $comment --> Bool) is export {
     }
 }
 
-sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy, Bool:D $overwrite-dirs, Str $comment is copy --> Bool) is export {
+sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy, Bool:D $overwrite-hosts, Str $comment is copy --> Bool) is export {
     unless valid-key($key) {
         $*ERR.say: "invalid key: $key";
         return False;
@@ -1547,7 +1547,7 @@ sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy, Bool:D $overwrit
                 $comment = %val«comment»;
             }
         }
-        $force = True if $overwrite-dirs;
+        $force = True if $overwrite-hosts;
         if %the-lot{$key}:exists {
             if $force {
                 CATCH {
@@ -1561,8 +1561,8 @@ sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy, Bool:D $overwrit
                     }
                 }
                 my %kval = %the-lot{$key};
-                unless %kval«type» eq 'alias' || $overwrite-dirs {
-                    "$key is not an alias it's a {%kval«type»} use -d|--really-force|--overwrite-dirs to override".say;
+                unless %kval«type» eq 'alias' || $overwrite-hosts {
+                    "$key is not an alias it's a {%kval«type»} use -d|--really-force|--overwrite-hosts to override".say;
                     return False;
                 }
                 without $comment {
@@ -1579,7 +1579,7 @@ sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy, Bool:D $overwrit
                 my Str $ln;
                 while $ln = $input.get {
                     if $ln ~~ rx/^ \s* $key \s* $<type> = [ '-->' | '=>' ] \s* .* $/ {
-                        if ~$<type> eq 'alias' || $overwrite-dirs {
+                        if ~$<type> eq 'alias' || $overwrite-hosts {
                             $output.say: $line;
                         } else {
                             $output.say: $ln
@@ -1613,7 +1613,7 @@ sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy, Bool:D $overwrit
         "target: $target doesnot exist".say;
         return False;
     }
-} # sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy, Bool:D $overwrite-dirs, Str $comment is copy --> Bool) is export #
+} # sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy, Bool:D $overwrite-hosts, Str $comment is copy --> Bool) is export #
 
 #`«««
     ##########################################################

@@ -163,8 +163,8 @@ multi sub MAIN('comment', Str:D $key, Str:D $comment) returns Int {
    } 
 }
 
-multi sub MAIN('alias', Str:D $key, Str:D $target, Bool:D :s(:set(:$force)) = False, Bool:D :d(:really-force(:$overwrite-dirs)) = False, Str :c(:$comment) = Str) returns Int {
-   if add-alias($key, $target, $force, $overwrite-dirs, $comment) {
+multi sub MAIN('alias', Str:D $key, Str:D $target, Bool:D :s(:set(:$force)) = False, Bool:D :d(:really-force(:$overwrite-hosts)) = False, Str :c(:$comment) = Str) returns Int {
+   if add-alias($key, $target, $force, $overwrite-hosts, $comment) {
        exit 0;
    } else {
        exit 1;
