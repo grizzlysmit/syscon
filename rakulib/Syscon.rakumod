@@ -349,6 +349,167 @@ class LineSyntaxActions does KeyActions does HostPortActions {
     }
 } # class LineSyntaxActions does KeyActions does HostPortActions #
 
+grammar CommentedLineStuff is Key is HostPort {
+    token empty-str           { ^^ \h* $$ }
+    token row-of-hashes       { ^^ '#' ** {2 .. ∞} $$ }
+    token commeted-host-alias { ^^ \h* '#' \h* [ <host-line> || <alias> ] }
+    regex header-line         { ^^ \h* '#' <header-line-inner> }
+    regex header-line-inner   { 'key' \h+ 'sep' \h+ 'host' [ '-spec' ]? \h+ ':' \h+ 'port' \h+ '#' \h+ 'comment' \h* }
+    token comment-line        { ^^ \h* '#' <!before [ '#'  || <header-line-inner> ] > \h* <!before [ <host-line> || <alias> || <header-line-inner> || <row-of-hashes> ] > .* $$ }
+    regex host-line           { <key> \h+ '=>' <host-port> [ '#' \h* <comment> \h* ]? }
+    regex alias               { <key> \h+ '-->' \h+ <target=.key> \h+ [ '#' \h* <comment> \h* ]? }
+    regex comment             { <-[\n]>* }
+}
+
+role CommentedLineStuffActions does KeyActions does HostPortActions {
+    method comment($/)   { make $/<comment>.made }
+    method empty-str($/) {
+        my %e;
+        my %value = type => 'empty-str', val => ~$/;
+        %e = key => '', value => %value;
+        dd %e;
+        make %e;
+    }
+    method comment-line($/) {
+        my %cl;
+        my %value = type => 'comment-line', val => ~$/;
+        %cl = key => '#', value => %value;
+        dd %cl;
+        make %cl;
+    }
+    method host-line   ($/)  {
+        my %hl = $/<host-port>.made;
+        %hl«type» = 'host';
+        if $/<comment> {
+            my Str $com = ~($/<comment>).trim;
+            %hl«comment» = $com;
+        }
+        my %res = key => $/<key>.made, value => %hl;
+        dd %res;
+        make %res;
+    }
+    method alias  ($/) {
+        my %alias =  type => 'alias', host => $/<target>.made;
+        if $/<comment> {
+            my $com = ~($/<comment>).trim;
+            %alias«comment» = $com;
+        }
+        my %result = key => $/<key>.made, value => %alias;
+        dd %result;
+        make %result;
+    }
+    method commeted-host-alias($/) {
+        my %commeted-host-alias;
+        if $/<host-line> {
+            %commeted-host-alias = $/<host-line>.made;
+            %commeted-host-alias«value»«type» = 'commeted-host';
+        } elsif $/<alias> {
+            %commeted-host-alias = $/<alias>.made;
+            %commeted-host-alias«value»«type» = 'commeted-alias';
+        }
+        dd %commeted-host-alias;
+        make %commeted-host-alias;
+    }
+    method row-of-hashes($/) {
+        my %value = type => 'row-of-hashes', val => ~$/;
+        my %row-of-hashes = key => '##', value => %value;
+        dd %row-of-hashes;
+        make %row-of-hashes;
+    }
+    method header-line($/) {
+        my %header-line = $/<header-line-inner>.made;
+        dd %header-line;
+        make %header-line;
+    }
+    method header-line-inner($/) {
+        my %value = type => 'header-line', val => '#' ~ ~$/;
+        my %header-line-inner = key => '#header', value => %value;
+        dd %header-line-inner;
+        make %header-line-inner;
+    }
+    method target ($/) { make $/<key>.made }
+} # role CommentedLineStuffActions does KeyActions does HostPortActions #
+
+grammar CommentedLine is CommentedLineStuff {
+    regex TOP                 { [ <empty-str> || <commeted-host-alias> || <row-of-hashes> || <header-line> || <comment-line> || <host-line> || <alias> ] }
+}
+
+class CommentedLineActions does CommentedLineStuffActions {
+    method TOP($match) {
+        my %top;
+        if $match<host-line> {
+            %top = $match<host-line>.made;
+        } elsif $match<alias> {
+            %top = $match<alias>.made;
+        } elsif $match<commeted-host-alias> {
+            %top = $match<commeted-host-alias>.made;
+        } elsif $match<row-of-hashes> {
+            %top = $match<row-of-hashes>.made;
+        } elsif $match<header-line> {
+            %top = $match<header-line>.made;
+        } elsif $match<comment-line> {
+            %top = $match<comment-line>.made;
+        } elsif $match<empty-str> {
+            %top = $match<empty-str>.made;
+        }
+        $match.make: %top;
+    }
+} # class CommentedLineActions does CommentedLineStuffActions #
+
+grammar Stats is CommentedLineStuff {
+    token TOP     { [ <line> [ \v <line> ]* \v? ] }
+    regex line    { [ <empty-str> || <commeted-host-alias> || <row-of-hashes> || <header-line> || <comment-line> || <host-line> || <alias> ] }
+}
+
+class StatsActions does CommentedLineStuffActions {
+    method line($/) {
+        my %line;
+        if $/<host-line> {
+            %line = $/<host-line>.made;
+            dd %line, $?LINE;
+        } elsif $/<alias> {
+            %line = $/<alias>.made;
+            dd %line, $?LINE;
+        } elsif $/<commeted-host-alias> {
+            %line = $/<commeted-host-alias>.made;
+            dd %line, $?LINE;
+        } elsif $/<row-of-hashes> {
+            %line = $/<row-of-hashes>.made;
+            dd %line, $?LINE;
+        } elsif $/<header-line> {
+            %line = $/<header-line>.made;
+            dd %line, $?LINE;
+        } elsif $/<comment-line> {
+            %line = $/<comment-line>.made;
+            dd %line, $?LINE;
+        } elsif $/<empty-str> {
+            %line = $/<empty-str>.made;
+            dd %line, $?LINE;
+        } else {
+            dd %line, $?LINE;
+        }
+        dd %line, $?LINE;
+        make %line;
+    }
+    method TOP($made) {
+        my @lines = $made<line>».made;
+        dd @lines, $?LINE;
+        my %top = lines-total => @lines.elems,
+        lines => @lines.values.grep( -> %val { %val«value»«type» eq 'host' || %val«value»«type» eq 'alias' } ).elems,
+        commented => @lines.values.grep( -> %val { %val«value»«type» eq 'commeted-host' || %val«value»«type» eq 'commeted-alias' } ).elems,
+        commented-hosts => @lines.values.grep( -> %val { %val«value»«type» eq 'commeted-host' } ).elems,
+        commented-aliases => @lines.values.grep( -> %val { %val«value»«type» eq 'commeted-alias' } ).elems,
+        rows-of-hashes => @lines.values.grep( -> %val { %val«value»«type» eq 'row-of-hashes' } ).elems,
+        header-lines => @lines.values.grep( -> %val { %val«value»«type» eq 'header-line' } ).elems,
+        comment-lines => @lines.values.grep( -> %val { %val«value»«type» eq 'comment-line' } ).elems,
+        empty-strs => @lines.values.grep( -> %val { %val«value»«type» eq 'empty-str' } ).elems,
+        hosts => @lines.values.grep( -> %val { %val«value»«type» eq 'host' } ).elems,
+        aliases => @lines.values.grep( -> %val { %val«value»«type» eq 'alias' } ).elems;
+        dd %top;
+        $made.make:  %top;
+    }
+} # class StatsActions does CommentedLineStuffActions #
+
 grammar KeyValid is Key {
     token TOP { <key> }
 }
@@ -724,7 +885,9 @@ class UsageStrActions does PathsActions {
     }
 } # class UsageStrActions #
 
-my Str  @lines     = slurp("$config/hosts.h_ts").split("\n").grep({ !rx/^ \h* '#' .* $/ }).grep({ !rx/^ \h* $/ });
+my Str  @LINES     = slurp("$config/hosts.h_ts").split("\n");
+dd @LINES;
+my Str  @lines     = @LINES.grep({ !rx/^ \h* '#' .* $/ }).grep({ !rx/^ \h* $/ });
 #dd @lines;
 #my Str  %the-hosts = @lines.map( { my Str $e = $_; $e ~~ s/ '#' .* $$ //; $e } ).map( { $_.trim() } ).grep({ !rx/ [ ^^ \s* '#' .* $$ || ^^ \s* $$ ] / }).map: { my ($key, $value) = $_.split(rx/ \s*  '=>' \s* /, 2); my $e = $key => $value; $e };
 #my Hash %the-lot   = @lines.grep({ !rx/ [ ^^ \s* '#' .* $$ || ^^ \s* $$ ] / }).map: { my $e = $_; ($e ~~ rx/^ \s* $<key> = [ \w+ [ [ '.' || '-' || '@' || '+' ]+ \w* ]* ] \s* '=>' \s* $<host> = [ <-[ # ]>+ ] \s* [ '#' \s* $<comment> = [ .* ] ]?  $/) ?? (~$<key> => { value => (~$<host>).trim, comment => ($<comment> ?? ~$<comment> !! Str), }) !! { my ($key, $value) = $_.split(rx/ \s*  '=>' \s* /, 2); my $r = $key => $value; $r } };
@@ -732,6 +895,15 @@ my $actions = HostFileActions;
 #my $test = HostsFile.parse(@lines.join("\x0A"), :enc('UTF-8'), :$actions).made;
 #dd $test, $?NL;
 my %the-lot = |(HostsFile.parse(@lines.join("\x0A"), :enc('UTF-8'), :$actions).made);
+
+####################
+#                  #
+#  get the stats   #
+#                  #
+####################
+my $statsactions = StatsActions;
+my %stats   = Stats.parse(@LINES.join("\x0A"), :enc('UTF-8'), :actions($statsactions)).made;
+
 #my Hash %the-lot = $test.List;
 #my Hash %the-lot   = HostsFile.parse(@lines.join("\n"), actions  => HostFileActions.new).made;
 
@@ -821,14 +993,18 @@ sub list-keys(Str $prefix, Regex:D $pattern --> Array[Str]) is export {
     return @keys;
 }
 
-sub say-list-keys(Str $prefix, Bool:D $colour, Regex:D $pattern, Int:D $page-length --> Bool:D) is export {
+sub say-list-keys(Str $prefix, Bool:D $colour is copy, Bool:D $syntax, Regex:D $pattern, Int:D $page-length --> Bool:D) is export {
+    if $syntax {
+        $colour = True;
+    }
     my @keys = list-keys($prefix, $pattern).sort: { .lc };
     my Int:D $key-width        = 0;
     my Int:D $comment-width    = 0;
     my Bool:D $comment-present = False;
     for @keys -> $key {
         my %val = %the-lot{$key};
-        my Str $comment = %val«comment»;
+        my Str $comment = Str;
+        $comment = %val«comment» with %val«comment»;
         $key-width           = max($key-width,     wcswidth($key));
         with $comment {
             $comment-width   = max($comment-width, wcswidth($comment));
@@ -867,10 +1043,17 @@ sub say-list-keys(Str $prefix, Bool:D $colour, Regex:D $pattern, Int:D $page-len
     }
     for @keys -> $key {
         my %val = %the-lot{$key};
-        my Str $comment = %val«comment»;
+        my Str $comment = Str;
+        $comment = %val«comment» with %val«comment»;
         with $comment {
             if $colour {
-                put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s # %-*s", $key-width, $key, $comment-width, $comment) ~ t.text-reset;
+                if $syntax {
+                    my $cline = (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.red ~ sprintf("%-*s", $key-width, $key);
+                    $cline   ~= t.bright-blue ~ sprintf(" # %-*s", $comment-width, $comment);
+                    put $cline ~ t.text-reset;
+                } else {
+                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s # %-*s", $key-width, $key, $comment-width, $comment) ~ t.text-reset;
+                }
                 $cnt++;
             } else {
                 printf "%-*s # %-*s\n", $key-width, $key, $comment-width, $comment;
@@ -880,7 +1063,11 @@ sub say-list-keys(Str $prefix, Bool:D $colour, Regex:D $pattern, Int:D $page-len
             if $comment-present {
                 $comment = '';
                 if $colour {
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s # %-*s", $key-width, $key, $comment-width, $comment) ~ t.text-reset;
+                    if $syntax {
+                        put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s # %-*s", $key-width, $key, $comment-width, $comment) ~ t.text-reset;
+                    } else {
+                        put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s # %-*s", $key-width, $key, $comment-width, $comment) ~ t.text-reset;
+                    }
                     $cnt++;
                 } else {
                     printf "%-*s # %-*s\n", $key-width, $key, $comment-width, $comment;
@@ -888,7 +1075,11 @@ sub say-list-keys(Str $prefix, Bool:D $colour, Regex:D $pattern, Int:D $page-len
                 }
             } else {
                 if $colour {
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $key-width, $key) ~ t.text-reset;
+                    if $syntax {
+                        put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.red ~ sprintf("%-*s", $key-width, $key) ~ t.text-reset;
+                    } else {
+                        put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $key-width, $key) ~ t.text-reset;
+                    }
                     $cnt++;
                 } else {
                     $key.say;
@@ -901,7 +1092,14 @@ sub say-list-keys(Str $prefix, Bool:D $colour, Regex:D $pattern, Int:D $page-len
                 if $comment-present {
                     put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
                     $cnt++;
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s # %-*s", $key-width, 'key', $comment-width, 'comment') ~ t.text-reset;
+                    my Str $cline;
+                    if $syntax {
+                        $cline  = (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.red ~ sprintf("%-*s", $key-width, 'key');
+                        $cline ~= t.bright-blue ~ sprintf(" # %-*s", $comment-width, 'comment');
+                    } else {
+                        $cline = (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s # %-*s", $key-width, 'key', $comment-width, 'comment');
+                    }
+                    put $cline ~ t.text-reset;
                     $cnt++;
                     put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ ('=' x $width) ~ t.text-reset;
                     $cnt++;
@@ -942,7 +1140,7 @@ sub say-list-keys(Str $prefix, Bool:D $colour, Regex:D $pattern, Int:D $page-len
         }
     }
     return True;
-} # sub say-list-keys(Str $prefix, Bool:D $colour, Regex:D $pattern, Int:D $page-length --> Bool:D) is export #
+} # sub say-list-keys(Str $prefix, Bool:D $colour is copy, Bool:D $syntax, Regex:D $pattern, Int:D $page-length --> Bool:D) is export #
 
 sub centre(Str:D $text, Int:D $width is copy, Str:D $fill = ' ' --> Str) {
     my Str $result = $text;
@@ -960,8 +1158,14 @@ sub left(Str:D $text, Int:D $width, Str:D $fill = ' ', Str:D :$ref = $text --> S
     return $result;
 } # sub left(Str:D $text, Int:D $width is copy, Str:D $fill = ' ', Str:D :$ref = $text --> Str) #
 
-sub list-all(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pattern --> Bool:D) is export {
+sub list-all(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool:D) is export {
+    $colour = True if $syntax;
     my Str @result;
+    ############################################
+    #                                          #
+    #    calculate the widths for each field   #
+    #                                          #
+    ############################################
     my Int:D $key-width        = 0;
     my Int:D $host-width       = 0;
     my Int:D $port-width       = 0;
@@ -999,6 +1203,12 @@ sub list-all(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pattern
     $port-width    += 2;
     $comment-width += 2;
     my Bool:D $comment-present = False;
+    my Int:D $cnt = 0;
+    ########################
+    #                      #
+    #  Assemble the data   #
+    #                      #
+    ########################
     for %the-lot.kv -> $key, %val {
         if $key.starts-with($prefix, :ignorecase) && $key ~~ $pattern {
             my Str:D $host      = %val«host»;
@@ -1018,25 +1228,84 @@ sub list-all(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pattern
                 $port = 22;
             }
             with $comment {
-                @result.push(sprintf("%-*s %s %-*s : %-*s # %-*s", $key-width, $key, (($port == 0) ?? '-->' !! " =>"), $host-width, $host, $port-width, (($port == 0) ?? '--' !! "$port"), $comment-width, $comment));
+                if $colour {
+                    my Str:D $cline = '';
+                    if $syntax {
+                        $cline ~= t.color(0,255,255) ~ sprintf("%-*s", $key-width, $key);
+                        $cline ~= t.red ~ sprintf(" %s", (($port == 0) ?? '-->' !! " =>"));
+                        $cline ~= (($port == 0) ?? t.color(0,255,255) !! t.color(255,0,255)) ~ sprintf(" %-*s", $host-width, $host);
+                        if $port == 0 {
+                            $cline ~= t.red ~ '   ';
+                            $cline ~= t.color(255,0,255) ~ sprintf("%-*s", $port-width, '');
+                        } else {
+                            $cline ~= t.red ~ ' : ';
+                            $cline ~= t.color(255,0,255) ~ sprintf("%-*s", $port-width, $port);
+                        }
+                        $cline ~= t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, $comment);
+                    } else {
+                        if $port == 0 {
+                            $cline ~= t.color(0,0,255) ~ sprintf("%-*s %s %-*s   %-*s # %-*s", $key-width, $key, '-->', $host-width, $host, $port-width, '', $comment-width, $comment);
+                        } else {
+                            $cline ~= t.color(0,0,255) ~ sprintf("%-*s %s %-*s : %-*d # %-*s", $key-width, $key, " =>", $host-width, $host, $port-width, $port, $comment-width, $comment);
+                        }
+                    }
+                    @result.push($cline);
+                } else {
+                    if $port == 0 {
+                        @result.push(sprintf("%-*s %s %-*s   %-*s # %-*s", $key-width, $key, '-->', $host-width, $host, $port-width, '', $comment-width, $comment));
+                    } else {
+                        @result.push(sprintf("%-*s %s %-*s : %-*d # %-*s", $key-width, $key, " =>", $host-width, $host, $port-width, $port, $comment-width, $comment));
+                    }
+                }
                 $comment-present = True;
             } else {
-                @result.push(sprintf("%-*s %s %-*s : %-*s", $key-width, $key, (($port == 0) ?? '-->' !! " =>"), $host-width, $host, $port-width, (($port == 0) ?? '--' !! "$port")));
+                if $colour {
+                    my Str:D $cline = '';
+                    if $syntax {
+                        $cline ~= t.color(0,255,255) ~ sprintf("%-*s", $key-width, $key);
+                        $cline ~= t.red ~ sprintf(" %s", (($port == 0) ?? '-->' !! " =>"));
+                        $cline ~= (($port == 0) ?? t.color(0,255,255) !! t.color(255,0,255)) ~ sprintf(" %-*s", $host-width, $host);
+                        if $port == 0 {
+                            $cline ~= t.red ~ '   ';
+                        } else {
+                            $cline ~= t.red ~ ' : ';
+                        }
+                        $cline ~= t.color(255,0,255) ~ sprintf("%-*s", $port-width, (($port == 0) ?? '' !! "$port"));
+                        $cline ~= t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, '');
+                    } else {
+                        if $port == 0 {
+                            $cline ~= t.color(0,0,255) ~ sprintf("%-*s %s %-*s   %-*s # %-*s", $key-width, $key, '-->', $host-width, $host, $port-width, '', $comment-width, '');
+                        } else {
+                            $cline ~= t.color(0,0,255) ~ sprintf("%-*s %s %-*s : %-*d # %-*s", $key-width, $key, " =>", $host-width, $host, $port-width, $port, $comment-width, '');
+                        }
+                    }
+                    @result.push($cline);
+                } else {
+                    if $port == 0 {
+                        @result.push(sprintf("%-*s %s %-*s   %-*s # %-*s", $key-width, $key, '-->', $host-width, $host, $port-width, '', $comment-width, ''));
+                    } else {
+                        @result.push(sprintf("%-*s %s %-*s : %-*s # %-*s", $key-width, $key, " =>", $host-width, $host, $port-width, $port, $comment-width, ''));
+                    }
+                }
             }
         }
     } # for %the-lot.kv -> $key, %val #
     my Int:D $width = $key-width + $host-width + $port-width + $comment-width + 11;
-    my Int:D $cnt = 0;
-    if $colour {
+    ########################
+    #                      #
+    #        Header        #
+    #                      #
+    ########################
+    if $colour { 
         if $comment-present {
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s sep %-*s : %-*s # %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port', $comment-width, 'comment') ~ t.text-reset;
+            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s sep %-*s : %-*s # %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port', $comment-width, 'comment') ~ t.text-reset;
             $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
             $cnt++;
         } else {
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s sep %-*s : %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port') ~ t.text-reset;
+            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s sep %-*s : %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port') ~ t.text-reset;
             $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
             $cnt++;
         }
     } else {
@@ -1052,35 +1321,49 @@ sub list-all(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pattern
             $cnt++;
         }
     }
+    ###############################
+    #                             #
+    #   The body of the listing   #
+    #                             #
+    ###############################
     for @result.sort( { .lc } ) -> $value {
         if $colour {
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, $value) ~ t.text-reset;
+            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ $value ~ t.text-reset;
             $cnt++;
-            if $cnt % $page-length == 0 {
+        } else {
+            put $value;
+        }
+        ###########################
+        #                         #
+        #    Extra headers and    #
+        #    footers for page     #
+        #    endings/startings    #
+        #                         #
+        ###########################
+        if $colour {
+            if $cnt %% $page-length {
                 if $comment-present {
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
                     $cnt++;
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s  sep %-*s : %-*s # %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port', $comment-width, 'comment') ~ t.text-reset;
+                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s sep %-*s : %-*s # %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port', $comment-width, 'comment') ~ t.text-reset;
                     $cnt++;
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
                     $cnt++;
                 } else {
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
                     $cnt++;
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s  sep %-*s : %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port') ~ t.text-reset;
+                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s  sep %-*s : %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port') ~ t.text-reset;
                     $cnt++;
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
                     $cnt++;
                 }
             } # if $cnt % $page-length == 0 #
         } else { # if $colour #
-            $value.say;
-            $cnt++;
-            if $cnt % $page-length == 0 {
+            if $cnt %% $page-length {
                 if $comment-present {
                     say '=' x $width;
                     $cnt++;
-                    printf("%-*s  sep %-*s : %-*s # %-*s\n", $key-width, 'key', $host-width, 'host', $port-width, 'port', $comment-width, 'comment');
+                    printf("%-*s sep %-*s : %-*s # %-*s\n", $key-width, 'key', $host-width, 'host', $port-width, 'port', $comment-width, 'comment');
                     $cnt++;
                     say '=' x $width;
                     $cnt++;
@@ -1096,16 +1379,22 @@ sub list-all(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pattern
         } # if $colour ... else ... #
     } # for @result.sort( { .lc } ) -> $value #
     if $colour {
-        put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, '') ~ t.text-reset;
+        put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, '') ~ t.text-reset;
         $cnt++;
     } else {
         "".say;
     }
     return True;
-} # sub list-all(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pattern --> Bool:D) is export #
+} # sub list-all(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool:D) is export #
 
-sub list-hosts(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pattern --> Bool:D) is export {
+sub list-hosts(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool:D) is export {
+    $colour = True if $syntax;
     my Str @result;
+    ############################################
+    #                                          #
+    #    calculate the widths for each field   #
+    #                                          #
+    ############################################
     my Int:D $key-width        = 0;
     my Int:D $host-width       = 0;
     my Int:D $port-width       = 0;
@@ -1140,6 +1429,11 @@ sub list-hosts(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $patte
     $host-width    += 2;
     $port-width    += 2;
     $comment-width += 2;
+    ############################################
+    #                                          #
+    #             Colect the data              #
+    #                                          #
+    ############################################
     my Bool:D $comment-present = False;
     for %the-lot.kv -> $key, %val {
         my Str:D $host     = %val«host»;
@@ -1159,26 +1453,79 @@ sub list-hosts(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $patte
         }
         if $host.starts-with("$prefix", :ignorecase) && $host ~~ $pattern {
             my Str   $comment   = %val«comment» // Str;
-            with $comment {
-                @result.push(sprintf("%-*s %s %-*s : %-*s # %-*s", $key-width, $key, (($port == 0) ?? '-->' !! " =>"), $host-width, $host, $port-width, (($port == 0) ?? '--' !! "$port"), $comment-width, $comment));
-                $comment-present = True;
+            my Str:D $cline = '';
+            if $colour {
+                if $syntax {
+                    with $comment {
+                        $cline ~= t.color(0,255,255) ~ sprintf("%-*s", $key-width, $key);
+                        $cline ~= t.red ~ sprintf(" %s", (($port == 0) ?? '-->' !! " =>"));
+                        $cline ~= (($port == 0) ?? t.color(0,255,255) !! t.color(255,0,255)) ~ sprintf(" %-*s", $host-width, $host);
+                        if $port == 0 {
+                            $cline ~= t.red ~ '   ';
+                            $cline ~= t.color(255,0,255) ~ sprintf("%-*s", $port-width, '');
+                        } else {
+                            $cline ~= t.red ~ ' : ';
+                            $cline ~= t.color(255,0,255) ~ sprintf("%-*s", $port-width, $port);
+                        }
+                        $cline ~= t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, $comment);
+                        $comment-present = True;
+                    } else {
+                        $cline ~= t.color(0,255,255) ~ sprintf("%-*s", $key-width, $key);
+                        $cline ~= t.red ~ sprintf(" %s", (($port == 0) ?? '-->' !! " =>"));
+                        $cline ~= (($port == 0) ?? t.color(0,255,255) !! t.color(255,0,255)) ~ sprintf(" %-*s", $host-width, $host);
+                        if $port == 0 {
+                            $cline ~= t.red ~ '   ';
+                            $cline ~= t.color(255,0,255) ~ sprintf("%-*s", $port-width, '');
+                        } else {
+                            $cline ~= t.red ~ ' : ';
+                            $cline ~= t.color(255,0,255) ~ sprintf("%-*s", $port-width, $port);
+                        }
+                        $cline ~= t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, '');
+                    }
+                } else {
+                    with $comment {
+                        if $port == 0 {
+                            $cline ~= t.color(0,0,255) ~ sprintf("%-*s %s %-*s   %-*s # %-*s", $key-width, $key, '-->', $host-width, $host, $port-width, '', $comment-width, $comment);
+                        } else {
+                            $cline ~= t.color(0,0,255) ~ sprintf("%-*s %s %-*s : %-*d # %-*s", $key-width, $key, " =>", $host-width, $host, $port-width, $port, $comment-width, $comment);
+                        }
+                        $comment-present = True;
+                    } else {
+                        if $port == 0 {
+                            $cline ~= t.color(0, 0, 255) ~ sprintf("%-*s %s %-*s   %-*s # %-*s", $key-width, $key, '-->', $host-width, $host, $port-width, '', $comment-width, '');
+                        } else {
+                            $cline ~= t.color(0, 0, 255) ~ sprintf("%-*s %s %-*s : %-*d # %-*s", $key-width, $key, " =>", $host-width, $host, $port-width, $port, $comment-width, '');
+                        }
+                    }
+                }
             } else {
-                @result.push(sprintf("%-*s %s %-*s : %-*s", $key-width, $key, (($port == 0) ?? '-->' !! " =>"), $host-width, $host, $port-width, (($port == 0) ?? '--' !! "$port")));
+                with $comment {
+                    $cline ~= sprintf("%-*s %s %-*s : %-*s # %-*s", $key-width, $key, (($port == 0) ?? '-->' !! " =>"), $host-width, $host, $port-width, (($port == 0) ?? '' !! "$port"), $comment-width, $comment);
+                    $comment-present = True;
+                } else {
+                    $cline ~= sprintf("%-*s %s %-*s : %-*s", $key-width, $key, (($port == 0) ?? '-->' !! " =>"), $host-width, $host, $port-width, (($port == 0) ?? '--' !! "$port"));
+                }
             }
+            @result.push($cline);
         }
     } # for %the-lot.kv -> $key, %val #
     my Int:D $width = $key-width + $host-width + $port-width + $comment-width + 11;
     my Int:D $cnt = 0;
+    ##################
+    #                #
+    #  print header  #
+    #                #
+    ##################
     if $colour {
         if $comment-present {
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s sep %-*s : %-*s # %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port', $comment-width, 'comment') ~ t.text-reset;
+            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.color(0, 0, 255) ~ sprintf("%-*s sep %-*s : %-*s # %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port', $comment-width, 'comment') ~ t.text-reset;
             $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.color(0, 0, 255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
             $cnt++;
         } else {
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s sep %-*s : %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port') ~ t.text-reset;
+            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.color(0, 0, 255) ~ sprintf("%-*s sep %-*s : %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port') ~ t.text-reset;
             $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.color(0, 0, 255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
             $cnt++;
         }
     } else {
@@ -1194,30 +1541,41 @@ sub list-hosts(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $patte
             $cnt++;
         }
     }
+    #################################
+    #                               #
+    #   print the body of the list  #
+    #                               #
+    #################################
     for @result.sort( { .lc } ) -> $value {
         if $colour {
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, $value) ~ t.text-reset;
+            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ sprintf("%-*s", $width, $value) ~ t.text-reset;
             $cnt++;
             if $cnt % $page-length == 0 {
                 if $comment-present {
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.color(0, 0, 255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
                     $cnt++;
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s sep %-*s : %-*s # %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port', $comment-width, 'comment') ~ t.text-reset;
+                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.color(0, 0, 255) ~ sprintf("%-*s sep %-*s : %-*s # %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port', $comment-width, 'comment') ~ t.text-reset;
                     $cnt++;
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.color(0, 0, 255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
                     $cnt++;
                 } else {
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.color(0, 0, 255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
                     $cnt++;
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s sep %-*s : %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port') ~ t.text-reset;
+                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.color(0, 0, 255) ~ sprintf("%-*s sep %-*s : %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port') ~ t.text-reset;
                     $cnt++;
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.color(0, 0, 255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
                     $cnt++;
                 }
             } # if $cnt % $page-length == 0 #
         } else { # if $colour #
             $value.say;
             $cnt++;
+            ##########################################
+            #                                        #
+            #    print page ending and beginning     #
+            #    to make pages.                      #
+            #                                        #
+            ##########################################
             if $cnt % $page-length == 0 {
                 if $comment-present {
                     say '=' x $width;
@@ -1244,7 +1602,7 @@ sub list-hosts(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $patte
         "".say;
     }
     return True;
-} # sub list-hosts(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pattern --> Bool:D) is export #
+} # sub list-hosts(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool:D) is export #
 
 sub list-by-both(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pattern --> Bool:D) is export {
     my Str @result;
@@ -1388,6 +1746,281 @@ sub list-by-both(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pat
     return True;
 } # sub list-by-both(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pattern --> Bool:D) is export #
 
+sub list-commented(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export {
+    $colour = True if $syntax;
+    my IO::Handle:D $input  = "$config/hosts.h_ts".IO.open:     :r, :nl-in("\n")   :chomp;
+    my Int:D $key-width        = 0;
+    my Int:D $host-width       = 0;
+    my Int:D $port-width       = 0;
+    my Int:D $comment-width    = 0;
+    my Str $ln;
+    if $colour {
+        $ln = $input.get;
+        while !$input.eof {
+            my $actions = CommentedLineActions;
+            #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
+            #dd $test;
+            my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
+            my Str $key             = %val«key»;
+            unless $key eq '' || $key eq '#' {
+                my %v               = %val«value»;
+                my Str:D $type      = %v«type»;
+                #`««
+                unless $type eq 'commeted-host' || $type eq 'commeted-alias' || $type eq 'header-line' {
+                    $ln = $input.get;
+                    next;
+                }
+                #»»
+                my Str $host;
+                with %val«host» {
+                    $host        = %v«host»;
+                }
+                $key-width          = max($key-width,     wcswidth("#$key"));
+                $host-width         = max($host-width,    wcswidth($host)) with $host;
+                my Int $port = 0;
+                if $type eq 'commeted-host' {
+                    $port = %v«port».Int;
+                    $port-width     = max($port-width,    wcswidth($port));
+                }
+                with %v«comment» {
+                    my Str $comment = %v«comment»;
+                    $comment-width  = max($comment-width,    wcswidth("# $comment"));
+                }
+            }
+            $ln = $input.get;
+        } # while !$input.eof #
+        if $ln {
+            my $actions = CommentedLineActions;
+            #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
+            #dd $test;
+            my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
+            my Str $key             = %val«key»;
+            unless $key eq '' || $key eq '#' {
+                my %v               = %val«value»;
+                my Str:D $type      = %v«type»;
+                my Str $host;
+                with %val«host» {
+                    $host      = %v«host»;
+                }
+                $key-width          = max($key-width,     wcswidth("#$key"));
+                $host-width         = max($host-width,    wcswidth($host)) with $host;
+                my Int $port = 0;
+                if $type eq 'commeted-host' {
+                    $port = %v«port».Int;
+                    $port-width     = max($port-width,    wcswidth($port));
+                }
+                with %v«comment» {
+                    my Str $comment = %v«comment»;
+                    $comment-width  = max($comment-width,    wcswidth("# $comment"));
+                }
+            }
+        } # $ln #
+        #$key-width     += 2;
+        #$host-width    += 2;
+        $port-width    += 3;
+        #$comment-width += 2;
+        $key-width = 20 if $key-width < 20;
+        $host-width = 70 if $host-width < 70;
+        $port-width = 10 if $port-width < 10;
+        my Int:D $width = $key-width + 5 + $host-width + $port-width + 3 + $comment-width;
+        $input.seek(0, SeekFromBeginning);
+        $ln = $input.get;
+        my Int:D $cnt = 0;
+        my Bool:D $cond = $cnt %% 2;
+        while !$input.eof {
+            my $actions = CommentedLineActions;
+            #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
+            #dd $test;
+            my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
+            my Str $key = %val«key»;
+            $cond = $cnt %% 2;
+            if $key eq '' {
+                put ($cond ?? t.bg-color(191,191,191) !! t.bg-color(255,255,255)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, %val«value») ~ t.text-reset;
+            } elsif %val«key» eq '#' {
+                put ($cond ?? t.bg-color(191,191,191) !! t.bg-color(255,255,255)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, %val«value») ~ t.text-reset;
+            } elsif %val«key» eq '##' {
+                put ($cond ?? t.bg-color(191,191,191) !! t.bg-color(255,255,255)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, '#' x $width) ~ t.text-reset;
+            } elsif %val«key» eq '#header' {
+                put ($cond ?? t.bg-color(191,191,191) !! t.bg-color(255,255,255)) ~ t.bold ~ t.bright-blue ~
+                      sprintf("%-*s%3s %-*s   : %-*s # %-*s", $key-width, '#key', 'sep', $host-width - 1, 'host', $port-width - 3, 'port', $comment-width, 'comment')
+                                                                                                                                                   ~ t.text-reset;
+            } else {
+                my %v = %val«value»;
+                my Str:D $type = %v«type»;
+                unless $type eq 'commeted-host' || $type eq 'commeted-alias' {
+                    $ln = $input.get;
+                    next;
+                }
+                my Str:D $host = %v«host»;
+                my Int $port = 0;
+                my Str:D $type-spec = '-->';
+                if $type eq 'commeted-host' {
+                    $port = %v«port».Int;
+                    $type-spec = ' =>';
+                }
+                my Str $cline;
+                if $syntax {
+                    $cline = ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,255,0) ~ sprintf("%-*s", $key-width, "#$key");
+                    $cline ~= t.red ~ sprintf("%3s", $type-spec);
+                    if $port > 0 {
+                        $cline ~= t.color(255,0,255) ~ sprintf(" %-*s", $host-width, $host);
+                        $cline ~= t.red ~ sprintf(" %-*s", 3, " : ");
+                        $cline ~= t.color(255,0,255) ~ sprintf("%-*d", $port-width - 2, $port);
+                    }else {
+                        $cline ~= t.color(0,255,0) ~ sprintf(" %-*s", $host-width, $host);
+                        $cline ~= t.red ~ sprintf(" %-*s", 3, "   ");
+                        $cline ~= t.color(255,0,255) ~ sprintf("%-*s", $port-width - 2, '');
+                    }
+                    with %v«comment» {
+                        my Str $comment = %v«comment»;
+                        $cline ~= t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, $comment.trim);
+                    } else {
+                        $cline ~= t.color(0,0,255) ~ sprintf("   %-*s", $comment-width, '');
+                    }
+                } else {
+                    $cline = ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("#%-*s", $key-width - 1, $key);
+                    $cline ~= sprintf("%3s", $type-spec);
+                    if $port > 0 {
+                        $cline ~= sprintf(" %-*s", $host-width, $host);
+                        $cline ~= sprintf(" %-*s", 3, " : ");
+                        $cline ~= sprintf("%-*d", $port-width - 3, $port);
+                    }else {
+                        $cline ~= sprintf(" %-*s", $host-width, $host);
+                        $cline ~= sprintf(" %-*s", $port-width, "");
+                    }
+                    with %v«comment» {
+                        my Str $comment = %v«comment»;
+                        $cline ~= sprintf(" # %-*s", $comment-width, $comment);
+                    } else {
+                        $cline ~= sprintf(" # %-*s", $comment-width, '');
+                    }
+                }
+                put $cline ~ t.text-reset;
+            }
+            $ln = $input.get;
+            $cnt++;
+        } # while !$input.eof #
+        if $ln {
+            my $actions = CommentedLineActions;
+            #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
+            #dd $test;
+            my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
+            my Str $key = %val«key»;
+            $cond = $cnt %% 2;
+            if $key eq '' {
+                put ($cond ?? t.bg-color(191,191,191) !! t.bg-color(255,255,255)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, %val«value») ~ t.text-reset;
+            } elsif %val«key» eq '#' {
+                put ($cond ?? t.bg-color(191,191,191) !! t.bg-color(255,255,255)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, %val«value») ~ t.text-reset;
+            } else {
+                my %v = %val«value»;
+                my Str:D $type = %v«type»;
+                if $type eq 'commeted-host' || $type eq 'commeted-alias' {
+                    my Str:D $host = %v«host»;
+                    my Int $port = 0;
+                    my Str:D $type-spec = '-->';
+                    if $type eq 'commeted-host' {
+                        $port = %v«port».Int;
+                        $type-spec = ' =>';
+                    }
+                    my Str $cline;
+                    if $syntax {
+                        $cline = ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,255,0) ~ sprintf("%-*s", $key-width, "#$key");
+                        $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.red ~ sprintf("%3s", $type-spec);
+                        if $port > 0 {
+                            $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(255,0,255) ~ sprintf(" %-*s", $host-width, $host);
+                            $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.red ~ sprintf(" %-*s", 3, " : ");
+                            $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(255,0,255) ~ sprintf("%-*d", $port-width - 3, $port);
+                        }else {
+                            $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,255,0) ~ sprintf(" %-*s", $host-width, $host);
+                            $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.red ~ sprintf(" %-*s", $port-width, "");
+                        }
+                        with %v«comment» {
+                            my Str $comment = %v«comment»;
+                            $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, $comment.trim);
+                        }
+                    } else {
+                        $cline = ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $key-width, "#$key");
+                        $cline ~= sprintf("%3s", $type-spec);
+                        if $port > 0 {
+                            $cline ~= sprintf(" %-*s", $host-width, $host);
+                            $cline ~= sprintf(" %-*s", 3, " : ");
+                            $cline ~= sprintf("%-*d", $port-width - 3, $port);
+                        }else {
+                            $cline ~= sprintf(" %-*s", $host-width, $host);
+                            $cline ~= sprintf(" %-*s", $port-width, "");
+                        }
+                        with %v«comment» {
+                            my Str $comment = %v«comment»;
+                            $cline ~= sprintf(" # %-*s", $comment-width, $comment);
+                        }
+                    }
+                    put $cline ~ t.text-reset;
+                }
+            }
+            $cnt++;
+        } # $ln #
+        $cond = $cnt %% 2;
+        put ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, '') ~ t.text-reset;
+    } else {
+        $ln = $input.get;
+        while !$input.eof {
+            my $actions = CommentedLineActions;
+            #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
+            #dd $test;
+            my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
+            my Str $key = %val«key»;
+            if $key eq '' || $key eq '#' {
+                say $ln;
+            } else {
+                my %v = %val«value»;
+                my Str:D $type = %v«type»;
+                say $ln unless $type eq 'host' || $type eq 'alias';
+            }
+            $ln = $input.get;
+        } # while !$input.eof #
+        if $ln {
+            my $actions = CommentedLineActions;
+            #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
+            #dd $test;
+            my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
+            my Str $key = %val«key»;
+            if $key eq '' || $key eq '#' {
+                say $ln;
+            } else {
+                my %v = %val«value»;
+                my Str:D $type = %v«type»;
+                say $ln unless $type eq 'host' || $type eq 'alias';
+            }
+        } # $ln #
+    }
+    $input.close;
+} # sub list-commented(Bool:D $colour, Bool:D $syntax --> Bool) is export #
+
+sub stats(Bool:D $colour --> Bool:D) is export {
+    dd %stats;
+    my $size = %stats«lines»;
+    my $hosts = %stats«hosts»;
+    my $aliases = %stats«aliases»;
+    if $colour {
+        put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("%-35s", '')                                ~ t.text-reset;
+        put t.bg-yellow         ~ t.bold ~ t.bright-blue ~ sprintf("%-35s", 'statistics')                      ~ t.text-reset;
+        put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("%-35s", '=' x 35)                          ~ t.text-reset;
+        put t.bg-yellow         ~ t.bold ~ t.bright-blue ~ sprintf("number of elts in db:    %-10s", $size)    ~ t.text-reset;
+        put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("number of hosts in db:   %-10s", $hosts)   ~ t.text-reset;
+        put t.bg-yellow         ~ t.bold ~ t.bright-blue ~ sprintf("number of aliases in db: %-10s", $aliases) ~ t.text-reset;
+        put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("%-35s", '')                                ~ t.text-reset;
+    } else {
+        "".say;
+        'statistics'.say;
+        ('=' x 35).say;
+        "number of elts in db:    $size".say;
+        "number of hosts in db:   $hosts".say;
+        "number of aliases in db: $aliases".say;
+        ''.say;
+    }
+    return True;
+}
+
 subset PortVal is export of Int where 0 < * <= 9_223_372_036_854_775_807;
 
 sub add-host(Str:D $key, Str:D $host is copy, PortVal:D $port, Bool $force, Str $comment --> Bool) is export {
@@ -1462,9 +2095,9 @@ sub delete-key(Str:D $key, Bool:D $comment-out --> Bool) is export {
     my IO::Handle:D $output = "$config/hosts.h_ts.new".IO.open: :w, :nl-out("\n"), :chomp(True);
     my Str $ln;
     while $ln = $input.get {
-        if $ln ~~ rx/^ $key \h* [ '-->' || '=>' ] \h* [ <-[ # : ]>+ ] \h* ':' \h* \d+ \h* '#' \h* .* $/ {
+        if $ln ~~ rx/^ $key \h* [ '-->' || '=>' ] \h* [ <-[ # : ]>+ ] \h* [ ':' \h* \d+ ]? \h* [ '#' \h* .* ]? $/ {
             if $comment-out {
-                $output.say: "# $ln";
+                $output.say: "#$ln";
             }
         } else {
             $output.say: $ln
@@ -1478,6 +2111,302 @@ sub delete-key(Str:D $key, Bool:D $comment-out --> Bool) is export {
         return False;
     }
 } # sub delete-key(Str:D $key, Bool:D $comment-out --> Bool) is export #
+
+sub undelete(Str:D $key-to-find --> Bool) is export {
+    #`«««
+    CATCH {
+        when X::IO::Rename {
+            $*ERR.say: $_;
+            return False;
+        }
+        default: {
+            $*ERR.say: $_;
+            return False;
+        }
+    }
+    #»»»
+    if %the-lot{$key-to-find}:exists {
+        "key $key-to-find exists delete undelete would override it.".say;
+        return False;
+    }
+    my IO::Handle:D $input  = "$config/hosts.h_ts".IO.open:     :r, :nl-in("\n")   :chomp;
+    my IO::Handle:D $output = "$config/hosts.h_ts.new".IO.open: :w, :nl-out("\n"), :chomp(True);
+    my Int:D $key-width        = 0;
+    my Int:D $host-width       = 0;
+    my Int:D $port-width       = 0;
+    my Int:D $comment-width    = 0;
+    my Str $ln;
+    $ln = $input.get;
+    while !$input.eof {
+        if $ln ~~ rx/ ^ '#' ** {2 .. ∞} / {
+        } elsif $ln ~~ rx/^ \s* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* ':' \h* $<port> = [ \d+ ] \h* [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Int:D $port = (~$<port>).Int;
+            $key-width         = max($key-width,     wcswidth(~$<key>));
+            $host-width        = max($host-width,    wcswidth($host));
+            $port-width        = max($port-width,    wcswidth($port));
+            with $<comment> {
+                $comment-width = max($comment-width, wcswidth(~$<comment>));
+            }
+        } elsif $ln ~~ rx/^ \h+ '#' \h* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' || 'sep' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \d+ ] \h* [ '#' \h* $<comment> = [ .* ] ]? ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Int:D $port = (~$<port>).Int;
+            $key-width         = max($key-width,     wcswidth('#' ~ ~$<key>));
+            $host-width        = max($host-width,    wcswidth($host));
+            $port-width        = max($port-width,    wcswidth($port));
+            with $<comment> {
+                $comment-width = max($comment-width, wcswidth(~$<comment>));
+            }
+        }
+        $ln = $input.get;
+    } # while !$input.eof #
+    if $ln {
+        if $ln ~~ rx/ ^ '#' ** {2 .. ∞} / {
+        } elsif $ln ~~ rx/^ \s* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* ':' \h* $<port> = [ \d+ ] \h* [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Int:D $port = (~$<port>).Int;
+            $key-width         = max($key-width,     wcswidth(~$<key>));
+            $host-width        = max($host-width,    wcswidth($host));
+            $port-width        = max($port-width,    wcswidth($port));
+            with $<comment> {
+                $comment-width = max($comment-width, wcswidth(~$<comment>));
+            }
+        } elsif $ln ~~ rx/^ \h* '#' \h* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' || 'sep' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \d+ ] \h* [ '#' \h* $<comment> = [ .* ] ]? ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Int:D $port = (~$<port>).Int;
+            $key-width         = max($key-width,     wcswidth('#' ~ ~$<key>));
+            $host-width        = max($host-width,    wcswidth($host));
+            $port-width        = max($port-width,    wcswidth($port));
+            with $<comment> {
+                $comment-width = max($comment-width, wcswidth(~$<comment>));
+            }
+        }
+    } # $ln #
+    #$key-width     += 2;
+    #$host-width    += 2;
+    $port-width    += 2;
+    #$comment-width += 2;
+    $key-width = 20 if $key-width < 20;
+    $host-width = 70 if $host-width < 70;
+    $port-width = 9 if $port-width < 9;
+    $input.seek(0, SeekFromBeginning);
+    $ln = $input.get;
+    while !$input.eof {
+        if $ln ~~ rx/ ^ '#' ** {2 .. ∞} / {
+            $output.say: $ln
+        } elsif $ln ~~ rx/^ \h* $<key> = [ \w+ [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \d+ ] \h* ]? [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Int:D $port = 0;
+            with $<port> {
+                $port = (~$<port>).Int;
+            }
+            my Str $line = sprintf "%-*s %-3s %-*s %-*s", $key-width, ~$<key>, ~$<type>, $host-width, $host, $port-width, (($port == 0) ?? '' !! ': ' ~ "$port");
+            with $<comment> {
+                $line ~= " # $<comment>";
+            }
+            $output.say: $line;
+        } elsif $ln ~~ rx/^ \h* '#' \h* $<key> = [ \w+ [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \w+ ] \h* ]? [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Str:D $port = '';
+            with $<port> {
+                $port = ': ' ~ ~$<port>;
+            }
+            my Str $line;
+            if $key-to-find.trim eq (~$<key>).trim {
+                $line = sprintf "%-*s %-3s %-*s %-*s", $key-width, ~$<key>, ~$<type>, $host-width, $host, $port-width, $port;
+            } else {
+                $line = sprintf "#%-*s %-3s %-*s %-*s", $key-width - 1, ~$<key>, ~$<type>, $host-width, $host, $port-width, $port;
+            }
+            with $<comment> {
+                $line ~= " # $<comment>";
+            }
+            $output.say: $line;
+        } else {
+            $output.say: $ln
+        }
+        $ln = $input.get;
+    } # while !$input.eof #
+    if $ln {
+        if $ln ~~ rx/ ^ '#' ** {2 .. ∞} / {
+            $output.say: $ln
+        } elsif $ln ~~ rx/^ \h* $<key> = [ \w+ [ <-[\h]>+ \w+ ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \d+ ] \h* ]? [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Int:D $port = 0;
+            with $<port> {
+                $port = (~$<port>).Int;
+            }
+            my Str $line = sprintf "%-*s %-3s %-*s %-*s", $key-width, ~$<key>, ~$<type>, $host-width, $host, $port-width, (($port == 0) ?? '' !! ': ' ~ "$port");
+            with $<comment> {
+                $line ~= " # $<comment>";
+            }
+            $output.say: $line;
+        } elsif $ln ~~ rx/^ \h* '#' \h* $<key> = [ \w+ [ <-[\h]>+ \w+ ]* ] \h* $<type> = [ '-->' || ' =>' || 'sep' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \w+ ] \h* ]? [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Str:D $port = '';
+            with $<port> {
+                $port = ': ' ~ ~$<port>;
+            }
+            my Str $line;
+            if $key-to-find.trim eq (~$<key>).trim {
+                $line = sprintf "%-*s %-3s %-*s %-*s", $key-width, ~$<key>, ~$<type>, $host-width, $host, $port-width, $port;
+            } else {
+                $line = sprintf "#%-*s %-3s %-*s %-*s", $key-width - 1, ~$<key>, ~$<type>, $host-width, $host, $port-width, $port;
+            }
+            with $<comment> {
+                $line ~= " # $<comment>";
+            }
+            $output.say: $line;
+        } else {
+            $output.say: $ln
+        }
+    } # $ln #
+    $input.close;
+    $output.close;
+    if "$config/hosts.h_ts.new".IO.move: "$config/hosts.h_ts" {
+        return True;
+    } else {
+        die "move failed";
+    }
+} # sub undelete(Str:D $key-to-find --> Bool) is export #
+
+sub empty-trash( --> Bool) is export {
+    #`«««
+    CATCH {
+        when X::IO::Rename {
+            $*ERR.say: $_;
+            return False;
+        }
+        default: {
+            $*ERR.say: $_;
+            return False;
+        }
+    }
+    #»»»
+    my IO::Handle:D $input  = "$config/hosts.h_ts".IO.open:     :r, :nl-in("\n")   :chomp;
+    my IO::Handle:D $output = "$config/hosts.h_ts.new".IO.open: :w, :nl-out("\n"), :chomp(True);
+    my Int:D $key-width        = 0;
+    my Int:D $host-width       = 0;
+    my Int:D $port-width       = 0;
+    my Int:D $comment-width    = 0;
+    my Str $ln;
+    $ln = $input.get;
+    while !$input.eof {
+        if $ln ~~ rx/ ^ '#' ** {2 .. ∞} / {
+        } elsif $ln ~~ rx/^ \s* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* ':' \h* $<port> = [ \d+ ] \h* [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Int:D $port = (~$<port>).Int;
+            $key-width         = max($key-width,     wcswidth(~$<key>));
+            $host-width        = max($host-width,    wcswidth($host));
+            $port-width        = max($port-width,    wcswidth($port));
+            with $<comment> {
+                $comment-width = max($comment-width, wcswidth(~$<comment>));
+            }
+        } elsif $ln ~~ rx/^ \h+ '#' \h* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' || 'sep' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \d+ ] \h* [ '#' \h* $<comment> = [ .* ] ]? ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Int:D $port = (~$<port>).Int;
+            $key-width         = max($key-width,     wcswidth('#' ~ ~$<key>));
+            $host-width        = max($host-width,    wcswidth($host));
+            $port-width        = max($port-width,    wcswidth($port));
+            with $<comment> {
+                $comment-width = max($comment-width, wcswidth(~$<comment>));
+            }
+        }
+        $ln = $input.get;
+    } # while !$input.eof #
+    if $ln {
+        if $ln ~~ rx/ ^ '#' ** {2 .. ∞} / {
+        } elsif $ln ~~ rx/^ \s* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* ':' \h* $<port> = [ \d+ ] \h* [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Int:D $port = (~$<port>).Int;
+            $key-width         = max($key-width,     wcswidth(~$<key>));
+            $host-width        = max($host-width,    wcswidth($host));
+            $port-width        = max($port-width,    wcswidth($port));
+            with $<comment> {
+                $comment-width = max($comment-width, wcswidth(~$<comment>));
+            }
+        } elsif $ln ~~ rx/^ \h* '#' \h* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' || 'sep' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \d+ ] \h* [ '#' \h* $<comment> = [ .* ] ]? ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Int:D $port = (~$<port>).Int;
+            $key-width         = max($key-width,     wcswidth('#' ~ ~$<key>));
+            $host-width        = max($host-width,    wcswidth($host));
+            $port-width        = max($port-width,    wcswidth($port));
+            with $<comment> {
+                $comment-width = max($comment-width, wcswidth(~$<comment>));
+            }
+        }
+    } # $ln #
+    #$key-width     += 2;
+    #$host-width    += 2;
+    $port-width    += 2;
+    #$comment-width += 2;
+    $key-width = 20 if $key-width < 20;
+    $host-width = 70 if $host-width < 70;
+    $port-width = 9 if $port-width < 9;
+    $input.seek(0, SeekFromBeginning);
+    $ln = $input.get;
+    while !$input.eof {
+        if $ln ~~ rx/ ^ '#' ** {2 .. ∞} / {
+            $output.say: $ln
+        } elsif $ln ~~ rx/^ \h* $<key> = [ \w+ [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \d+ ] \h* ]? [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Int:D $port = 0;
+            with $<port> {
+                $port = (~$<port>).Int;
+            }
+            my Str $line = sprintf "%-*s %-3s %-*s %-*s", $key-width, ~$<key>, ~$<type>, $host-width, $host, $port-width, (($port == 0) ?? '' !! ': ' ~ "$port");
+            with $<comment> {
+                $line ~= " # $<comment>";
+            }
+            $output.say: $line;
+        } elsif $ln ~~ rx/^ \h* '#' \h* $<key> = [ \w+ [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \w+ ] \h* ]? [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+            # do nothing we want to delete this #
+        } else {
+            $output.say: $ln
+        }
+        $ln = $input.get;
+    } # while !$input.eof #
+    if $ln {
+        if $ln ~~ rx/ ^ '#' ** {2 .. ∞} / {
+            $output.say: $ln
+        } elsif $ln ~~ rx/^ \h* $<key> = [ \w+ [ <-[\h]>+ \w+ ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \d+ ] \h* ]? [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+            my Str:D $host = ~$<host>;
+            $host         .=trim;
+            my Int:D $port = 0;
+            with $<port> {
+                $port = (~$<port>).Int;
+            }
+            my Str $line = sprintf "%-*s %-3s %-*s %-*s", $key-width, ~$<key>, ~$<type>, $host-width, $host, $port-width, (($port == 0) ?? '' !! ': ' ~ "$port");
+            with $<comment> {
+                $line ~= " # $<comment>";
+            }
+            $output.say: $line;
+        } elsif $ln ~~ rx/^ \h* '#' \h* $<key> = [ \w+ [ <-[\h]>+ \w+ ]* ] \h* $<type> = [ '-->' || ' =>' || 'sep' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \w+ ] \h* ]? [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+            # do nothing we want to delete this #
+        } else {
+            $output.say: $ln
+        }
+    } # $ln #
+    $input.close;
+    $output.close;
+    if "$config/hosts.h_ts.new".IO.move: "$config/hosts.h_ts" {
+        return True;
+    } else {
+        die "move failed";
+    }
+} # sub empty-trash( --> Bool) is export #
 
 sub add-comment(Str:D $key, Str:D $comment --> Bool) is export {
     CATCH {
@@ -1645,7 +2574,8 @@ sub tidy-file( --> Bool) is export {
     my Str $ln;
     $ln = $input.get;
     while !$input.eof {
-        if $ln ~~ rx/^ \s* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* ':' \h* $<port> = [ \d+ ] \h* [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+        if $ln ~~ rx/ ^ '#' ** {2 .. ∞} / {
+        } elsif $ln ~~ rx/^ \s* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* ':' \h* $<port> = [ \d+ ] \h* [ '#' \h* $<comment> = [ .* ] ]?  $/ {
             my Str:D $host = ~$<host>;
             $host         .=trim;
             my Int:D $port = (~$<port>).Int;
@@ -1669,7 +2599,8 @@ sub tidy-file( --> Bool) is export {
         $ln = $input.get;
     } # while !$input.eof #
     if $ln {
-        if $ln ~~ rx/^ \s* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* ':' \h* $<port> = [ \d+ ] \h* [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+        if $ln ~~ rx/ ^ '#' ** {2 .. ∞} / {
+        } elsif $ln ~~ rx/^ \s* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* ':' \h* $<port> = [ \d+ ] \h* [ '#' \h* $<comment> = [ .* ] ]?  $/ {
             my Str:D $host = ~$<host>;
             $host         .=trim;
             my Int:D $port = (~$<port>).Int;
@@ -1701,7 +2632,9 @@ sub tidy-file( --> Bool) is export {
     $input.seek(0, SeekFromBeginning);
     $ln = $input.get;
     while !$input.eof {
-        if $ln ~~ rx/^ \h* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \d+ ] \h* ]? [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+        if $ln ~~ rx/ ^ '#' ** {2 .. ∞} / {
+            $output.say: $ln
+        } elsif $ln ~~ rx/^ \h* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \d+ ] \h* ]? [ '#' \h* $<comment> = [ .* ] ]?  $/ {
             my Str:D $host = ~$<host>;
             $host         .=trim;
             my Int:D $port = 0;
@@ -1731,7 +2664,9 @@ sub tidy-file( --> Bool) is export {
         $ln = $input.get;
     } # while !$input.eof #
     if $ln {
-        if $ln ~~ rx/^ \h* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \d+ ] \h* ]? [ '#' \h* $<comment> = [ .* ] ]?  $/ {
+        if $ln ~~ rx/ ^ '#' ** {2 .. ∞} / {
+            $output.say: $ln
+        } elsif $ln ~~ rx/^ \h* $<key> = [ \w* [ <-[\h]>+ \w* ]* ] \h* $<type> = [ '-->' || ' =>' ] \h* $<host> = [ <-[ : # ]>+ ] \h* [ ':' \h* $<port> = [ \d+ ] \h* ]? [ '#' \h* $<comment> = [ .* ] ]?  $/ {
             my Str:D $host = ~$<host>;
             $host         .=trim;
             my Int:D $port = 0;
@@ -1873,14 +2808,17 @@ sub show-file(Bool:D $colour --> Bool) is export {
                 if $port > 0 {
                     $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(255,0,255) ~ sprintf(" %-*s", $host-width, $host);
                     $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.red ~ sprintf(" %-*s", 3, " : ") ~ t.text-reset;
-                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(255,0,255) ~ sprintf("%-*d", $port-width - 3, $port) ~ t.text-reset;
+                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(255,0,255) ~ sprintf("%-*d", $port-width - 3, $port);
                 }else {
-                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,255,0) ~ sprintf(" %-*s", $host-width, $host);
-                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.red ~ sprintf(" %-*s", $port-width, " : ") ~ t.text-reset;
+                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(255,0,255) ~ sprintf(" %-*s", $host-width, $host);
+                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.red ~ sprintf(" %-*s", 3, " : ") ~ t.text-reset;
+                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(255,0,255) ~ sprintf("%-*d", $port-width - 3, '');
                 }
                 with %v«comment» {
                     my Str $comment = %v«comment»;
-                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, $comment) ~ t.text-reset;
+                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, $comment);
+                } else {
+                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("   %-*s", $comment-width, '');
                 }
                 put $cline ~ t.text-reset;
             }
@@ -1909,18 +2847,21 @@ sub show-file(Bool:D $colour --> Bool) is export {
                     $type-spec = ' =>';
                 }
                 my Str $cline = ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,255,0) ~ sprintf("%-*s", $key-width, $key);
-                $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.red ~ sprintf("%3s", $type-spec);
+                $cline ~= t.red ~ sprintf("%3s", $type-spec);
                 if $port > 0 {
-                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(255,0,255) ~ sprintf(" %-*s", $host-width, $host);
-                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.red ~ sprintf(" %-*s", 3, " : ") ~ t.text-reset;
-                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(255,0,255) ~ sprintf("%-*d", $port-width - 3, $port) ~ t.text-reset;
+                    $cline ~= t.bold ~ t.color(255,0,255) ~ sprintf(" %-*s", $host-width, $host);
+                    $cline ~= t.red ~ sprintf(" %-*s", 3, " : ") ~ t.text-reset;
+                    $cline ~= t.color(255,0,255) ~ sprintf("%-*d", $port-width - 3, $port);
                 }else {
-                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,255,0) ~ sprintf(" %-*s", $host-width, $host);
-                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.red ~ sprintf(" %-*s", $port-width, " : ") ~ t.text-reset;
+                    $cline ~= t.bold ~ t.color(255,0,255) ~ sprintf(" %-*s", $host-width, $host);
+                    $cline ~= t.red ~ sprintf(" %-*s", 3, "   ") ~ t.text-reset;
+                    $cline ~= t.color(255,0,255) ~ sprintf("%-*d", $port-width - 3, $port);
                 }
                 with %v«comment» {
                     my Str $comment = %v«comment»;
-                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, $comment) ~ t.text-reset;
+                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, $comment);
+                } else {
+                    $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, '');
                 }
                 put $cline ~ t.text-reset;
             }
