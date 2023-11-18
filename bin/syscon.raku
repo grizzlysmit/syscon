@@ -155,26 +155,34 @@ multi sub MAIN('list', 'trash', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:
    } 
 }
 
-multi sub MAIN('stats', Bool:D :c(:color(:$colour)) = False) returns Int {
-   if stats($colour) {
+multi sub MAIN('stats', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
+   if stats($colour, $syntax) {
        exit 0;
    } else {
        exit 1;
    } 
-}
+} # multi sub MAIN('stats', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int #
 
-multi sub MAIN('statistics', Bool:D :c(:color(:$colour)) = False) returns Int {
-   if stats($colour) {
+multi sub MAIN('statistics', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
+   if stats($colour, $syntax) {
        exit 0;
    } else {
        exit 1;
    } 
+} # multi sub MAIN('statistics', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int #
+
+multi sub MAIN('add', Str:D $key, Str:D $host, PortVal:D $port = 22, Bool:D :s(:set(:$force)) = False, Str :c(:$comment) = Str) returns Int {
+   if add-host($key, $host, $port, $force, $comment) {
+       exit 0;
+   } else {
+       exit 1;
+   }
 }
 
 multi sub MAIN('delete', Bool:D :o(:$comment-out) = False, *@keys) returns Int {
     my Int:D $result = 0;
     for @keys -> $key {
-        unless delete-key($key, True) {
+        unless delete-key($key, $comment-out) {
             $result++;
         } 
     }
@@ -184,7 +192,7 @@ multi sub MAIN('delete', Bool:D :o(:$comment-out) = False, *@keys) returns Int {
 multi sub MAIN('del', Bool:D :o(:$comment-out) = False, *@keys) returns Int {
     my Int:D $result = 0;
     for @keys -> $key {
-        unless delete-key($key, True) {
+        unless delete-key($key, $comment-out) {
             $result++;
         } 
     }
