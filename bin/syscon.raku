@@ -244,6 +244,40 @@ multi sub MAIN('alias', Str:D $key, Str:D $target, Bool:D :s(:set(:$force)) = Fa
 }
 
 #`«««
+    ##################################
+    #********************************#
+    #*                              *#
+    #*       Editor functions       *#
+    #*                              *#
+    #********************************#
+    ##################################
+#»»»
+
+multi sub MAIN('list', 'editors', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
+   if list-editors($colour, $syntax) {
+       exit 0;
+   } else {
+       exit 1;
+   } 
+}
+
+multi sub MAIN('list', 'editors', 'file', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
+   if list-editors-file($colour, $syntax) {
+       exit 0;
+   } else {
+       exit 1;
+   } 
+}
+
+multi sub MAIN('editors', 'stats', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
+   if editors-stats($colour, $syntax) {
+       exit 0;
+   } else {
+       exit 1;
+   } 
+}
+
+#`«««
     #########################################################
     #                                                       #
     #   vanity functions no real point in their existance   #
