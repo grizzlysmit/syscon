@@ -907,8 +907,10 @@ class UsageStrActions does PathsActions {
     ################################################
     #**********************************************#
     #*                                            *#
-    #*   Grammars to Syntax Highlight Raku Code   *#
+    #*   Grammars to Syntax Highlight Raku¹ Code  *#
     #*                and Values.                 *#
+    #*                                            *#
+    #*  1. not complete or exhaustive.            *#
     #*                                            *#
     #**********************************************#
     ################################################
@@ -1086,6 +1088,245 @@ class VariablesActions does VariablesBaseActions {
         $made.make: $top;
     }
 }
+
+
+grammar ValueBase {
+    token value       { <space> [ <array-val> || <hash-val> || <scalar-val> ] <space-after=.space> }
+    token array-val   { '[' [ <space> [ <value> ]+ %% ',' ]? <space-after=.space> ']' }
+    token hash-val    { '{' [ <space> [ <pair> ]+ %% ',' ]? <space-after=.space> '}' }
+    token space       { \h* }
+    token pair        { [ <pair0> || <pair1> ] }
+    token pair0       { <key> \h+ '=>' \h+ <value> }
+    token pair1       { ':' <key> '(' <value> ')' }
+    token key         { \w+ [ '-' \w+ ]* }
+    token scalar-val  { [ <int-val> || <rat-val> || <num-val> || <bool-val> || <bare-word> || <string> ] }
+    token int-val     { \d+ }
+    token rat-val     { <numerator> '/' <denominator> }
+    token numerator   { \d+ }
+    token denominator { \d+ }
+    token num-val     { [ <mantisa> <exponent>? || <integer> <exponent> ] }
+    token mantisa     { [ '.' \d+ || \d+ '.' \d* ] }
+    token exponent    { <signifitant> <sign>? <integer> }
+    token signifitant { [ 'e' || 'E' ] }
+    token integer     { \d+ }
+    token sign        { [ '+' || '-' ] }
+    token bool-val    { [ 'True' || 'False' ] }
+    token bare-word   { '/'? \w+ [ [ '-' || '/' ] \w+ ]* '/'? }
+    # lots of string stuff missing here  like q and qq strings etc ... #
+    token string      { [ '"' <string-body> '"' || "'" <single-body> "'" ] }
+    token string-body { [ <-["]>* [ <?after '\\' > '"' <-["]>* ]* ]? }
+    token single-body { [ <-[']>* [ <?after '\\' > "'" <-[']>* ]* ]? }
+}
+
+role ValueBaseActions {
+    method space-after($/) {
+        my %space-after = $/<space>.made;
+        make %space-after;
+    }
+    method space($/) {
+        my %space = type => 'space', val => ~$/;
+        make %space;
+    }
+    method key($/) {
+        my $key = ~$/;
+        make $key;
+    }
+    method int-val($/) {
+        my Int %int-val = type => 'int', val => +$/;
+        make %int-val;
+    }
+    method numerator($/) {
+        my Int $numerator = +$/;
+        make $numerator;
+    }
+    method denominator($/) {
+        my Int $denominator = +$/;
+        make $denominator;
+    }
+    method integer($/) {
+        my Int $integer = +$/;
+        make $integer;
+    }
+    method rat-val($/) {
+        my %rat-val = type => 'rat-val', numerator => $/<numerator>.made, denominator => $/<denominator>.made;
+        make %rat-val;
+    }
+    method mantisa($/) {
+        my Num $mantisa = +$/;
+        make $mantisa;
+    }
+    method sign($/) {
+        my Str $sign = ~$/;
+        make $sign;
+    }
+    method signifitant($/) {
+        my Str $signifitant = ~$/;
+        make $signifitant;
+    }
+    method exponent($/) {
+        my %exponent = signifitant => $/<signifitant>.made, sign => '', exp => $/<integer>.made;
+        if $/<sign> {
+            %exponent«sign» = $/<sign>.made;
+        }
+        make %exponent;
+    }
+    method num-val($/) {
+        my %num-val;
+        my %exp;
+        if $/<exponent> {
+            %exp = $/<exponent>.made;
+        }
+        if $/<mantisa> {
+            %num-val = type => 'num', mantisa => $/<mantisa>.made, exponent => %exp;
+        } elsif $/<integer> {
+            %num-val = type => 'num', mantisa => $/<integer>.made, exponent => %exp;
+        }
+        make %num-val;
+    }
+    method bool-val($/) {
+        my %bool-val = type => 'bool', val => ~$/;
+        make %bool-val;
+    }
+    method bare-word($/) {
+        my %bare-word = type => 'bare-word', val => ~$/;
+        make %bare-word;
+    }
+    method string-body($/) {
+        my Str $string-body = ~$/;
+        make $string-body;
+    }
+    method single-body($/) {
+        my Str $single-body = ~$/;
+        make $single-body;
+    }
+    method string($/) {
+        my %string;
+        if $/<string-body> {
+            %string = type => 'string', open => '"', close => '"', val => $/<string-body>.made;
+        } elsif $/<single-body> {
+            %string = type => 'string', open => "'", close => "'", val => $/<single-body>.made;
+        }
+        make %string;
+    }
+    #token scalar-val  { [ <int-val> || <rat-val> || <num-val> || <bare-word> || <string> ] }
+    method scalar-val($/) {
+        my %scalar-val;
+        if $/<int-val> {
+            %scalar-val = $/<int-val>.made;
+        } elsif $/<rat-val> {
+            %scalar-val = $/<rat-val>.made;
+        } elsif $/<num-val> {
+            %scalar-val = $/<num-val>.made;
+        } elsif $/<bool-val> {
+            %scalar-val = $/<bool-val>.made;
+        } elsif $/<bare-word> {
+            %scalar-val = $/<bare-word>.made;
+        } elsif $/<string> {
+            %scalar-val = $/<string>.made;
+        }
+        make %scalar-val;
+    }
+    #token array-val   { '[' [ [ \h+ <value> ]+ %% ',' ]? ']' }
+    method array-val($/) {
+        my %array-val = type => 'array-val', val => $/<value>».made, a-space => $/<space>.made, a-space-after => $/<space-after>.made;
+        make %array-val;
+    }
+    #token pair0       { <key> \h+ '=>' \h+ <value> }
+    method pair0($/) {
+        my %pair0 = type => 'pair0', key => $/<key>.made, val => $/<value>.made;
+        make %pair0;
+    }
+    #token pair1       { ':' <key> '(' <value> ')' }
+    method pair1($/) {
+        my %pair1 = type => 'pair1', key => $/<key>.made, val => $/<value>.made;
+        make %pair1;
+    }
+    #token pair        { [ <pair0> || <pair1> ] }
+    method pair($/) {
+        my %pair;
+        if $/<pair0> {
+            %pair = $/<pair0>.made;
+        } elsif $/<pair1> {
+            %pair = $/<pair1>.made;
+        }
+        make %pair;
+    }
+    #token hash-val    { '{' [ [ \h+ <pair> ]+ %% ',' ]? '}' }
+    method hash-val($/) {
+        my %hash-val = type => 'hash-val', val => $/<pair>».made, h-space => $/<space>.made, h-space-after => $/<space-after>.made;
+        make %hash-val;
+    }
+    #token value       { [ <array-val> || <hash-val> || <scalar-val> ] }
+    method value($/) {
+        my %value;
+        if $/<array-val> {
+            %value = |$/<array-val>.made, space => $/<space>.made, space-after => $/<space-after>.made;
+        } elsif $/<hash-val> {
+            %value = $/<hash-val>.made, space => $/<space>.made, space-after => $/<space-after>.made;
+        } elsif $/<scalar-val> {
+            %value = |$/<scalar-val>.made, space => $/<space>.made, space-after => $/<space-after>.made;
+        }
+        make %value;
+    }
+} # role ValueBaseActions does KeyActions #
+
+grammar Value is ValueBase {
+    token TOP            { ^ <value> $ }
+}
+
+class ValueActions does ValueBaseActions {
+    method !highlight(%spec) {
+        my $highlight = '';
+        $highlight ~= %spec«space»«val» if %spec«space»;
+        if %spec«type» eq 'int' {
+            $highlight ~= t.color(255, 0, 255) ~ %spec«val»;
+        } elsif %spec«type» eq 'rat-val' {
+            $highlight ~= t.color(255, 0, 255) ~ %spec«numerator» ~ '/' ~ %spec«denominator»;
+        } elsif %spec«type» eq 'num' {
+            $highlight ~= t.color(255, 0, 255) ~ %spec«mantisa»;
+            $highlight ~= %spec«exponent»«signifitant» ~ %spec«exponent»«sign» ~ %spec«exponent»«exp» if %spec«exponent»;
+        } elsif %spec«type» eq 'bool' {
+            $highlight ~= t.color(255, 0, 255) ~ %spec«val»;
+        } elsif %spec«type» eq 'bare-word' {
+            $highlight ~= t.color(255, 0, 255) ~ %spec«val»;
+        } elsif %spec«type» eq 'string' {
+            $highlight ~= t.color(255, 0, 255) ~ %spec«open» ~ %spec«val» ~ %spec«close»;
+        } elsif %spec«type» eq 'array-val' {
+            $highlight ~= t.color(255, 0, 0) ~  '[';
+            $highlight ~= %spec«a-space»«val» if %spec«a-space»;
+            my Str:D $sep = '';
+            my @vals = |%spec«val»;
+            for @vals -> %val {
+                $highlight ~= t.color(255, 0, 0) ~ $sep ~ self!highlight(%val);
+                $sep = ',';
+            }
+            $highlight ~= %spec«a-space-after»«val» if %spec«a-space-after»;
+            $highlight ~= t.color(255, 0, 0) ~ ']';
+        } elsif %spec«type» eq 'hash-val' {
+            $highlight ~= t.color(255, 0, 0) ~  '{';
+            $highlight ~= %spec«h-space»«val» if %spec«h-space»;
+            my Str:D $sep = '';
+            my @vals = |%spec«val»;
+            for @vals -> %val {
+                $highlight ~= t.color(255, 0, 0) ~ $sep ~ self!highlight(%val);
+                $sep = ',';
+            }
+            $highlight ~= %spec«h-space-after»«val» if %spec«h-space-after»;
+            $highlight ~= t.color(255, 0, 0) ~ '}';
+        } elsif %spec«type» eq 'pair0' {
+            $highlight ~= t.color(255, 0, 255) ~ %spec«key» ~ t.color(255, 0, 0) ~ ' => ' ~ self!highlight(%spec«val»);
+        } elsif %spec«type» eq 'pair1' {
+            $highlight ~= t.color(255, 0, 0) ~ ':' ~ t.color(255, 0, 255) ~ %spec«key» ~ t.color(255, 0, 0) ~ '(' ~ self!highlight(%spec«val») ~ t.color(255, 0, 0) ~ ')';
+        }
+        $highlight ~= %spec«space-after»«val» if %spec«space-after»;
+        return $highlight;
+    }
+    method TOP($made) {
+        my %spec = $made<value>.made;
+        my Str $top = self!highlight(%spec);
+        $made.make: $top;
+    }
+} # class ValueActions does ValueBaseActions #
 
 my Str  @LINES     = slurp("$config/hosts.h_ts").split("\n");
 #dd @LINES;
@@ -2985,6 +3226,7 @@ sub editors-stats(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export {
     if $colour {
         if $syntax {
             my $actions = VariablesActions;
+            my $v-actions = ValueActions;
             put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s => %-*s", $var-width, 'variable', $value-width, 'value') ~ t.text-reset;
             $cnt++;
             put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, '#' x $width) ~ t.text-reset;
@@ -2992,8 +3234,9 @@ sub editors-stats(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export {
             for %editors.keys.sort -> $var {
                 my $value = %editors{$var};
                 my $highlightedvar = Variables.parse($var, :enc('UTF-8'), :$actions).made;
+                my $highlightedvalue = Value.parse($value, :enc('UTF-8'), :actions($v-actions)).made;
                 my Int:D $l = $var-width - wcswidth($var);
-                put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ $highlightedvar ~ (' ' x $l) ~ t.red ~ ' => ' ~ t.color(255,0,255) ~ sprintf("%-*s", $value-width, $value) ~ t.text-reset;
+                put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ left($highlightedvar, $var-width, :ref($var)) ~ t.red ~ ' => ' ~ left($highlightedvalue, $value-width, :ref("$value")) ~ t.text-reset;
                 $cnt++;
             } # %editors.keys.sort -> $var #
             put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, '') ~ t.text-reset;
