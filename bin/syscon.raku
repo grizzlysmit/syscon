@@ -147,14 +147,6 @@ multi sub MAIN('list', 'trash', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:
    } 
 }
 
-multi sub MAIN('list', 'trash', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
-   if list-commented($colour, $syntax) {
-       exit 0;
-   } else {
-       exit 1;
-   } 
-}
-
 multi sub MAIN('stats', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
    if stats($colour, $syntax) {
        exit 0;
@@ -228,11 +220,11 @@ multi sub MAIN('undelete', *@keys) returns Int {
 }
 
 multi sub MAIN('comment', Str:D $key, Str:D $comment) returns Int {
-   if add-comment($key, $comment) {
-       exit 0;
-   } else {
-       exit 1;
-   } 
+    if add-comment($key, $comment) {
+        exit 0;
+    } else {
+        exit 1;
+    } 
 }
 
 multi sub MAIN('alias', Str:D $key, Str:D $target, Bool:D :s(:set(:$force)) = False, Bool:D :d(:really-force(:$overwrite-hosts)) = False, Str :c(:$comment) = Str) returns Int {
@@ -241,6 +233,26 @@ multi sub MAIN('alias', Str:D $key, Str:D $target, Bool:D :s(:set(:$force)) = Fa
    } else {
        exit 1;
    } 
+}
+
+multi sub MAIN('backup', 'db', Bool:D :w(:win-format(:$use-windows-formating)) = False --> Bool) {
+    if backup-db-file($use-windows-formating) {
+        exit 0;
+    } else {
+        die "Error: backup failed!!!";
+    }
+}
+
+multi sub MAIN('restore', 'db', Str $restore-from = Str --> Bool) {
+    my IO::Path $_restore-from;
+    with $restore-from {
+        $_restore-from = $restore-from.IO;
+    }
+    if restore-db-file($_restore-from) {
+        exit 0;
+    } else {
+        die "Error: restore backup failed!!!";
+    }
 }
 
 #`«««
@@ -309,15 +321,37 @@ multi sub MAIN('show', 'file', Bool:D :c(:color(:$colour)) = False) returns Int 
    } 
 }
 
-multi sub MAIN('help', Bool:D :n(:nocolor(:$nocolour)) = False) returns Int {
+multi sub MAIN('help', Bool:D :n(:nocolor(:$nocolour)) = False, *%named-args, *@args) returns Int {
+   my @_args is Array[Str] = |@args[1 .. *];
+   #say @_args.shift;
+   dd @_args,  @args;
    if $nocolour {
        $*USAGE.say;
    } else {
-       say-coloured($*USAGE);
+       say-coloured($*USAGE, |%named-args, |@_args);
    } 
    exit 0;
 }
 
 sub USAGE() {
     say-coloured($*USAGE);
+}
+
+multi sub GENERATE-USAGE(&main, |capture) {
+    dd capture;
+    my @capture = |(capture.list);
+    my @_capture;
+    if @capture && @capture[0] eq 'help' {
+        @_capture = |@capture[1 .. *];
+    } else {
+        @_capture = |@capture;
+    }
+    my %capture = |(capture.hash);
+    if %capture«nocolour» || %capture«nocolor» || %capture«n» {
+        say $*USAGE;
+    } else {
+        #dd @capture;
+        say-coloured($*USAGE, |%capture, |@_capture);
+        #&*GENERATE-USAGE(&main, |capture)
+    }
 }

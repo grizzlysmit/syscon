@@ -744,7 +744,7 @@ grammar UsageStr is Paths {
     regex opt               { [ <long-opt> || <short-opt> ] }
     regex short-opt         { [ '-' \w ] }
     regex long-opt          { [ '--' \w ** {2 .. Inf} [ '-' \w+ ]* ] }
-    regex type              { [ 'Str' || 'Num' || 'Rat' || 'Complex' || [ \w+ [ '-' \w+ ]* ] ] }
+    regex type              { [ 'Str' || 'Num' || 'Rat' || 'Complex' || [ \w+ [ [ '-' || '::' ] \w+ ]* ] ] }
     regex slurpy-hash       { [ '[--<' [ \w+ [ '-' \w+ ]* ] '>=...]' ] }
 }
 
@@ -3165,7 +3165,7 @@ sub list-editors-file(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export
                 } else {
                     $mark = '';
                 }
-                put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,255,0) ~ sprintf("%-30s ", $ed) ~ t.color(255,0,255) ~ sprintf("%-14s", $mark) ~ t.text-reset;
+                put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,255,0) ~ sprintf("%-30s ", $ed) ~ t.color(255,0,0) ~ sprintf("%-14s", $mark) ~ t.text-reset;
                 $cnt++;
             } # @gui-editors -> $ed #
             put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-45s", '') ~ t.text-reset;
@@ -3235,7 +3235,6 @@ sub editors-stats(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export {
                 my $value = %editors{$var};
                 my $highlightedvar = Variables.parse($var, :enc('UTF-8'), :$actions).made;
                 my $highlightedvalue = Value.parse($value, :enc('UTF-8'), :actions($v-actions)).made;
-                my Int:D $l = $var-width - wcswidth($var);
                 put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ left($highlightedvar, $var-width, :ref($var)) ~ t.red ~ ' => ' ~ left($highlightedvalue, $value-width, :ref("$value")) ~ t.text-reset;
                 $cnt++;
             } # %editors.keys.sort -> $var #
@@ -3607,8 +3606,28 @@ sub show-file(Bool:D $colour --> Bool) is export {
     $input.close;
 } # sub show-file( --> Bool) is export #
 
-sub say-coloured(Str:D $USAGE --> True) is export {
+sub backup-db-file(Bool:D $use-windows-formating --> Bool) is export {
+    my DateTime $now = DateTime.now;
+    my Str:D $time-stamp = $now.Str;
+    if $*DISTRO.is-win || $use-windows-formating {
+        $time-stamp ~~ tr/./·/;
+        $time-stamp ~~ tr/:/./;
+    }
+    return "$config/hosts.h_ts".IO.copy("$config/hosts.h_ts.$time-stamp".IO);
+} # sub backup-db-file(Bool:D $use-windows-formating --> Bool) is export #
+
+sub restore-db-file(IO::Path $restore-from --> Bool) is export {
+    with $restore-from {
+        return True;
+    } else {
+        return True;
+    }
+}
+
+sub say-coloured(Str:D $USAGE, *%named-args, *@args --> True) is export {
     my @usage = $USAGE.split("\n");
+    my Num:D $limit = ((%named-args«limit»:exists) ?? %named-args«limit».Num !! 75.Num);
+    dd @args, %named-args, $limit;
     my $actions = UsageStrActions;
     #my $test = UsageStr.parse(@usage.join("\x0A"), :enc('UTF-8'), :$actions).made;
     #dd $test, $?NL;
@@ -3651,7 +3670,8 @@ sub say-coloured(Str:D $USAGE --> True) is export {
     my Int $terminal-width = terminal-width;
     $terminal-width = 80 if $terminal-width === Int;
     $width = min($width, $terminal-width);
-    for @usage-struct -> %line {
+    my Bool:D $output = False;
+    main-for: for @usage-struct -> %line {
         my Str $kind = %line«kind»;
         if $kind eq 'usage' {
             my Str $value = %line«value»;
@@ -3660,7 +3680,63 @@ sub say-coloured(Str:D $USAGE --> True) is export {
         } elsif $kind eq 'usage-line' {
             my %value            = %line«value»;
             my Str $prog         = %value«prog»;
-            my @fixed-args       = %value«fixed-args»;
+            my @fixed-args       = |%value«fixed-args»;
+            my Str:D $arg0 = '';
+            $arg0 = @args[0] if @args;
+            my @positional-args  = |%value«positional-args»;
+            my @optionals        = |%value«optionals»;
+            my @posible = |@fixed-args;
+            my Int:D $n = min(@posible.elems, @args.elems);
+            my Int:D $sum-weights = (($n * ($n + 1)) / 2).Int;
+            $sum-weights = 1 if $sum-weights == 0;
+            my Int:D $sum = 0;
+            loop (my $i = 0; $i < $n; $i++) {
+                my Str:D $arg-current = '';
+                $arg-current = @args[$i].Str unless @args[$i] === Any;
+                $sum += ($n - $i) if @posible[$i] ~~ rx:i/ ^ $arg-current .* $ /;
+            }
+            my Num $score = $sum.Num / $sum-weights.Num * 100; # get score as a percentage #
+            next if $score < $limit;
+            #next if @fixed-args && @fixed-args[0] !~~ rx:i/ ^ $arg0 .* $ /;
+            my Str $slurpy-array = %value«slurpy-array»;
+            my @options          = %value«options»;
+            my Str $slurpy-hash  = %value«slurpy-hash»;
+            my Str:D $ln = ' ' x 2;
+            $ln ~= t.color(0,255,0) ~ $prog ~ ' ' ~ t.color(255,0,255);
+            my Str $ref = ' ' x 2 ~ $prog ~ ' ';
+            for @fixed-args -> $arg {
+                $ln ~= $arg ~ ' ';
+                $ref ~= $arg ~ ' ';
+            }
+            $ln ~= t.color(255, 0, 0);
+            for @positional-args -> $arg {
+                $ln ~= $arg ~ ' ';
+                $ref ~= $arg ~ ' ';
+            }
+            $ln ~= t.color(0, 255, 255);
+            for @optionals -> $arg {
+                $ln ~= $arg ~ ' ';
+                $ref ~= $arg ~ ' ';
+            }
+            $ln ~= t.color(255, 255, 0) ~ $slurpy-array ~ t.red ~ ' ';
+            $ref ~= $slurpy-array ~ ' ';
+            for @options -> $arg {
+                $ln ~= $arg ~ ' ';
+                $ref ~= $arg ~ ' ';
+            }
+            $ln ~= t.color(255, 128, 128) ~ $slurpy-hash ~ ' ';
+            $ref ~= $slurpy-hash ~ ' ';
+            put t.bg-blue ~ t.bold ~ sprintf("%-*s", $width, left($ln, $width, :$ref)) ~ t.text-reset;
+            $output = True;
+        }
+    } # for @usage -> $line #
+    unless $output {
+    for @usage-struct -> %line {
+        my Str $kind = %line«kind»;
+        if $kind eq 'usage-line' {
+            my %value            = %line«value»;
+            my Str $prog         = %value«prog»;
+            my @fixed-args       = |%value«fixed-args»;
             my @positional-args  = %value«positional-args»;
             my @optionals        = %value«optionals»;
             my Str $slurpy-array = %value«slurpy-array»;
@@ -3692,9 +3768,10 @@ sub say-coloured(Str:D $USAGE --> True) is export {
             $ln ~= t.color(255, 128, 128) ~ $slurpy-hash ~ ' ';
             $ref ~= $slurpy-hash ~ ' ';
             put t.bg-blue ~ t.bold ~ sprintf("%-*s", $width, left($ln, $width, :$ref)) ~ t.text-reset;
-        } else {
+            $output = True;
         }
     } # for @usage -> $line #
+    }
 } # sub say-coloured(Str:D $USAGE --> True) is export #
 
 #`«««
