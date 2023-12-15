@@ -7,6 +7,10 @@ my %*SUB-MAIN-OPTS;
 #%*SUB-MAIN-OPTS<bundling>       = True;
 
 
+use Gzz::Text::Utils;
+#use Syntax::Highlighters;
+use GUI::Editors;
+use Usage::Utils;
 use Syscon;
 
 #`«««
@@ -115,7 +119,7 @@ multi sub MAIN('list', 'hosts', Str:D $prefix = '', Bool:D :c(:color(:$colour)) 
     } 
 } # multi sub MAIN('list', 'all', Str $prefix = '', Bool:D :c(:color(:$colour)) = False, Str :p(:$pattern) = Str, Str :e(:$ecma-pattern) = Str) returns Int #
 
-multi sub MAIN('list', 'by', 'both', Str:D $prefix = '', Bool:D :c(:color(:$colour)) = False, Int:D :l(:$page-length) = 50, Str :p(:$pattern) = Str, Str :e(:$ecma-pattern) = Str) returns Int {
+multi sub MAIN('list', 'by', 'both', Str:D $prefix = '', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False, Int:D :l(:$page-length) = 50, Str :p(:$pattern) = Str, Str :e(:$ecma-pattern) = Str) returns Int {
     my Regex $_pattern;
     with $pattern {
         $_pattern = rx:i/ <$pattern> /;
@@ -124,7 +128,7 @@ multi sub MAIN('list', 'by', 'both', Str:D $prefix = '', Bool:D :c(:color(:$colo
     } else {
         $_pattern = rx:i/^ .* $/;
     }
-    if list-by-both($prefix, $colour, $page-length, $_pattern) {
+    if list-by-both($prefix, $colour, $syntax, $page-length, $_pattern) {
        exit 0;
     } else {
        exit 1;
@@ -289,6 +293,54 @@ multi sub MAIN('editors', 'stats', Bool:D :c(:color(:$colour)) = False, Bool:D :
    } 
 }
 
+multi sub MAIN('list', 'editors', 'backups', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
+   if list-editors-backups($colour, $syntax) {
+       exit 0;
+   } else {
+       exit 1;
+   } 
+}
+
+multi sub MAIN('backup', 'editors', Bool:D :w(:$use-windows-formatting) = False) returns Int {
+   if backup-editors($use-windows-formatting) {
+       exit 0;
+   } else {
+       exit 1;
+   } 
+}
+
+multi sub MAIN('restore', 'editors', Str:D $restore-from) returns Int {
+   if restore-editors($restore-from.IO) {
+       exit 0;
+   } else {
+       exit 1;
+   } 
+}
+
+multi sub MAIN('set', 'editor', Str:D $editor, Str $comment = Str) returns Int {
+   if set-editor($editor, $comment) {
+       exit 0;
+   } else {
+       exit 1;
+   } 
+}
+
+multi sub MAIN('set', 'override', 'GUI_EDITOR', Bool:D $value, Str $comment = Str) returns Int {
+   if set-override-GUI_EDITOR($value, $comment) {
+       exit 0;
+   } else {
+       exit 1;
+   } 
+}
+
+multi sub MAIN('menu', 'restore', 'editors', Str:D $message = '', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
+   if backups-menu-restore($colour, $syntax, $message) {
+       exit 0;
+   } else {
+       exit 1;
+   } 
+}
+
 #`«««
     #########################################################
     #                                                       #
@@ -324,21 +376,29 @@ multi sub MAIN('show', 'file', Bool:D :c(:color(:$colour)) = False) returns Int 
 multi sub MAIN('help', Bool:D :n(:nocolor(:$nocolour)) = False, *%named-args, *@args) returns Int {
    my @_args is Array[Str] = |@args[1 .. *];
    #say @_args.shift;
-   dd @_args,  @args;
-   if $nocolour {
-       $*USAGE.say;
-   } else {
-       say-coloured($*USAGE, |%named-args, |@_args);
-   } 
+   say-coloured($*USAGE, $nocolour, |%named-args, |@_args);
    exit 0;
 }
 
-sub USAGE() {
-    say-coloured($*USAGE);
+multi sub MAIN('test') returns Int {
+   test();
+   exit 0;
 }
 
-multi sub GENERATE-USAGE(&main, |capture) {
-    dd capture;
+#`«««
+    ***********************************************************
+    *                                                         *
+    *                       USAGE Stuff                       *
+    *                                                         *
+    ***********************************************************
+#»»»
+
+sub USAGE(Bool:D :n(:nocolor(:$nocolour)) = False, *%named-args, *@args --> Int) {
+    say-coloured($*USAGE, False, %named-args, @args);
+    exit 0;
+}
+
+multi sub GENERATE-USAGE(&main, |capture --> Int) {
     my @capture = |(capture.list);
     my @_capture;
     if @capture && @capture[0] eq 'help' {
@@ -348,10 +408,11 @@ multi sub GENERATE-USAGE(&main, |capture) {
     }
     my %capture = |(capture.hash);
     if %capture«nocolour» || %capture«nocolor» || %capture«n» {
-        say $*USAGE;
+        say-coloured($*USAGE, True, |%capture, |@_capture);
     } else {
         #dd @capture;
-        say-coloured($*USAGE, |%capture, |@_capture);
+        say-coloured($*USAGE, False, |%capture, |@_capture);
         #&*GENERATE-USAGE(&main, |capture)
     }
+    exit 0;
 }

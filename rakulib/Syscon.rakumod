@@ -3,8 +3,13 @@ unit module Syscon:ver<0.1.0>:auth<Francis Grizzly Smit (grizzlysmit@smit.id.au)
 use Terminal::ANSI::OO :t;
 use Terminal::Width;
 use Terminal::WCWidth;
+use Gzz::Text::Utils;
+use Syntax::Highlighters;
+use GUI::Editors;
+use Usage::Utils;
 #use Grammar::Debugger;
 #use Grammar::Tracer;
+use trace;
 
 # the home dir #
 constant $home is export = %*ENV<HOME>.Str();
@@ -17,11 +22,11 @@ if $config.IO !~~ :d {
 }
 
 # The config files to test for #
-constant @config-files is export = qw{hosts.h_ts editors};
+my Str @host-config-files = |qw{hosts.h_ts};
 
-my Str @guieditors;
+my Str $client-config;
 
-sub generate-configs(Str $file) returns Bool:D {
+sub generate-configs(Str:D $file, Str:D $config) returns Bool:D {
     my Bool $result = True;
     CATCH {
         default { 
@@ -36,34 +41,6 @@ sub generate-configs(Str $file) returns Bool:D {
 
                         END
                     }
-                    when 'editors' {
-                        $content = q:to/END/;
-                            # these editors are gui editors
-                            # you can define multiple lines like these 
-                            # and the system will add to an array of strings 
-                            # to treat as guieditors (+= is prefered but = can be used).  
-                            guieditors  +=  gvim
-                            guieditors  +=  xemacs
-                            guieditors  +=  gedit
-                            guieditors  +=  kate
-                            
-                            
-                            
-                            # define the editor to use here probably better to use
-                            # GUI_EDITOR or VISUAL or EDITOR environmet variables 
-                            # either := or = maybe used here but := is preferred.
-                            # note also defined as a member of guieditors so that
-                            # it will be called correctly
-                            editor      :=  gvim  # is a also guieditor see above.
-
-                        END
-                        for <gvim xemacs kate gedit> -> $guieditor {
-                            @guieditors.append($guieditor);
-                        }
-                        for @guieditors -> $guieditor {
-                            $content ~= "\n        guieditors  +=  $guieditor";
-                        }
-                    } # when 'editors' #
                 }
                 $content .=trim-trailing;
                 if "$config/$file".IO !~~ :e || "$config/$file".IO.s == 0 {
@@ -88,66 +65,50 @@ sub generate-configs(Str $file) returns Bool:D {
                 "$config/$file".IO.spurt: $content, :append;
             }
         }
-        when 'editors' {
-            my Str $content = q:to/END/;
-                # these editors are gui editors
-                # you can define multiple lines like these 
-                # and the system will add to an array of strings 
-                # to treat as guieditors (+= is prefered but = can be used).  
-                guieditors  +=  gvim
-                guieditors  +=  xemacs
-                guieditors  +=  gedit
-                guieditors  +=  kate
-
-            END
-            $content .=trim-trailing;
-            for <gvim xemacs kate gedit> -> $guieditor {
-                @guieditors.append($guieditor);
-            }
-            for @guieditors -> $guieditor {
-                $content ~= "\n        guieditors  +=  $guieditor";
-            }
-            my Bool $r = $fd.put: $content;
-            "could not write $config/$file".say if ! $r;
-            $result ?&= $r;
-        } # when 'editors' #
     } # given $file #
     my Bool $r = $fd.close;
     "error closing file: $config/$file".say if ! $r;
     $result ?&= $r;
     return $result;
-} # sub generate-configs(Str $file) returns Bool:D #
-
+} # sub generate-configs(Str:D $file, Str:D $config) returns Bool:D #
 
 my Bool:D $please-edit = False;
-for @config-files -> $file {
+
+sub check-files(Str:D @cfg-files, Str:D $config --> Bool:D) {
     my Bool $result = True;
-    if "$config/$file".IO !~~ :e || "$config/$file".IO.s == 0 {
-        $please-edit = True;
-        if "/etc/skel/.local/share/syscon/$file".IO ~~ :f {
-            try {
-                CATCH {
-                    when X::IO::Copy { 
-                        "could not copy /etc/skel/.local/share/syscon/$file -> $config/$file".say;
-                        my Bool $r = generate-configs($file); 
-                        $result ?&= $r;
+    for @cfg-files -> $file {
+        if "$config/$file".IO !~~ :e || "$config/$file".IO.s == 0 {
+            $please-edit = True;
+            if "/etc/skel/.local/share/syscon/$file".IO ~~ :f {
+                try {
+                    CATCH {
+                        when X::IO::Copy { 
+                            "could not copy /etc/skel/.local/share/syscon/$file -> $config/$file".say;
+                            my Bool $r = generate-configs($file, $config); 
+                            $result ?&= $r;
+                        }
                     }
+                    my Bool $r = "/etc/skel/.local/share/syscon/$file".IO.copy("$config/$file".IO);
+                    if $r {
+                        "copied /etc/skel/.local/share/syscon/$file -> $config/$file".say;
+                    } else {
+                        "could not copy /etc/skel/.local/share/syscon/$file -> $config/$file".say;
+                    }
+                    $result ?&= $r;
                 }
-                my Bool $r = "/etc/skel/.local/share/syscon/$file".IO.copy("$config/$file".IO, :createonly);
-                if $r {
-                    "copied /etc/skel/.local/share/syscon/$file -> $config/$file".say;
-                } else {
-                    "could not copy /etc/skel/.local/share/syscon/$file -> $config/$file".say;
-                }
+            } else {
+                my Bool $r = generate-configs($file, $config);
+                "generated $config/$file".say if $r;
                 $result ?&= $r;
             }
-        } else {
-            my Bool $r = generate-configs($file);
-            "generated $config/$file".say if $r;
-            $result ?&= $r;
         }
-    }
-} # for @config-files -> $file # 
+    } # for @cfg-files -> $file # 
+    return $result;
+}
+
+unless init-gui-editors(@host-config-files, $config, &generate-configs, &check-files) {
+    exit 1;
+}
 
 #`«««
     ##################################################################
@@ -518,815 +479,6 @@ class HostValidActions does HostPortActions {
     method TOP($/) { make $/<TOP>.made }
 }
 
-# the editor to use #
-my Str $editor = '';
-my Bool:D $editor-guessed = False;
-if %*ENV<GUI_EDITOR>:exists {
-    $editor = %*ENV<GUI_EDITOR>.Str();
-} elsif %*ENV<VISUAL>:exists {
-    $editor = %*ENV<VISUAL>.Str();
-} elsif %*ENV<EDITOR>:exists {
-    $editor = %*ENV<EDITOR>.Str();
-} else {
-    my Str $gvim = qx{/usr/bin/which gvim 2> /dev/null };
-    my Str $vim  = qx{/usr/bin/which vim  2> /dev/null };
-    my Str $vi   = qx{/usr/bin/which vi   2> /dev/null };
-    if $gvim.chomp {
-        $editor = $gvim.chomp;
-        $editor-guessed = True;
-    } elsif $vim.chomp {
-        $editor = $vim.chomp;
-        $editor-guessed = True;
-    } elsif $vi.chomp {
-        $editor = $vi.chomp;
-        $editor-guessed = True;
-    }
-}
-if $please-edit {
-    edit-configs();
-    exit 0;
-}
-
-#`«««
-    ###############################################################################
-    #                                                                             #
-    #            grammars for parsing the `editors` configuration file            #
-    #                                                                             #
-    ###############################################################################
-#»»»
-
-grammar Editors {
-    regex TOP                 { [ <line> [ \v+ <line> ]* \v* ]? }
-    regex line                { [ <white-space-line> || <override-gui_editor> || <config-line> || <editor-to-use> || <comment-line> ] }
-    regex white-space-line    { ^^ \h* $$ }
-    regex override-gui_editor { ^^ \h* 'override' \h+ 'GUI_EDITOR' \h* $$ }
-    regex comment-line        { ^^ \h* '#' <-[\v]>* $$ }
-    regex config-line         { ^^ \h* 'guieditors' \h* '+'? '=' \h* <editor> \h* [ '#' <comment> \h* ]? $$ }
-    regex editor-to-use       { ^^ \h* 'editor' \h* ':'? '=' \h* <editor> \h* [ '#' <comment> \h* ]? $$ }
-    regex editor              { <editor-name> || <path> <editor-name> }
-    regex comment             { <-[\n]>* }
-    regex path                { <lead-in>  <path-segments>? }
-    regex lead-in             { [ '/' | '~' | '~/' ] }
-    regex path-segments       { <path-segment> [ '/' <path-segment> ]* '/' }
-    regex path-segment        { \w+ [ [ '-' || \h || '+' || ':' || '@' || '=' || '!' || ',' || '&' || '&' || '%' || '.' ]+ \w* ]* }
-    regex editor-name         { \w+ [ [ '-' || '+' || ':' || '@' || '=' || '!' || ',' || '&' || '&' || '%' || '.' ]+ \w* ]* }
-}
-
-class EditorsActions {
-    method white-space-line($/) {
-        my %wspln = type => 'white-space-line', value => ~$/;
-        make %wspln;
-    }
-    method comment-line($/) {
-        my %comln = type => 'comment-line', value => ~$/;
-        make %comln;
-    }
-    method editor-name($/) {
-        my $edname = ~$/;
-        make $edname;
-    }
-    method lead-in($/) {
-        my $leadin = ~$/;
-        make $leadin;
-    }
-    method path-segment($/) {
-        my $ps = ~$/;
-        make $ps;
-    }
-    method path-segments($/) {
-        my @path-seg = $/<path-segment>».made;
-        make @path-seg.join('/');
-    }
-    method path($/) {
-        my Str $ed-path = $/<lead-in>.made ~ $/<path-segments>.made;
-        make $ed-path;
-    }
-    method editor($/) {
-        my $ed-name;
-        if $/<path> {
-            $ed-name = $/<path>.made ~ '/' ~ $/<editor-name>.made;
-        } else {
-            $ed-name = $/<editor-name>.made;
-        }
-        make $ed-name;
-    }
-    method comment($/) {
-        my $comm = (~$/).trim;
-        make $comm;
-    }
-    method config-line($/) {
-        my %cfg-line = type => 'config-line', value => $/<editor>.made;
-        if $/<comment> {
-            my $com = $/<comment>.made;
-            %cfg-line«comment» = $com;
-        }
-        make %cfg-line;
-    }
-    method editor-to-use($/) {
-        my %editor-to-use = type => 'editor-to-use', value => $/<editor>.made;
-        if $/<comment> {
-            my $com = $/<comment>.made;
-            %editor-to-use«comment» = $com;
-        }
-        make %editor-to-use;
-    }
-    method override-gui_editor($/) {
-        my %override-gui_editor = type => 'override-gui_editor', value => True;
-        if $/<comment> {
-            my $com = $/<comment>.made;
-            %override-gui_editor«comment» = $com;
-        }
-        make %override-gui_editor;
-    }
-    method line($/) {
-        my %ln;
-        if $/<white-space-line> {
-            %ln = $/<white-space-line>.made;
-        } elsif $/<comment-line> {
-            %ln = $/<comment-line>.made;
-        } elsif $/<config-line> {
-            %ln = $/<config-line>.made;
-        } elsif $/<editor-to-use> {
-            %ln = $/<editor-to-use>.made;
-        } elsif $/<override-gui_editor> {
-            %ln = $/<override-gui_editor>.made;
-        }
-        make %ln;
-    }
-    method TOP($made) {
-        my @top = $made<line>».made;
-        $made.make: @top;
-    }
-} # class EditorsActions #
-
-#`«««
-    #########################################################
-    #*******************************************************#
-    #**                                                   **#
-    #**  This grammar is for parsing the usage string     **#
-    #**                                                   **#
-    #*******************************************************#
-    #########################################################
-#»»»
-
-
-grammar Paths {
-    regex path          { [ <absolute-path> || <relative-path> ] }
-    regex absolute-path { <lead-in>  <path-segments>? }
-    regex lead-in       { [ '/' || '~/' || '~' ] }
-    regex relative-path { <path-segments> }
-    regex path-segments { <path-segment> [ '/' <path-segment> ]* '/' }
-    regex path-segment  { \w+ [ [ '-' || '+' || ':' || '@' || '=' || ',' || '%' || '$' || '.' ]+ \w+ ]* }
-}
-
-role PathsActions {
-    method lead-in($/) {
-        my $leadin = ~$/;
-        make $leadin;
-    }
-    method path($/) {
-        my Str $abs-rel-path;
-        if $/<absolute-path> {
-            $abs-rel-path = $/<absolute-path>.made;
-        } elsif $/<relative-path> {
-            $abs-rel-path = $/<relative-path>.made;
-        }
-        make $abs-rel-path;
-    }
-    method absolute-path($/) {
-        my Str $abs-path = $/<lead-in>.made;
-        if $/<path-segments> {
-            $abs-path ~= $/<path-segments>.made;
-        }
-        make $abs-path;
-    }
-    method relative-path($/) {
-        my Str $rel-path = '';
-        if $/<path-segments> {
-            $rel-path ~= $/<path-segments>.made;
-        }
-        make $rel-path;
-    }
-    method path-segment($/) {
-        my $ps = ~$/;
-        make $ps;
-    }
-    method path-segments($/) {
-        my @pss = $/<path-segment>».made;
-        make @pss.join('/');
-    }
-} # role PathsActions #
-
-grammar UsageStr is Paths {
-    token TOP               { ^ 'Usage:' [ \v+ <usage-line> ]+ \v* $ }
-    token usage-line        { ^^ \h* <prog> <fixed-args-spec> <pos-spec> <optionals-spec> <slurpy-array-spec> <options-spec> <slurpy-hash-spec> \h* $$ }
-    token fixed-args-spec   { [ \h* <fixed-args> ]? }
-    token pos-spec          { [ \h* <positional-args> ]? }
-    regex optionals-spec    { [ \h* <optionals> ]? }
-    regex slurpy-array-spec { [ \h* <slurpy-array> ]? }
-    token options-spec      { [ \h* <options> ]? }
-    token slurpy-hash-spec  { [ \h* <slurpy-hash> ]? }
-    token prog              { [ <prog-name> <!before [ '/' || '~/' || '~' ] > || <path> <prog-name> ] }
-    token prog-name         { \w+ [ [ '-' || '+' || ':' || '@' || '=' || ',' || '%' || '.' ]+ \w+ ]* }
-    token fixed-args        { [ <fixed-arg> [ \h+ <fixed-arg> ]* ]? }
-    token fixed-arg         {  \w+ [ [ '-' || '+' || ':' || '.' ]+ \w+ ]* }
-    regex positional-args   { [ <positional-arg> [ \h+ <positional-arg> ]* ]? }
-    regex positional-arg    { '<' \w+ [ '-' \w+ ]* '>' }
-    regex optionals         { [ <optional> [ \h+ <optional> ]* ] }
-    regex optional          { '[<' [ \w+ [ '-' \w+ ]* ] '>]' }
-    regex slurpy-array      { [ '[<' [ \w+ [ '-' \w+ ]* ] '>' \h '...' ']' ] }
-    regex options           { [ <option> [ \h+ <option> ]* ] }
-    regex option            { [ <int-opt> || <other-opt> || <bool-opt> ] }
-    regex int-opt           { [ '[' <opts> '[=Int]]' ] }
-    regex other-opt         { [ '[' <opts> '=<' <type> '>]' ] }
-    regex bool-opt          { [ '[' <opts> ']' ] }
-    token opts              { <opt> [ '|' <opt> ]* }
-    regex opt               { [ <long-opt> || <short-opt> ] }
-    regex short-opt         { [ '-' \w ] }
-    regex long-opt          { [ '--' \w ** {2 .. Inf} [ '-' \w+ ]* ] }
-    regex type              { [ 'Str' || 'Num' || 'Rat' || 'Complex' || [ \w+ [ [ '-' || '::' ] \w+ ]* ] ] }
-    regex slurpy-hash       { [ '[--<' [ \w+ [ '-' \w+ ]* ] '>=...]' ] }
-}
-
-class UsageStrActions does PathsActions {
-    method prog($/) {
-        my $prog;
-        if $/<path> {
-            $prog = $/<path>.made ~ '/' ~ $/<prog-name>.made;
-        } else {
-            $prog = $/<prog-name>.made;
-        }
-        make $prog;
-    }
-    method prog-name($/) {
-        my $prog-name = ~$/;
-        make $prog-name;
-    }
-    method fixed-args-spec($/) {
-        my @fixed-args-spec;
-        if $/<fixed-args> {
-            @fixed-args-spec = $/<fixed-args>.made;
-        }
-        make @fixed-args-spec;
-    }
-    method fixed-args($/) {
-        my @fixed-args = $/<fixed-arg>».made;
-        make @fixed-args;
-    }
-    method fixed-arg($/) {
-        my $fixed-arg = ~$/;
-        make $fixed-arg;
-    }
-    method pos-spec($/) {
-        my @pos-spec;
-        if $/<positional-args> {
-            @pos-spec = $/<positional-args>.made;
-        }
-        make @pos-spec;
-    }
-    method positional-args($/) {
-        my @positional-args = $/<positional-arg>».made;
-        make @positional-args;
-    }
-    method positional-arg($/) {
-        my $positional-arg = ~$/;
-        make $positional-arg;
-    }
-    method optionals-spec($/) {
-        my @optionals-spec;
-        if $/<optionals> {
-            @optionals-spec = $/<optionals>.made;
-        }
-        make @optionals-spec;
-    }
-    method optionals($/) {
-        my @optionals = $/<optional>».made;
-        make @optionals;
-    }
-    method optional($/) {
-        my $optional = ~$/;
-        make $optional;
-    }
-    method slurpy-array-spec($/) {
-        my $slurpy-array-spec = '';
-        if $/<slurpy-array> {
-            $slurpy-array-spec = $/<slurpy-array>.made;
-        }
-        make $slurpy-array-spec;
-    }
-    method slurpy-array($/) {
-        my $slurpy-array = ~$/;
-        make $slurpy-array;
-    }
-    method options-spec($/) {
-        my @options-spec;
-        if $/<options> {
-            @options-spec = $/<options>.made;
-        }
-        make @options-spec;
-    }
-    method options($/) {
-        my @options = $/<option>».made;
-        make @options;
-    }
-    method option($/) {
-        my $option;
-        if $/<int-opt> {
-            $option = $/<int-opt>.made;
-        } elsif $/<other-opt> {
-            $option = $/<other-opt>.made;
-        } elsif $<bool-opt> {
-            $option = $/<bool-opt>.made;
-        }
-        make $option;
-    }
-    method int-opt($/) {
-        my $int-opt = '[' ~ $/<opts>.made ~ '[=Int]]';
-        make $int-opt;
-    }
-    method other-opt($/) {
-        my $other-opt = '[' ~ $/<opts>.made ~ '=<' ~ $/<type> ~ '>]';
-        make $other-opt;
-    }
-    method bool-opt($/) {
-        my $bool-opt = '[' ~ $/<opts>.made ~ ']';
-        make $bool-opt;
-    }
-    method opts($/) {
-        my @opts = $/<opt>».made;
-        make @opts.join('|');
-    }
-    method opt($/) {
-        my $opt;
-        if $/<short-opt> {
-            $opt = $/<short-opt>.made;
-        } elsif $/<long-opt> {
-            $opt = $/<long-opt>.made;
-        }
-        make $opt;
-    }
-    method short-opt($/) {
-        my $short-opt = ~$/;
-        make $short-opt;
-    }
-    method long-opt($/) {
-        my $long-opt = ~$/;
-        make $long-opt;
-    }
-    method type($/) {
-        my $type = ~$/;
-        make $type;
-    }
-    method slurpy-hash-spec($/) {
-        my $slurpy-hash-spec = '';
-        if $/<slurpy-hash> {
-            $slurpy-hash-spec = $/<slurpy-hash>.made;
-        }
-        make $slurpy-hash-spec;
-    }
-    method slurpy-hash($/) {
-        my $slurpy-hash = ~$/;
-        make $slurpy-hash;
-    }
-    method usage-line($/) {
-        my %line = prog => $/<prog>.made, fixed-args => $/<fixed-args-spec>.made,
-        positional-args => $/<pos-spec>.made, optionals => $/<optionals-spec>.made,
-        slurpy-array => $/<slurpy-array-spec>.made, options => $/<options-spec>.made,
-        slurpy-hash => $/<slurpy-hash-spec>.made;
-        my %usage-line = kind => 'usage-line', value => %line;
-        make %usage-line;
-    }
-    method TOP($made) {
-        my %u   = kind => 'usage', value => 'Usage:';
-        my @top = %u, |($made<usage-line>».made);
-        $made.make: @top;
-    }
-} # class UsageStrActions does PathsActions #
-
-#`«««
-    ################################################
-    #**********************************************#
-    #*                                            *#
-    #*   Grammars to Syntax Highlight Raku¹ Code  *#
-    #*                and Values.                 *#
-    #*                                            *#
-    #*  1. not complete or exhaustive.            *#
-    #*                                            *#
-    #**********************************************#
-    ################################################
-#»»»
-
-
-grammar VariablesBase {
-    token var          { [ <scalar-var> || <array-var> || <hash-var> || <callable-var> ] }
-    token scalar-var   { [ '$' <index> || '$' <twigil>? <identifier> ] }
-    token array-var    { [ '@' <index> || '@' <twigil>? <identifier> <array-derref>? ] }
-    token array-derref { [ '[' <array-index> ']' ] }
-    token array-index  { \d+ }
-    token hash-var     { [ '%' <index> || '%' <twigil>? <identifier> <hash-derref>? ] }
-    token hash-derref  { [ '«' <key0=.identifier> '»' # only support the simplest case
-                           || '<' <key1=.identifier> '>' # again only support the simplest case
-                           || '{' '$' <key2=.identifier> '}' ] }
-    token callable-var { [ '&' <index> || '&' <twigil>? <identifier> <invoked>? ] }
-    token invoked      { '(' .* ')' } # dammed crude #
-    token twigil       { [ '*' || '?' || '!' || '.' || '^' || ':' || '=' || '~' ] }
-    token index        { '<' <identifier> '>' }
-    regex identifier   { \w+ [ '-' \w+ ]* }
-}
-
-role VariablesBaseActions {
-    method identifier($/) {
-        my Str $identifier = ~$/;
-        make $identifier;
-    }
-    method array-index($/) {
-        my Int $array-index = +$/;
-        make $array-index;
-    }
-    method array-derref($/) {
-        my %array-derref = derref-type => 'array', derref-char => '[', ind => $/<array-index>.made;
-        make %array-derref;
-    }
-    method key0($/) {
-        my Str $key0 = ~$/;
-        make $key0;
-    }
-    method key1($/) {
-        my Str $key1 = ~$/;
-        make $key1;
-    }
-    method key2($/) {
-        my Str $key2 = ~$/;
-        make $key2;
-    }
-    method hash-derref($/) {
-        my %hash-derref;
-        if $/<key0> {
-            %hash-derref = derref-type => 'hash', derref-char => '«', ind => $/<key0>.made;
-        } elsif $/<key1> {
-            %hash-derref = derref-type => 'hash', derref-char => '<', ind => $/<key1>.made;
-        } elsif $/<key2> {
-            %hash-derref = derref-type => 'hash', derref-char => '{', ind => $/<key2>.made;
-        }
-        make %hash-derref;
-    }
-    method invoked($/) {
-        my %invoked = derref-type => 'invoked', derref-char => '(', ind => ~$/;
-    }
-    method index($/) {
-        my %index = type => 'index', sigil => 'TBO', twigil => '<', name => $/<identifier>.made;
-        make %index;
-    }
-    method twigil($/) {
-        my $twigil = ~$/;
-        make $twigil;
-    }
-    method scalar-var($/) {
-        my %scalar-var;
-        if $/<index> {
-            %scalar-var = $/<index>.made;
-            %scalar-var«type» = 'scalar-var';
-            %scalar-var«sigil» = '$';
-        } elsif $/<twigil> {
-            %scalar-var = type => 'scalar-var', sigil => '$', twigil => $/<twigil>.made, name => $/<identifier>.made;
-        } else {
-            %scalar-var = type => 'scalar-var', sigil => '$', twigil => '', name => $/<identifier>.made;
-        }
-        make %scalar-var;
-    }
-    method array-var($/) {
-        my %array-var;
-        if $/<index> {
-            %array-var = $/<index>.made;
-            %array-var«type» = 'array-var';
-            %array-var«sigil» = '@';
-        } elsif $/<twigil> {
-            %array-var = type => 'array-var', sigil => '@', twigil => $/<twigil>.made, name => $/<identifier>.made, derref => {};
-        } else {
-            %array-var = type => 'array-var', sigil => '@', twigil => '', name => $/<identifier>.made, derref => {};
-        }
-        if $/<array-derref> {
-            %array-var«derref» = $/<array-derref>.made;
-        }
-        make %array-var;
-    }
-    method hash-var($/) {
-        my %hash-var;
-        if $/<index> {
-            %hash-var = $/<index>.made;
-            %hash-var«type» = 'hash-var';
-            %hash-var«sigil» = '%';
-        } elsif $/<twigil> {
-            %hash-var = type => 'hash-var', sigil => '%', twigil => $/<twigil>.made, name => $/<identifier>.made, derref => {};
-        } else {
-            %hash-var = type => 'hash-var', sigil => '%', twigil => '', name => $/<identifier>.made, derref => {};
-        }
-        if $/<hash-derref> {
-            %hash-var«derref» = $/<hash-derref>.made;
-        }
-        make %hash-var;
-    }
-    method callable-var($/) {
-        my %callable-var;
-        if $/<index> {
-            %callable-var = $/<index>.made;
-            %callable-var«type» = 'callable-var';
-            %callable-var«sigil» = '&';
-        } elsif $/<twigil> {
-            %callable-var = type => 'callable-var', sigil => '&', twigil => $/<twigil>.made, name => $/<identifier>.made;
-        } else {
-            %callable-var = type => 'callable-var', sigil => '&', twigil => '', name => $/<identifier>.made;
-        }
-        make %callable-var;
-    }
-    method var($made) {
-        my %var;
-        if $made<scalar-var> {
-            %var = $made<scalar-var>.made;
-        } elsif $made<array-var> {
-            %var = $made<array-var>.made;
-        } elsif $made<hash-var> {
-            %var = $made<hash-var>.made;
-        } elsif $made<callable-var> {
-            %var = $made<callable-var>.made;
-        } else {
-            %var = type => 'Failed', sigil => 'Bad-var', twigil => '', name => 'Error bad value: ' ~ ~$made;
-        }
-        $made.make: %var;
-
-    }
-} # role VariablesBaseActions #
-
-grammar Variables is VariablesBase {
-    token TOP { <var> }
-}
-
-class VariablesActions does VariablesBaseActions {
-    method TOP($made) {
-        my %spec = $made<var>.made;
-        my Str $top = t.color(255,0,0) ~ %spec«sigil»;
-        if %spec«twigil» eq '<' {
-            $top ~= t.color(0,255,255) ~ '<' ~ %spec«name» ~ '>';
-        } elsif %spec«type» eq 'Failed' {
-            $top ~= t.color(255,0,0) ~ %spec«name»;
-        } else {
-            $top ~= %spec«twigil» ~ t.color(0,255,255) ~ %spec«name»;
-        }
-        if %spec«derref»:exists && (%spec«derref»«derref-char»:exists) {
-            if %spec«derref»«derref-char» eq '[' {
-                $top ~= t.color(255,0,0) ~ '[' ~ t.color(255,0,255) ~ %spec«derref»«ind» ~ t.color(255,0,0) ~ ']';
-            } elsif %spec«derref»«derref-char» eq '«' {
-                $top ~= t.color(255,74,0) ~ '«' ~ %spec«derref»«ind» ~ '»';
-            } elsif %spec«derref»«derref-char» eq '<' {
-                $top ~= t.color(255,0,0) ~ '<' ~ t.color(255,0,255) ~ %spec«derref»«ind» ~ t.color(255,0,0) ~ '>';
-            } elsif %spec«derref»«derref-char» eq '{' {
-                $top ~= t.color(255,0,0) ~ '{$' ~ t.color(255,0,255) ~ %spec«derref»«ind» ~ t.color(255,0,0) ~ '}';
-            } elsif %spec«derref»«derref-char» eq '(' {
-                $top ~= t.color(255,0,0) ~ '(' ~ t.color(255,0,255) ~ %spec«derref»«ind» ~ t.color(255,0,0) ~ ')';
-            }
-        }
-        $made.make: $top;
-    }
-}
-
-
-grammar ValueBase {
-    token value       { <space> [ <array-val> || <hash-val> || <scalar-val> ] <space-after=.space> }
-    token array-val   { '[' [ <space> [ <value> ]+ %% ',' ]? <space-after=.space> ']' }
-    token hash-val    { '{' [ <space> [ <pair> ]+ %% ',' ]? <space-after=.space> '}' }
-    token space       { \h* }
-    token pair        { [ <pair0> || <pair1> ] }
-    token pair0       { <key> \h+ '=>' \h+ <value> }
-    token pair1       { ':' <key> '(' <value> ')' }
-    token key         { \w+ [ '-' \w+ ]* }
-    token scalar-val  { [ <int-val> || <rat-val> || <num-val> || <bool-val> || <bare-word> || <string> ] }
-    token int-val     { \d+ }
-    token rat-val     { <numerator> '/' <denominator> }
-    token numerator   { \d+ }
-    token denominator { \d+ }
-    token num-val     { [ <mantisa> <exponent>? || <integer> <exponent> ] }
-    token mantisa     { [ '.' \d+ || \d+ '.' \d* ] }
-    token exponent    { <signifitant> <sign>? <integer> }
-    token signifitant { [ 'e' || 'E' ] }
-    token integer     { \d+ }
-    token sign        { [ '+' || '-' ] }
-    token bool-val    { [ 'True' || 'False' ] }
-    token bare-word   { '/'? \w+ [ [ '-' || '/' ] \w+ ]* '/'? }
-    # lots of string stuff missing here  like q and qq strings etc ... #
-    token string      { [ '"' <string-body> '"' || "'" <single-body> "'" ] }
-    token string-body { [ <-["]>* [ <?after '\\' > '"' <-["]>* ]* ]? }
-    token single-body { [ <-[']>* [ <?after '\\' > "'" <-[']>* ]* ]? }
-}
-
-role ValueBaseActions {
-    method space-after($/) {
-        my %space-after = $/<space>.made;
-        make %space-after;
-    }
-    method space($/) {
-        my %space = type => 'space', val => ~$/;
-        make %space;
-    }
-    method key($/) {
-        my $key = ~$/;
-        make $key;
-    }
-    method int-val($/) {
-        my Int %int-val = type => 'int', val => +$/;
-        make %int-val;
-    }
-    method numerator($/) {
-        my Int $numerator = +$/;
-        make $numerator;
-    }
-    method denominator($/) {
-        my Int $denominator = +$/;
-        make $denominator;
-    }
-    method integer($/) {
-        my Int $integer = +$/;
-        make $integer;
-    }
-    method rat-val($/) {
-        my %rat-val = type => 'rat-val', numerator => $/<numerator>.made, denominator => $/<denominator>.made;
-        make %rat-val;
-    }
-    method mantisa($/) {
-        my Num $mantisa = +$/;
-        make $mantisa;
-    }
-    method sign($/) {
-        my Str $sign = ~$/;
-        make $sign;
-    }
-    method signifitant($/) {
-        my Str $signifitant = ~$/;
-        make $signifitant;
-    }
-    method exponent($/) {
-        my %exponent = signifitant => $/<signifitant>.made, sign => '', exp => $/<integer>.made;
-        if $/<sign> {
-            %exponent«sign» = $/<sign>.made;
-        }
-        make %exponent;
-    }
-    method num-val($/) {
-        my %num-val;
-        my %exp;
-        if $/<exponent> {
-            %exp = $/<exponent>.made;
-        }
-        if $/<mantisa> {
-            %num-val = type => 'num', mantisa => $/<mantisa>.made, exponent => %exp;
-        } elsif $/<integer> {
-            %num-val = type => 'num', mantisa => $/<integer>.made, exponent => %exp;
-        }
-        make %num-val;
-    }
-    method bool-val($/) {
-        my %bool-val = type => 'bool', val => ~$/;
-        make %bool-val;
-    }
-    method bare-word($/) {
-        my %bare-word = type => 'bare-word', val => ~$/;
-        make %bare-word;
-    }
-    method string-body($/) {
-        my Str $string-body = ~$/;
-        make $string-body;
-    }
-    method single-body($/) {
-        my Str $single-body = ~$/;
-        make $single-body;
-    }
-    method string($/) {
-        my %string;
-        if $/<string-body> {
-            %string = type => 'string', open => '"', close => '"', val => $/<string-body>.made;
-        } elsif $/<single-body> {
-            %string = type => 'string', open => "'", close => "'", val => $/<single-body>.made;
-        }
-        make %string;
-    }
-    #token scalar-val  { [ <int-val> || <rat-val> || <num-val> || <bare-word> || <string> ] }
-    method scalar-val($/) {
-        my %scalar-val;
-        if $/<int-val> {
-            %scalar-val = $/<int-val>.made;
-        } elsif $/<rat-val> {
-            %scalar-val = $/<rat-val>.made;
-        } elsif $/<num-val> {
-            %scalar-val = $/<num-val>.made;
-        } elsif $/<bool-val> {
-            %scalar-val = $/<bool-val>.made;
-        } elsif $/<bare-word> {
-            %scalar-val = $/<bare-word>.made;
-        } elsif $/<string> {
-            %scalar-val = $/<string>.made;
-        }
-        make %scalar-val;
-    }
-    #token array-val   { '[' [ [ \h+ <value> ]+ %% ',' ]? ']' }
-    method array-val($/) {
-        my %array-val = type => 'array-val', val => $/<value>».made, a-space => $/<space>.made, a-space-after => $/<space-after>.made;
-        make %array-val;
-    }
-    #token pair0       { <key> \h+ '=>' \h+ <value> }
-    method pair0($/) {
-        my %pair0 = type => 'pair0', key => $/<key>.made, val => $/<value>.made;
-        make %pair0;
-    }
-    #token pair1       { ':' <key> '(' <value> ')' }
-    method pair1($/) {
-        my %pair1 = type => 'pair1', key => $/<key>.made, val => $/<value>.made;
-        make %pair1;
-    }
-    #token pair        { [ <pair0> || <pair1> ] }
-    method pair($/) {
-        my %pair;
-        if $/<pair0> {
-            %pair = $/<pair0>.made;
-        } elsif $/<pair1> {
-            %pair = $/<pair1>.made;
-        }
-        make %pair;
-    }
-    #token hash-val    { '{' [ [ \h+ <pair> ]+ %% ',' ]? '}' }
-    method hash-val($/) {
-        my %hash-val = type => 'hash-val', val => $/<pair>».made, h-space => $/<space>.made, h-space-after => $/<space-after>.made;
-        make %hash-val;
-    }
-    #token value       { [ <array-val> || <hash-val> || <scalar-val> ] }
-    method value($/) {
-        my %value;
-        if $/<array-val> {
-            %value = |$/<array-val>.made, space => $/<space>.made, space-after => $/<space-after>.made;
-        } elsif $/<hash-val> {
-            %value = $/<hash-val>.made, space => $/<space>.made, space-after => $/<space-after>.made;
-        } elsif $/<scalar-val> {
-            %value = |$/<scalar-val>.made, space => $/<space>.made, space-after => $/<space-after>.made;
-        }
-        make %value;
-    }
-} # role ValueBaseActions does KeyActions #
-
-grammar Value is ValueBase {
-    token TOP            { ^ <value> $ }
-}
-
-class ValueActions does ValueBaseActions {
-    method !highlight(%spec) {
-        my $highlight = '';
-        $highlight ~= %spec«space»«val» if %spec«space»;
-        if %spec«type» eq 'int' {
-            $highlight ~= t.color(255, 0, 255) ~ %spec«val»;
-        } elsif %spec«type» eq 'rat-val' {
-            $highlight ~= t.color(255, 0, 255) ~ %spec«numerator» ~ '/' ~ %spec«denominator»;
-        } elsif %spec«type» eq 'num' {
-            $highlight ~= t.color(255, 0, 255) ~ %spec«mantisa»;
-            $highlight ~= %spec«exponent»«signifitant» ~ %spec«exponent»«sign» ~ %spec«exponent»«exp» if %spec«exponent»;
-        } elsif %spec«type» eq 'bool' {
-            $highlight ~= t.color(255, 0, 255) ~ %spec«val»;
-        } elsif %spec«type» eq 'bare-word' {
-            $highlight ~= t.color(255, 0, 255) ~ %spec«val»;
-        } elsif %spec«type» eq 'string' {
-            $highlight ~= t.color(255, 0, 255) ~ %spec«open» ~ %spec«val» ~ %spec«close»;
-        } elsif %spec«type» eq 'array-val' {
-            $highlight ~= t.color(255, 0, 0) ~  '[';
-            $highlight ~= %spec«a-space»«val» if %spec«a-space»;
-            my Str:D $sep = '';
-            my @vals = |%spec«val»;
-            for @vals -> %val {
-                $highlight ~= t.color(255, 0, 0) ~ $sep ~ self!highlight(%val);
-                $sep = ',';
-            }
-            $highlight ~= %spec«a-space-after»«val» if %spec«a-space-after»;
-            $highlight ~= t.color(255, 0, 0) ~ ']';
-        } elsif %spec«type» eq 'hash-val' {
-            $highlight ~= t.color(255, 0, 0) ~  '{';
-            $highlight ~= %spec«h-space»«val» if %spec«h-space»;
-            my Str:D $sep = '';
-            my @vals = |%spec«val»;
-            for @vals -> %val {
-                $highlight ~= t.color(255, 0, 0) ~ $sep ~ self!highlight(%val);
-                $sep = ',';
-            }
-            $highlight ~= %spec«h-space-after»«val» if %spec«h-space-after»;
-            $highlight ~= t.color(255, 0, 0) ~ '}';
-        } elsif %spec«type» eq 'pair0' {
-            $highlight ~= t.color(255, 0, 255) ~ %spec«key» ~ t.color(255, 0, 0) ~ ' => ' ~ self!highlight(%spec«val»);
-        } elsif %spec«type» eq 'pair1' {
-            $highlight ~= t.color(255, 0, 0) ~ ':' ~ t.color(255, 0, 255) ~ %spec«key» ~ t.color(255, 0, 0) ~ '(' ~ self!highlight(%spec«val») ~ t.color(255, 0, 0) ~ ')';
-        }
-        $highlight ~= %spec«space-after»«val» if %spec«space-after»;
-        return $highlight;
-    }
-    method TOP($made) {
-        my %spec = $made<value>.made;
-        my Str $top = self!highlight(%spec);
-        $made.make: $top;
-    }
-} # class ValueActions does ValueBaseActions #
 
 my Str  @LINES     = slurp("$config/hosts.h_ts").split("\n");
 #dd @LINES;
@@ -1362,56 +514,6 @@ my %stats;
 #my Hash %the-lot = $test.List;
 #my Hash %the-lot   = HostsFile.parse(@lines.join("\n"), actions  => HostFileActions.new).made;
 
-# The default name of the gui editor #
-my $edactions = EditorsActions;
-my @editors-file = "$config/editors".IO.slurp.split("\n");
-#dd @editors-file;
-#my $edtest = Editors.parse(@editors-file.join("\x0A"), :enc('UTF-8'), :actions($edactions)).made;
-#dd $edtest;
-my @GUIEDITORS = Editors.parse(@editors-file.join("\x0A"), :enc('UTF-8'), :actions($edactions)).made;
-my @gui-editors = @GUIEDITORS.grep( -> %l { %l«type» eq 'config-line' } ).map: -> %ln { %ln«value»; };
-my @default-editors = @GUIEDITORS.grep( -> %l { %l«type» eq 'editor-to-use' } ).map: -> %ln { %ln«value»; };
-if @default-editors > 1 {
-    $*ERR.say: "Error: file $config/editors is miss configured  more than one editor defined should be 0 or 1";
-}
-my Bool:D $override-GUI_EDITOR = False;
-my @override-gui_editor = @GUIEDITORS.grep( -> %l { %l«type» eq 'override-gui_editor' } ).map: -> %ln { %ln«value»; };
-if @override-gui_editor > 1 {
-    my Int:D $elems = @override-gui_editor.elems;
-    $*ERR.say: qq[Make up your mind only one "override GUI_EDITOR" is required, you supplied $elems are you insane???];
-    $override-GUI_EDITOR = True;
-} elsif @override-gui_editor == 1 {
-    $override-GUI_EDITOR = True;
-}
-#my Str @gui-editors = slurp("$config/editors").split("\n").map( { my Str $e = $_; $e ~~ s/ '#' .* $$ //; $e } ).map( { $_.trim() } ).grep: { !rx/ [ ^^ \s* '#' .* $$ || ^^ \s* $$ ] / };
-#my Str @guieditors;
-#@gui-editors.raku.say;
-if @gui-editors {
-    #@gui-editors.raku.say;
-    for @gui-editors -> $geditor {
-        if !@guieditors.grep: { $geditor } {
-            my Str $guieditor = $geditor;
-            $guieditor .=trim;
-            @guieditors.append($guieditor);
-        }
-    }
-}
-
-my Str:D $GUI_EDITOR = ((%*ENV<GUI_EDITOR>:exists) ?? ~%*ENV<GUI_EDITOR> !! '');
-my Str:D $VISUAL = ((%*ENV<VISUAL>:exists) ?? ~%*ENV<VISUAL> !! '');
-my Str:D $EDITOR = ((%*ENV<EDITOR>:exists) ?? ~%*ENV<EDITOR> !! '');
-
-if $override-GUI_EDITOR && @default-editors {
-    $editor = @default-editors[@default-editors - 1];
-}elsif %*ENV<GUI_EDITOR>:exists {
-    my Str $guieditor = ~%*ENV<GUI_EDITOR>;
-    if ! @guieditors.grep( { $_ eq $guieditor.IO.basename } ) {
-        @guieditors.prepend($guieditor.IO.basename);
-    }
-} elsif $editor-guessed && @default-editors {
-    $editor = @default-editors[@default-editors - 1];
-}
-
 #`«««
     ##################################
     #********************************#
@@ -1432,37 +534,6 @@ sub valid-key(Str:D $key --> Bool) is export {
     return $key eq $match;
 }
 
-
-sub edit-configs() returns Bool:D is export {
-    if $editor {
-        my $option = '';
-        my @args;
-        my $edbase = $editor.IO.basename;
-        if $edbase eq 'gvim' {
-            $option = '-p';
-            @args.append('-p');
-        }
-        my Str $cmd = "$editor $option ";
-        @args.append(|@config-files);
-        for @config-files -> $file {
-            $cmd ~= "'$config/$file' ";
-        }
-        $cmd ~= '&' if @guieditors.grep: { rx/ ^^ $edbase $$ / };
-        chdir($config.IO);
-        #my $proc = run( :in => '/dev/tty', :out => '/dev/tty', :err => '/dev/tty', $editor, |@args);
-        my $proc = run($editor, |@args);
-        return $proc.exitcode == 0 || $proc.exitcode == -1;
-    } else {
-        $*ERR.say: "no editor found please set GUI_EDITOR, VISUAL or EDITOR to your preferred editor.";
-        $*ERR.say: "e.g. export GUI_EDITOR=/usr/bin/gvim";
-        $*ERR.say: "or set editor in the $config/editors file this can be done with the set editor command.";
-        $*ERR.say: qq[NB: the editor will be set by first checking GUI_EDITOR then VISUAL then EDITOR and
-                    finally editor in the config file so GUI_EDITOR will win over all.
-                    Unless you supply the "override GUI_EDITOR" directive in the $config/editors file
-                    and also supplied the "editor := <editor>" directive];
-        return False;
-    }
-}
 
 sub list-keys(Str $prefix, Regex:D $pattern --> Array[Str]) is export {
     my Str @keys;
@@ -1623,22 +694,6 @@ sub say-list-keys(Str $prefix, Bool:D $colour is copy, Bool:D $syntax, Regex:D $
     return True;
 } # sub say-list-keys(Str $prefix, Bool:D $colour is copy, Bool:D $syntax, Regex:D $pattern, Int:D $page-length --> Bool:D) is export #
 
-sub centre(Str:D $text, Int:D $width is copy, Str:D $fill = ' ', Str:D :$ref = $text --> Str) {
-    my Str $result = $text;
-    $width -= wcswidth($ref);
-    $width = $width div wcswidth($fill);
-    my Int:D $w  = $width div 2;
-    $result = $fill x $w ~ $result ~ $fill x ($width - $w);
-    return $result;
-} # sub centre(Str:D $text, Int:D $width is copy, Str:D $fill = ' ', Str:D :$ref = $text --> Str) #
-
-sub left(Str:D $text, Int:D $width, Str:D $fill = ' ', Str:D :$ref = $text --> Str) {
-    my Int:D $w  = wcswidth($ref);
-    my Int:D $l  = ($width - $w).abs;
-    my Str:D $result = $text ~ ($fill x $l);
-    return $result;
-} # sub left(Str:D $text, Int:D $width is copy, Str:D $fill = ' ', Str:D :$ref = $text --> Str) #
-
 sub list-all(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool:D) is export {
     $colour = True if $syntax;
     my Str @result;
@@ -1772,6 +827,7 @@ sub list-all(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $page-
         }
     } # for %the-lot.kv -> $key, %val #
     my Int:D $width = $key-width + $host-width + $port-width + $comment-width + 11;
+    #dd $width;
     ########################
     #                      #
     #        Header        #
@@ -1781,12 +837,12 @@ sub list-all(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $page-
         if $comment-present {
             put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s sep %-*s : %-*s # %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port', $comment-width, 'comment') ~ t.text-reset;
             $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ ('=' x $width) ~ t.text-reset;
             $cnt++;
         } else {
             put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s sep %-*s : %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port') ~ t.text-reset;
             $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
+            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ ('=' x $width) ~ t.text-reset;
             $cnt++;
         }
     } else {
@@ -2031,6 +1087,12 @@ sub list-hosts(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $pag
         if $colour {
             put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ sprintf("%-*s", $width, $value) ~ t.text-reset;
             $cnt++;
+            ##########################################
+            #                                        #
+            #    print page ending and beginning     #
+            #    to make pages.                      #
+            #                                        #
+            ##########################################
             if $cnt % $page-length == 0 {
                 if $comment-present {
                     put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.color(0, 0, 255) ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
@@ -2085,12 +1147,18 @@ sub list-hosts(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $pag
     return True;
 } # sub list-hosts(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool:D) is export #
 
-sub list-by-both(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pattern --> Bool:D) is export {
+sub list-by-both(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool:D) is export {
+    $colour = True if $syntax;
     my Str @result;
     my Int:D $key-width        = 0;
     my Int:D $host-width       = 0;
     my Int:D $port-width       = 0;
     my Int:D $comment-width    = 0;
+    ############################################
+    #                                          #
+    #    calculate the widths for each field   #
+    #                                          #
+    ############################################
     for %the-lot.kv -> $key, %val {
         my Str $host      = %val«host»;
         my Str $type      = %val«type»;
@@ -2121,7 +1189,13 @@ sub list-by-both(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pat
     $host-width    += 2;
     $port-width    += 2;
     $comment-width += 2;
+    my Int:D $width = $key-width + $host-width + $port-width + $comment-width + 11;
     my Bool:D $comment-present = False;
+    ############################################
+    #                                          #
+    #             Colect the data              #
+    #                                          #
+    ############################################
     for %the-lot.kv -> $key, %val {
         my Str:D $host     = %val«host»;
         my Str:D $type     = %val«type»;
@@ -2140,16 +1214,68 @@ sub list-by-both(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pat
         }
         if ($key.starts-with($prefix, :ignorecase) && $key ~~ $pattern) || ($host.starts-with("$prefix", :ignorecase) && $host ~~ $pattern) {
             my Str   $comment   = %val«comment» // Str;
-            with $comment {
-                @result.push(sprintf("%-*s %s %-*s : %-*s # %-*s", $key-width, $key, (($port == 0) ?? '-->' !! " =>"), $host-width, $host, $port-width, (($port == 0) ?? '--' !! "$port"), $comment-width, $comment));
-                $comment-present = True;
+            my Str:D $cline = '';
+            if $colour {
+                if $syntax {
+                    with $comment {
+                        $cline ~= t.color(0,255,255) ~ sprintf("%-*s", $key-width, $key);
+                        $cline ~= t.red ~ sprintf(" %s", (($port == 0) ?? '-->' !! " =>"));
+                        $cline ~= (($port == 0) ?? t.color(0,255,255) !! t.color(255,0,255)) ~ sprintf(" %-*s", $host-width, $host);
+                        if $port == 0 {
+                            $cline ~= t.red ~ '   ';
+                            $cline ~= t.color(255,0,255) ~ sprintf("%-*s", $port-width, '');
+                        } else {
+                            $cline ~= t.red ~ ' : ';
+                            $cline ~= t.color(255,0,255) ~ sprintf("%-*s", $port-width, $port);
+                        }
+                        $cline ~= t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, $comment);
+                        $comment-present = True;
+                    } else {
+                        $cline ~= t.color(0,255,255) ~ sprintf("%-*s", $key-width, $key);
+                        $cline ~= t.red ~ sprintf(" %s", (($port == 0) ?? '-->' !! " =>"));
+                        $cline ~= (($port == 0) ?? t.color(0,255,255) !! t.color(255,0,255)) ~ sprintf(" %-*s", $host-width, $host);
+                        if $port == 0 {
+                            $cline ~= t.red ~ '   ';
+                            $cline ~= t.color(255,0,255) ~ sprintf("%-*s", $port-width, '');
+                        } else {
+                            $cline ~= t.red ~ ' : ';
+                            $cline ~= t.color(255,0,255) ~ sprintf("%-*s", $port-width, $port);
+                        }
+                        $cline ~= t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, '');
+                    }
+                } else {
+                    with $comment {
+                        if $port == 0 {
+                            $cline ~= t.color(0,0,255) ~ sprintf("%-*s %s %-*s   %-*s # %-*s", $key-width, $key, '-->', $host-width, $host, $port-width, '', $comment-width, $comment);
+                        } else {
+                            $cline ~= t.color(0,0,255) ~ sprintf("%-*s %s %-*s : %-*d # %-*s", $key-width, $key, " =>", $host-width, $host, $port-width, $port, $comment-width, $comment);
+                        }
+                        $comment-present = True;
+                    } else {
+                        if $port == 0 {
+                            $cline ~= t.color(0, 0, 255) ~ sprintf("%-*s %s %-*s   %-*s # %-*s", $key-width, $key, '-->', $host-width, $host, $port-width, '', $comment-width, '');
+                        } else {
+                            $cline ~= t.color(0, 0, 255) ~ sprintf("%-*s %s %-*s : %-*d # %-*s", $key-width, $key, " =>", $host-width, $host, $port-width, $port, $comment-width, '');
+                        }
+                    }
+                }
             } else {
-                @result.push(sprintf("%-*s %s %-*s : %-*s", $key-width, $key, (($port == 0) ?? '-->' !! " =>"), $host-width, $host, $port-width, (($port == 0) ?? '--' !! "$port")));
+                with $comment {
+                    $cline ~= sprintf("%-*s %s %-*s : %-*s # %-*s", $key-width, $key, (($port == 0) ?? '-->' !! " =>"), $host-width, $host, $port-width, (($port == 0) ?? '' !! "$port"), $comment-width, $comment);
+                    $comment-present = True;
+                } else {
+                    $cline ~= sprintf("%-*s %s %-*s : %-*s", $key-width, $key, (($port == 0) ?? '-->' !! " =>"), $host-width, $host, $port-width, (($port == 0) ?? '--' !! "$port"));
+                }
             }
-        }
+            @result.push($cline);
+        } # if ($key.starts-with($prefix, :ignorecase) && $key ~~ $pattern) || ($host.starts-with("$prefix", :ignorecase) && $host ~~ $pattern) #
     } # for %the-lot.kv -> $key, %val #
-    my Int:D $width = $key-width + $host-width + $port-width + $comment-width + 11;
     my Int:D $cnt = 0;
+    ##################
+    #                #
+    #  print header  #
+    #                #
+    ##################
     if $colour {
         if $comment-present {
             put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s sep %-*s : %-*s # %-*s", $key-width, 'key', $host-width, 'host', $port-width, 'port', $comment-width, 'comment') ~ t.text-reset;
@@ -2179,6 +1305,12 @@ sub list-by-both(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pat
         if $colour {
             put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, $value) ~ t.text-reset;
             $cnt++;
+            ##########################################
+            #                                        #
+            #    print page ending and beginning     #
+            #    to make pages.                      #
+            #                                        #
+            ##########################################
             if $cnt % $page-length == 0 {
                 if $comment-present {
                     put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
@@ -2199,6 +1331,12 @@ sub list-by-both(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pat
         } else { # if $colour #
             $value.say;
             $cnt++;
+            ##########################################
+            #                                        #
+            #    print page ending and beginning     #
+            #    to make pages.                      #
+            #                                        #
+            ##########################################
             if $cnt % $page-length == 0 {
                 if $comment-present {
                     say '=' x $width;
@@ -2225,7 +1363,7 @@ sub list-by-both(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pat
         "".say;
     }
     return True;
-} # sub list-by-both(Str:D $prefix, Bool:D $colour, Int:D $page-length, Regex:D $pattern --> Bool:D) is export #
+} # sub list-by-both(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool:D) is export #
 
 sub list-commented(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export {
     $colour = True if $syntax;
@@ -2541,7 +1679,7 @@ sub stats(Bool:D $colour is copy, Bool:D $syntax --> Bool:D) is export {
         printf("number of elts in db:             %-10s\n", $size);
         printf("number of hosts in db:            %-10s\n", $hosts);
         printf("number of aliases in db:          %-10s\n", $aliases);
-        printf("%-44s", '');
+        printf("%-44s\n", '');
     }
     return True;
 } # sub stats(Bool:D $colour is copy, Bool:D $syntax --> Bool:D) is export #
@@ -3087,185 +2225,6 @@ sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy, Bool:D $overwrit
 } # sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy, Bool:D $overwrite-hosts, Str $comment is copy --> Bool) is export #
 
 #`«««
-    ##################################
-    #********************************#
-    #*                              *#
-    #*       Editor functions       *#
-    #*                              *#
-    #********************************#
-    ##################################
-#»»»
-
-sub list-editors(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export {
-    $colour = True if $syntax;
-    my Int:D $cnt = 0;
-    my Str:D $mark = '';
-    if $colour {
-        if $syntax {
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-30s %-14s", 'editors', 'actual editor') ~ t.text-reset;
-            $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-45s", '#' x 45) ~ t.text-reset;
-            $cnt++;
-            for @guieditors -> $ed {
-                if $editor.trim.IO.basename eq $ed.trim.IO.basename {
-                    $mark = '*';
-                } else {
-                    $mark = '';
-                }
-                put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,255,0) ~ sprintf("%-30s ", $ed) ~ t.color(255,0,255) ~ sprintf("%-14s", $mark) ~ t.text-reset;
-                $cnt++;
-            } # @guieditors -> $ed #
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-45s", '') ~ t.text-reset;
-            $cnt++;
-        } else { # if $syntax #
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-30s %-14s", 'editors', 'actual editor') ~ t.text-reset;
-            $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-45s", '#' x 45) ~ t.text-reset;
-            $cnt++;
-            for @guieditors -> $ed {
-                if $editor.trim.IO.basename eq $ed.trim.IO.basename {
-                    $mark = '*';
-                } else {
-                    $mark = '';
-                }
-                put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-30s %-14s", $ed, $mark) ~ t.text-reset;
-                $cnt++;
-            } # @guieditors -> $ed #
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-45s", '') ~ t.text-reset;
-            $cnt++;
-        } # if $syntax else #
-    } else { # if $colour #
-        printf "%-30s %-10s\n", 'editors', 'actual editor';
-        ('#' x 44).say;
-        for @guieditors -> $ed {
-            if $editor.trim.IO.basename eq $ed.trim.IO.basename {
-                printf "%-30s %-10s\n", $ed, '*';
-            } else {
-                $ed.say;
-            }
-        } # @guieditors -> $ed #
-        ''.say;
-    } # if $colour else #
-    return True;
-} # sub list-editors(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export #
-
-sub list-editors-file(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export {
-    $colour = True if $syntax;
-    my Int:D $cnt = 0;
-    my Str:D $mark = '';
-    if $colour {
-        if $syntax {
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-30s %-14s", 'editors', 'actual editor') ~ t.text-reset;
-            $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-45s", '#' x 45) ~ t.text-reset;
-            $cnt++;
-            for @gui-editors -> $ed {
-                if $editor.trim.IO.basename eq $ed.trim.IO.basename {
-                    $mark = '*';
-                } else {
-                    $mark = '';
-                }
-                put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,255,0) ~ sprintf("%-30s ", $ed) ~ t.color(255,0,0) ~ sprintf("%-14s", $mark) ~ t.text-reset;
-                $cnt++;
-            } # @gui-editors -> $ed #
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-45s", '') ~ t.text-reset;
-            $cnt++;
-        } else { # if $syntax #
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-30s %-14s", 'editors', 'actual editor') ~ t.text-reset;
-            $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-45s", '#' x 45) ~ t.text-reset;
-            $cnt++;
-            for @gui-editors -> $ed {
-                if $editor.trim.IO.basename eq $ed.trim.IO.basename {
-                    $mark = '*';
-                } else {
-                    $mark = '';
-                }
-                put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-30s %-14s", $ed, $mark) ~ t.text-reset;
-                $cnt++;
-            } # @gui-editors -> $ed #
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-45s", '') ~ t.text-reset;
-            $cnt++;
-        } # if $syntax else #
-    } else { # if $colour #
-        printf "%-30s %-10s\n", 'editors', 'actual editor';
-        ('#' x 44).say;
-        for @gui-editors -> $ed {
-            if $editor.trim.IO.basename eq $ed.trim.IO.basename {
-                printf "%-30s %-10s\n", $ed, '*';
-            } else {
-                $ed.say;
-            }
-        } # @gui-editors -> $ed #
-        ''.say;
-    } # if $colour else #
-    return True;
-} # sub list-editors-file(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export #
-
-sub editors-stats(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export {
-    $colour = True if $syntax;
-    my Int:D $cnt = 0;
-    my Str:D $mark = '';
-    my %editors = '%*ENV«GUI_EDITOR»' => $GUI_EDITOR,
-                  '%*ENV<VISUAL>' => $VISUAL,
-                  '%*ENV<EDITOR>' => $EDITOR,
-                  '$editor' => $editor,
-                  '$override-GUI_EDITOR' => $override-GUI_EDITOR,
-                  '@default-editors' => '[ "' ~ @default-editors.join('", "') ~ '" ]', 
-                  '@override-gui_editor' => '[' ~ @override-gui_editor.join(', ') ~ ']';
-    my Int:D $var-width        = 0;
-    my Int:D $value-width      = 0;
-    for %editors.kv -> $var, $value {
-        $var-width         = max($var-width,     wcswidth($var));
-        $value-width       = max($value-width,   wcswidth($value));
-    } # for %editors.kv -> $var, $value #
-    $var-width = max($var-width,  30);
-    $var-width     += 2;
-    $value-width   += 2;
-    my Int:D $width = $var-width + $value-width + 4;
-    if $colour {
-        if $syntax {
-            my $actions = VariablesActions;
-            my $v-actions = ValueActions;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s => %-*s", $var-width, 'variable', $value-width, 'value') ~ t.text-reset;
-            $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, '#' x $width) ~ t.text-reset;
-            $cnt++;
-            for %editors.keys.sort -> $var {
-                my $value = %editors{$var};
-                my $highlightedvar = Variables.parse($var, :enc('UTF-8'), :$actions).made;
-                my $highlightedvalue = Value.parse($value, :enc('UTF-8'), :actions($v-actions)).made;
-                put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ left($highlightedvar, $var-width, :ref($var)) ~ t.red ~ ' => ' ~ left($highlightedvalue, $value-width, :ref("$value")) ~ t.text-reset;
-                $cnt++;
-            } # %editors.keys.sort -> $var #
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, '') ~ t.text-reset;
-            $cnt++;
-        } else { # if $syntax #
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s => %-*s", $var-width, 'variable', $value-width, 'value') ~ t.text-reset;
-            $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, '#' x $width) ~ t.text-reset;
-            $cnt++;
-            for %editors.keys.sort -> $var {
-                my $value = %editors{$var};
-                put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s => %-*s", $var-width, $var, $value-width, $value) ~ t.text-reset;
-                $cnt++;
-            } # %editors.keys.sort -> $var #
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,127,0)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $width, '') ~ t.text-reset;
-            $cnt++;
-        } # if $syntax else #
-    } else { # if $colour #
-        printf "%-*s => %-*s\n", $var-width, 'variable', $value-width, 'value';
-        ('#' x $width).say;
-        for %editors.keys.sort -> $var {
-                my $value = %editors{$var};
-            printf "%-*s => %-*s\n", $var-width, $var, $value-width, $value;
-        } # %editors.keys.sort -> $var #
-        ''.say;
-    } # if $colour else #
-    return True;
-} # sub editors-stats(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export #
-
-#`«««
     ##########################################################
     #                                                        #
     # some vanity functions no real point in their existance #
@@ -3618,161 +2577,104 @@ sub backup-db-file(Bool:D $use-windows-formating --> Bool) is export {
 
 sub restore-db-file(IO::Path $restore-from --> Bool) is export {
     with $restore-from {
-        return True;
+        my $actions = HostFileActions;
+        if $restore-from ~~ :f {
+            my @db-file = $restore-from.slurp.split("\n");
+            return $restore-from.copy("$config/hosts.h_ts".IO) if HostsFile.parse(@db-file.join("\x0A"), :enc('UTF-8'), :$actions).made;
+        }
+        return False;
     } else {
-        return True;
+        return False;
     }
 }
 
-sub say-coloured(Str:D $USAGE, *%named-args, *@args --> True) is export {
-    my @usage = $USAGE.split("\n");
-    my Num:D $limit = ((%named-args«limit»:exists) ?? %named-args«limit».Num !! 75.Num);
-    dd @args, %named-args, $limit;
-    my $actions = UsageStrActions;
-    #my $test = UsageStr.parse(@usage.join("\x0A"), :enc('UTF-8'), :$actions).made;
-    #dd $test, $?NL;
-    my @usage-struct = |(UsageStr.parse(@usage.join("\x0A"), :enc('UTF-8'), :$actions).made);
-    my Int:D $width = 0;
-    for @usage-struct -> %line {
-        my Str $kind = %line«kind»;
-        if $kind eq 'usage' {
-            my Str $value = %line«value»;
-            $width = max($width,    wcswidth($value));
-        } elsif $kind eq 'usage-line' {
-            my %value            = %line«value»;
-            my Str $prog         = %value«prog»;
-            my @fixed-args       = %value«fixed-args»;
-            my @positional-args  = %value«positional-args»;
-            my @optionals        = %value«optionals»;
-            my Str $slurpy-array = %value«slurpy-array»;
-            my @options          = %value«options»;
-            my Str $slurpy-hash  = %value«slurpy-hash»;
-            my Str:D $ln = ' ' x 2;
-            $ln ~= $prog ~ ' ';
-            for @fixed-args -> $arg {
-                $ln ~= $arg ~ ' ';
-            }
-            for @positional-args -> $arg {
-                $ln ~= $arg ~ ' ';
-            }
-            for @optionals -> $arg {
-                $ln ~= $arg ~ ' ';
-            }
-            $ln ~= $slurpy-array ~ ' ';
-            for @options -> $arg {
-                $ln ~= $arg ~ ' ';
-            }
-            $ln ~= $slurpy-hash ~ ' ';
-            $width = max($width,    wcswidth($ln));
-        } else {
-        }
-    } # for @usage -> $line #
-    my Int $terminal-width = terminal-width;
-    $terminal-width = 80 if $terminal-width === Int;
-    $width = min($width, $terminal-width);
-    my Bool:D $output = False;
-    main-for: for @usage-struct -> %line {
-        my Str $kind = %line«kind»;
-        if $kind eq 'usage' {
-            my Str $value = %line«value»;
-            my Str $ref = $value;
-            put t.bg-blue ~ t.bold ~ t.red ~ sprintf("%-*s", $width, left($value, $width, :$ref)) ~ t.text-reset;
-        } elsif $kind eq 'usage-line' {
-            my %value            = %line«value»;
-            my Str $prog         = %value«prog»;
-            my @fixed-args       = |%value«fixed-args»;
-            my Str:D $arg0 = '';
-            $arg0 = @args[0] if @args;
-            my @positional-args  = |%value«positional-args»;
-            my @optionals        = |%value«optionals»;
-            my @posible = |@fixed-args;
-            my Int:D $n = min(@posible.elems, @args.elems);
-            my Int:D $sum-weights = (($n * ($n + 1)) / 2).Int;
-            $sum-weights = 1 if $sum-weights == 0;
-            my Int:D $sum = 0;
-            loop (my $i = 0; $i < $n; $i++) {
-                my Str:D $arg-current = '';
-                $arg-current = @args[$i].Str unless @args[$i] === Any;
-                $sum += ($n - $i) if @posible[$i] ~~ rx:i/ ^ $arg-current .* $ /;
-            }
-            my Num $score = $sum.Num / $sum-weights.Num * 100; # get score as a percentage #
-            next if $score < $limit;
-            #next if @fixed-args && @fixed-args[0] !~~ rx:i/ ^ $arg0 .* $ /;
-            my Str $slurpy-array = %value«slurpy-array»;
-            my @options          = %value«options»;
-            my Str $slurpy-hash  = %value«slurpy-hash»;
-            my Str:D $ln = ' ' x 2;
-            $ln ~= t.color(0,255,0) ~ $prog ~ ' ' ~ t.color(255,0,255);
-            my Str $ref = ' ' x 2 ~ $prog ~ ' ';
-            for @fixed-args -> $arg {
-                $ln ~= $arg ~ ' ';
-                $ref ~= $arg ~ ' ';
-            }
-            $ln ~= t.color(255, 0, 0);
-            for @positional-args -> $arg {
-                $ln ~= $arg ~ ' ';
-                $ref ~= $arg ~ ' ';
-            }
-            $ln ~= t.color(0, 255, 255);
-            for @optionals -> $arg {
-                $ln ~= $arg ~ ' ';
-                $ref ~= $arg ~ ' ';
-            }
-            $ln ~= t.color(255, 255, 0) ~ $slurpy-array ~ t.red ~ ' ';
-            $ref ~= $slurpy-array ~ ' ';
-            for @options -> $arg {
-                $ln ~= $arg ~ ' ';
-                $ref ~= $arg ~ ' ';
-            }
-            $ln ~= t.color(255, 128, 128) ~ $slurpy-hash ~ ' ';
-            $ref ~= $slurpy-hash ~ ' ';
-            put t.bg-blue ~ t.bold ~ sprintf("%-*s", $width, left($ln, $width, :$ref)) ~ t.text-reset;
-            $output = True;
-        }
-    } # for @usage -> $line #
-    unless $output {
-    for @usage-struct -> %line {
-        my Str $kind = %line«kind»;
-        if $kind eq 'usage-line' {
-            my %value            = %line«value»;
-            my Str $prog         = %value«prog»;
-            my @fixed-args       = |%value«fixed-args»;
-            my @positional-args  = %value«positional-args»;
-            my @optionals        = %value«optionals»;
-            my Str $slurpy-array = %value«slurpy-array»;
-            my @options          = %value«options»;
-            my Str $slurpy-hash  = %value«slurpy-hash»;
-            my Str:D $ln = ' ' x 2;
-            $ln ~= t.color(0,255,0) ~ $prog ~ ' ' ~ t.color(255,0,255);
-            my Str $ref = ' ' x 2 ~ $prog ~ ' ';
-            for @fixed-args -> $arg {
-                $ln ~= $arg ~ ' ';
-                $ref ~= $arg ~ ' ';
-            }
-            $ln ~= t.color(255, 0, 0);
-            for @positional-args -> $arg {
-                $ln ~= $arg ~ ' ';
-                $ref ~= $arg ~ ' ';
-            }
-            $ln ~= t.color(0, 255, 255);
-            for @optionals -> $arg {
-                $ln ~= $arg ~ ' ';
-                $ref ~= $arg ~ ' ';
-            }
-            $ln ~= t.color(255, 255, 0) ~ $slurpy-array ~ t.red ~ ' ';
-            $ref ~= $slurpy-array ~ ' ';
-            for @options -> $arg {
-                $ln ~= $arg ~ ' ';
-                $ref ~= $arg ~ ' ';
-            }
-            $ln ~= t.color(255, 128, 128) ~ $slurpy-hash ~ ' ';
-            $ref ~= $slurpy-hash ~ ' ';
-            put t.bg-blue ~ t.bold ~ sprintf("%-*s", $width, left($ln, $width, :$ref)) ~ t.text-reset;
-            $output = True;
-        }
-    } # for @usage -> $line #
+sub test( --> True) is export {
+    #«««
+    my $colour = t.color(255, 0, 0);
+    my $bg-colour = t.bg-color(0, 0, 255);
+    my $bold   = t.bold;
+    my $italic = t.italic;
+    my $end = t.text-reset;
+    my $esc = "\e";
+    dd $colour, $bg-colour, $bold, $italic, $end, $esc;
+    my Str:D $highlighted = $bg-colour ~ $bold ~ $colour ~ 'Hello out there' ~ $end;
+    put $highlighted;
+    my Str:D $text = strip-ansi($highlighted);
+    put $text;
+    dd $highlighted, $text;
+    #`«««
+    put Sprintf('%30.34s, %30.34s%N%%%N%^*.*s%3$*4$.*3$d', $highlighted, $text, 40, 50, $highlighted);
+    put Sprintf('%30.34e, %30.34E%N%%%N%^*.*f%3$*4$.*3$d', 3.14159265, 42E10, 40, 50, 2.71828E-50);
+    put Sprintf('%30.34g, %30.34G%N%%%N%^*.*F%3$*4$.*3$d', 3.14159265, 42E100, 40, 50, 2.71828E-50);
+    put Sprintf('%30.34f, %30.34f%N%%%N%^*.*F%3$*4$.*3$d', 3.14159265, 42E100, 40, 50, 2.71828E-50);
+    put Sprintf('%#30.34b, %#30.34b%N%%%N%#^*.*b%3$#*4$.*3$B', 300, 42, 40, 50, 2);
+    put Sprintf('%#30.34o, %#30.34o%N%%%N%#^*.*O%3$#*4$.*3$O', 300, 42, 40, 50, 2);
+    put Sprintf('%#30.34x, %#30.34x%N%%%N%#^*.*X%3$#*4$.*3$X', 300, 42, 40, 51, 31);
+    put Sprintf('%#30.34u, %#30.34u%N%%%N%#^*.*U%3$#*4$.*3$U', 300, 42, 40, 51, 31);
+    put Sprintf('%0#30.34u, %0#30.34u%N%%%N%0#^*.*U%N%3$0#*4$.*3$U', 300, 42, 40, 51, 31);
+    put Sprintf('%0#30.34u, %0#30.34u%N%%%N%0#^*.*U%N%3$0#*4$.*3$U', 300, 42, 40, 51, 31, 1, 2, 3);
+    #`« uncomment to test exceptions #
+    put Sprintf('%0#30.34u, %0#30.34u%N%%%N%0#^*.*U%N%3$0#*4$.*3$U', 300, 42, 40, 'bad', 31);
+    BadArg.new(:msg("Testing this")).throw;
+    die "Just for fun!";
+    #»
+    #»»»
+    #«
+    #put Sprintf('%[*]30.34.33s, %[#]30.34.33s%N%%%N%^[*]*.*.33s%3$[$]*4$.*3$.37d', $highlighted, $text, 40, 50, $highlighted);
+    #put Sprintf('%^[%]30.34.30e, %^[@]30.34.30E%N%%%N%^[^]*.*f%T%3$*4$.*3$.30d', 3.14159265, 42E10, 40, 50, 2.71828E-30, :ellipsis('…'));
+    #put Sprintf('%^[%]30.34.30e, %^[@]30.34.30E%N%%%N%^[^]*.*.20f%T%3$^[+]*4$.*3$.30d', 3.14159265, 42E10, 40, 50, 2.71828E-30, :ellipsis('…'));
+    #put Sprintf('%^[^]*.*.*f, %T%4$^[+]*1$.*2$.*3$d', 24, 6, 20, 2.71828, :ellipsis('…'));
+    #»
+    put Sprintf('%^[*]3$*4$.*3$.30d', 3.14159265, 42E10, 40, 50, 2.71828E-30, :ellipsis('…')); # should throw exception #
+    Sprintf('%3$^[*%$]*4$.*3$.30d', 3.14159265, 42E10, 40, 50, 2.71828E-30, :ellipsis('…')); # should also throw #
+    #put Sprintf('%3$^[*#]*4$.*3$.30d', 3.14159265, 42E10, 40, 50, 2.71828E-30, :ellipsis('…')); # should throw exception #
+    #`««
+    put Sprintf('%30.34g, %30.34G%N%%%N%^*.*F%3$*4$.*3$d', 3.14159265, 42E100, 40, 50, 2.71828E-50);
+    put Sprintf('%30.34f, %30.34f%N%%%N%^*.*F%3$*4$.*3$d', 3.14159265, 42E100, 40, 50, 2.71828E-50);
+    put Sprintf('%#30.34b, %#30.34b%N%%%N%#^*.*b%3$#*4$.*3$B', 300, 42, 40, 50, 2);
+    put Sprintf('%#30.34o, %#30.34o%N%%%N%#^*.*O%3$#*4$.*3$O', 300, 42, 40, 50, 2);
+    put Sprintf('%#30.34x, %#30.34x%N%%%N%#^*.*X%3$#*4$.*3$X', 300, 42, 40, 51, 31);
+    put Sprintf('%#30.34u, %#30.34u%N%%%N%#^*.*U%3$#*4$.*3$U', 300, 42, 40, 51, 31);
+    put Sprintf('%0#30.34u, %0#30.34u%N%%%N%0#^*.*U%N%3$0#*4$.*3$U', 300, 42, 40, 51, 31);
+    put Sprintf('%0#30.34u, %0#30.34u%N%%%N%0#^*.*U%N%3$0#*4$.*3$U', 300, 42, 40, 51, 31, 1, 2, 3);
+    #»»
+    
+    my $test-number-of-chars = 0;
+    my $test-number-of-visible-chars = 0;
+
+    sub test-number-of-chars(Int:D $number-of-chars, Int:D $number-of-visible-chars --> Bool:D) {
+        $test-number-of-chars         = $number-of-chars;
+        $test-number-of-visible-chars = $number-of-visible-chars;
+        return True
     }
-} # sub say-coloured(Str:D $USAGE --> True) is export #
+
+    put Sprintf('%30.14.14s, %30.14.13s%N%%%N%^*.*s%3$*4$.*3$.*6$d%N%2$^[&]*3$.*4$.*6$s%T%1$[*]^100.*4$.99s', ${ arg => $highlighted, ref => $text }, $text, 30, 14, $highlighted, 13, :number-of-chars(&test-number-of-chars), :ellipsis('…'));
+    dd $test-number-of-chars,  $test-number-of-visible-chars;
+    put Sprintf('%30.14.14s,  testing %30.14.13s%N%%%N%^*.*s%3$*4$.*3$.*6$d%N%2$^[&]*3$.*4$.*6$s%T%1$[*]^100.*4$.99s', $[ $highlighted, $text ], $text, 30, 14, $highlighted, 13, 13, :number-of-chars(&test-number-of-chars), :ellipsis('…'));
+    dd $test-number-of-chars,  $test-number-of-visible-chars;
+    Printf('%30.14.14s,  testing %30.14.13s%N%%%N%^*.*s%3$*4$.*3$.*6$d%N%2$^[&]*3$.*4$.*6$s%T%1$[*]^100.*4$.99s%N%1$[!]*4$.*3$.*7$s%N', $[ $highlighted, $text ], $text, 30, 14, $highlighted, 13, 13, :number-of-chars(&test-number-of-chars), :ellipsis('…'));
+    dd $test-number-of-chars,  $test-number-of-visible-chars;
+    CATCH {
+        when BadArg {
+            .WHAT.^name.say; .message; .say; .resume;
+        }
+        when ArgParityMissMatch {
+            .WHAT.^name.say; .message; .say; .resume;
+        }
+        when FormatSpecError {
+            .WHAT.^name.say; .message; .say; .resume;
+        }
+        when X::AdHoc {
+            .WHAT.^name.say; .message; .say; .resume;
+        }
+        when X::TypeCheck::Assignment {
+            .WHAT.^name.say; .message; .say; .resume;
+        }
+        default {
+            .WHAT.^name.say; .message; .say; .resume;
+        }
+    }
+} # sub test( --> True) is export #
 
 #`«««
     ############################################
@@ -3904,3 +2806,6 @@ multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, *@args --> Bool
     }
     die "key $key not found";
 } # multi sub put('home', Str:D $key, Bool $recursive, *@args --> Bool) is export #
+
+
+
