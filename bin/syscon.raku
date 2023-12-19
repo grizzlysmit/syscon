@@ -135,6 +135,26 @@ multi sub MAIN('list', 'by', 'both', Str:D $prefix = '', Bool:D :c(:color(:$colo
     } 
 } # multi sub MAIN('list', 'all', Str $prefix = '', Bool:D :c(:color(:$colour)) = False, Str :p(:$pattern) = Str, Str :e(:$ecma-pattern) = Str) returns Int #
 
+multi sub MAIN('list', 'by', 'all', Str:D $prefix = '', Bool:D :c(:color(:$colour)) = False,
+                    Bool:D :s(:$syntax) = False, Int:D :l(:$page-length) = 50, Str :p(:$pattern) = Str,
+                                                                Str :e(:$ecma-pattern) = Str) returns Int {
+    my Regex $_pattern;
+    with $pattern {
+        $_pattern = rx:i/ <$pattern> /;
+    } orwith $ecma-pattern {
+        $_pattern = ECMA262Regex.compile("^$ecma-pattern\$");
+    } else {
+        $_pattern = rx:i/^ .* $/;
+    }
+    if list-by-all($prefix, $colour, $syntax, $page-length, $_pattern) {
+       exit 0;
+    } else {
+       exit 1;
+    } 
+} #`««« multi sub MAIN('list', 'by', 'all', Str:D $prefix = '', Bool:D :c(:color(:$colour)) = False,
+                    Bool:D :s(:$syntax) = False, Int:D :l(:$page-length) = 50, Str :p(:$pattern) = Str,
+                                                                Str :e(:$ecma-pattern) = Str) returns Int »»»
+
 multi sub MAIN('list', 'commented', 'out', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
    if list-commented($colour, $syntax) {
        exit 0;

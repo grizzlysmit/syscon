@@ -1,3 +1,4 @@
+#!/usr/bin/env raku
 use JSON::Fast;
 
 sub MAIN() {
