@@ -1,0 +1,28 @@
+use v6;
+use lib 'lib';
+use Test;
+
+use Syscon;
+
+my Str:D $prefix = '';
+my Bool:D $colour = False;
+my Bool:D $syntax = True;
+my Int:D $page-length = 30;
+my Regex:D $pattern = rx:i/ ^ .* 'kil' .* $ /;
+
+plan 4;
+
+is(list-by-all($prefix, $colour, $syntax, $page-length, $pattern),  True);
+
+
+is(list-by-all($prefix, $colour, $syntax, $page-length, $pattern),  True);
+
+$pattern = rx/ ^ .* $ /;
+
+is(list-by-all($prefix, $colour, $syntax, $page-length, $pattern),  True);
+
+$prefix = 'kil';
+
+is(list-by-all($prefix, $colour, $syntax, $page-length, $pattern),  True);
+
+done-testing;
