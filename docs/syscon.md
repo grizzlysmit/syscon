@@ -147,11 +147,19 @@ multi sub MAIN('ssh', Str:D $key --> int){
 
 ### sc ping
 
+Runs
+
 ```bash
-$ sc ping $key
+$ sc ping $server
 ```
 
+  * Where
+
+    * **`$server`** is the domain part of the host value i.e. with the **`username@`** removed.
+
 ![https://github.com/grizzlysmit/syscon/blob/main/docs/images/ping.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/ping.png)
+
+by the **`sc ping $key`**
 
 ```raku
 multi sub MAIN('ping', Str:D $key --> int){

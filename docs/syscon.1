@@ -177,15 +177,25 @@ multi sub MAIN('ssh', Str:D $key \-\-> int){
 Top of Document [#table-of-contents]
 .SS sc ping
 
+Runs
+
 .RS 4m
 .EX
-$ sc ping $key
+$ sc ping $server
 
 
 .EE
 .RE
-.P
+.IP \(bu 2m
+Where
+.RS 2n
+.IP \(bu 2m
+\fB$server\fR is the domain part of the host value i\&.e\&. with the \fBusername@\fR removed\&.
+.RE
+
 !https://github\&.com/grizzlysmit/syscon/blob/main/docs/images/ping\&.png
+
+by the \fBsc ping $key\fR
 
 .RS 4m
 .EX

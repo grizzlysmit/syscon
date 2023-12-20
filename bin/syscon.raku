@@ -170,13 +170,20 @@ multi sub MAIN('ssh', Str:D $key --> int){
 
 =head3 sc ping
 
+Runs
+
 =begin code :lang<bash>
 
-$ sc ping $key
+$ sc ping $server
 
 =end code
 
+=item1 Where
+=item2 B<C<$server>> is the domain part of the host value i.e. with the B<C<username@>> removed.
+
 !L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/ping.png>
+
+by the B<C<sc ping $key>>
 
 =begin code :lang<raku>
 
