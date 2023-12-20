@@ -22,6 +22,7 @@ Table of  Contents
 =item L<COPYRIGHT|#copyright>
 =item L<Introduction|#introduction>
 =item2 L<Motivations|#motivations>
+=item L<USAGE|#usage>
 
 =NAME syscon 
 =AUTHOR Francis Grizzly Smit (grizzly@smit.id.au)
@@ -92,6 +93,20 @@ use Gzz::Text::Utils;
 use GUI::Editors;
 use Usage::Utils;
 use Syscon;
+
+=begin pod
+
+=head3 USAGE
+
+=begin code :lang<bash>
+
+$ sc --help
+
+=end code
+
+P<https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png>
+
+=end pod
 
 #`«««
     ############################################

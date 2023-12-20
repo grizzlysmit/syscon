@@ -17,6 +17,8 @@ Table of Contents
 
     * [Motivations](#motivations)
 
+  * [USAGE](#usage)
+
 NAME
 ====
 
@@ -94,4 +96,12 @@ $ scp -P $port <files> …… $host:
 [Top of Document](#able-of-contents)
 
 This is the app, you can find the modules docs [here](https://github.com/grizzlysmit/syscon)
+
+### USAGE
+
+```bash
+$ sc --help
+```
+
+https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png
 
