@@ -24,7 +24,7 @@ Table of  Contents
 =item2 L<Motivations|#motivations>
 =item1 L<USAGE|#usage>
 =item2 L<sc ssh|#sc-ssh>
-=item1 L<USAGE|#usage>
+=item2 L<USAGE|#usage>
 =item2 L<USAGE|#usage>
 =item2 L<USAGE|#usage>
 =item2 L<USAGE|#usage>
@@ -128,6 +128,29 @@ L<Top of Document|#table-of-contents>
 =begin pod
 
 =head3 sc ssh
+
+Runs
+
+=begin code :lang<bash>
+
+ssh -p $port $host
+
+=end code
+
+by the B<C<ssh(…)>>
+
+=begin code :lang<raku>
+
+multi sub MAIN('ssh', Str:D $key --> int){
+    if ssh($key) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+=end code
+
 
 !L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png>
 

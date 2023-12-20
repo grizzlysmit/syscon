@@ -600,9 +600,7 @@ footer {
 <li><p><a href="#usage">USAGE</a></p></li>
 <ul>
 <li><p><a href="#sc-ssh">sc ssh</a></p></li>
-</ul>
 <li><p><a href="#usage">USAGE</a></p></li>
-<ul>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
@@ -643,8 +641,18 @@ footer {
 <pre class="pod-block-code">$ sc --help
 
 </pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_ssh"><a href="#syscon" class="u" title="go to top of document">sc ssh</a></h3>
-<p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-20T11:30:22Z</span></div></footer>
+<p>Runs</p><pre class="pod-block-code">ssh -p $port $host
+
+</pre><p>by the <strong><code>ssh(…)</code></strong></p><pre class="pod-block-code">multi sub MAIN('ssh', Str:D $key --&gt; int){
+    if ssh($key) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-20T11:37:25Z</span></div></footer>
 	</body>
 </html>
 

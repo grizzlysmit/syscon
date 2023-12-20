@@ -25,8 +25,10 @@ USAGE [#usage]
 .IP \(bu 2m
 sc ssh [#sc-ssh]
 .RE
+.RS 2n
 .IP \(bu 2m
 USAGE [#usage]
+.RE
 .RS 2n
 .IP \(bu 2m
 USAGE [#usage]
@@ -144,6 +146,32 @@ $ sc \-\-help
 Top of Document [#table-of-contents]
 .SS sc ssh
 
+Runs
+
+.RS 4m
+.EX
+ssh \-p $port $host
+
+
+.EE
+.RE
+.P
+by the \fBssh(…)\fR
+
+.RS 4m
+.EX
+multi sub MAIN('ssh', Str:D $key \-\-> int){
+    if ssh($key) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+
+.EE
+.RE
+.P
 !https://github\&.com/grizzlysmit/syscon/blob/main/docs/images/sc\-ssh\&.png
 
 Top of Document [#table-of-contents]

@@ -21,7 +21,7 @@ Table of Contents
 
     * [sc ssh](#sc-ssh)
 
-  * [USAGE](#usage)
+    * [USAGE](#usage)
 
     * [USAGE](#usage)
 
@@ -122,6 +122,24 @@ $ sc --help
 [Top of Document](#table-of-contents)
 
 ### sc ssh
+
+Runs
+
+```bash
+ssh -p $port $host
+```
+
+by the **`ssh(…)`**
+
+```raku
+multi sub MAIN('ssh', Str:D $key --> int){
+    if ssh($key) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+```
 
 ![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png)
 
