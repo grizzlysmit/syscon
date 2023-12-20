@@ -45,7 +45,7 @@ A module **`Syscon`** and a program **`syscon`** or **`sc`** for short, which ke
 COPYRIGHT
 =========
 
-LGPL V3.0+ [LICENSE](https://github.com/grizzlysmit/syscon/blob/main/LICENSE) LGPL V3.0+ [LICENSE](#blob/main/LICENSE)
+LGPL V3.0+ [LICENSE](https://github.com/grizzlysmit/syscon/blob/main/LICENSE)
 
 Introduction
 ============

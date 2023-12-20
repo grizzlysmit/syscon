@@ -31,7 +31,6 @@ Table of  Contents
 
 =COPYRIGHT
 LGPL V3.0+ L<LICENSE|https://github.com/grizzlysmit/syscon/blob/main/LICENSE>
-LGPL V3.0+ L<LICENSE|#blob/main/LICENSE>
 
 =head1 Introduction
 
