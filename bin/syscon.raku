@@ -14,15 +14,22 @@ Table of  Contents
 
 =end head2
 
-=item L<NAME|#name>
-=item L<AUTHOR|#author>
-=item L<VERSION|#version>
-=item L<TITLE|#title>
-=item L<SUBTITLE|#subtitle>
-=item L<COPYRIGHT|#copyright>
-=item L<Introduction|#introduction>
+=item1 L<NAME|#name>
+=item1 L<AUTHOR|#author>
+=item1 L<VERSION|#version>
+=item1 L<TITLE|#title>
+=item1 L<SUBTITLE|#subtitle>
+=item1 L<COPYRIGHT|#copyright>
+=item1 L<Introduction|#introduction>
 =item2 L<Motivations|#motivations>
-=item L<USAGE|#usage>
+=item1 L<USAGE|#usage>
+=item2 L<sc ssh|#sc-ssh>
+=item1 L<USAGE|#usage>
+=item2 L<USAGE|#usage>
+=item2 L<USAGE|#usage>
+=item2 L<USAGE|#usage>
+=item2 L<USAGE|#usage>
+=item2 L<USAGE|#usage>
 
 =NAME syscon 
 =AUTHOR Francis Grizzly Smit (grizzly@smit.id.au)
@@ -98,7 +105,7 @@ use Syscon;
 
 =head3 USAGE
 
-=begin code :lang<sh>
+=begin code :lang<bash>
 
 $ sc --help
 
@@ -117,6 +124,16 @@ L<Top of Document|#table-of-contents>
     #                                          #
     ############################################
 #»»»
+
+=begin pod
+
+=head3 sc ssh
+
+!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png>
+
+L<Top of Document|#table-of-contents>
+
+=end pod
 
 multi sub MAIN('ssh', Str:D $key --> int){
     if ssh($key) {

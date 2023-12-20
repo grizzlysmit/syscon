@@ -19,6 +19,20 @@ Table of Contents
 
   * [USAGE](#usage)
 
+    * [sc ssh](#sc-ssh)
+
+  * [USAGE](#usage)
+
+    * [USAGE](#usage)
+
+    * [USAGE](#usage)
+
+    * [USAGE](#usage)
+
+    * [USAGE](#usage)
+
+    * [USAGE](#usage)
+
 NAME
 ====
 
@@ -99,11 +113,17 @@ This is the app, you can find the modules docs [here](https://github.com/grizzly
 
 ### USAGE
 
-```sh
+```bash
 $ sc --help
 ```
 
 ![https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png)
+
+[Top of Document](#table-of-contents)
+
+### sc ssh
+
+![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png)
 
 [Top of Document](#table-of-contents)
 
