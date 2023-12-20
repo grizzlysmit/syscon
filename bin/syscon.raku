@@ -166,6 +166,34 @@ multi sub MAIN('ssh', Str:D $key --> int){
     }
 }
 
+=begin pod
+
+=head3 ping
+
+=begin code :lang<bash>
+
+$ sc ping $key
+
+=end code
+
+!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/ping.png>
+
+=begin code :lang<raku>
+
+multi sub MAIN('ping', Str:D $key --> int){
+    if ping($key) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+=end code
+
+L<Top of Document|#table-of-contents>
+
+=end pod
+
 multi sub MAIN('ping', Str:D $key --> int){
     if ping($key) {
         return 0;

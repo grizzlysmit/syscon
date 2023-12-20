@@ -145,3 +145,23 @@ multi sub MAIN('ssh', Str:D $key --> int){
 
 [Top of Document](#table-of-contents)
 
+### ping
+
+```bash
+$ sc ping $key
+```
+
+![https://github.com/grizzlysmit/syscon/blob/main/docs/images/ping.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/ping.png)
+
+```raku
+multi sub MAIN('ping', Str:D $key --> int){
+    if ping($key) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+```
+
+[Top of Document](#table-of-contents)
+

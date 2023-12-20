@@ -175,3 +175,30 @@ multi sub MAIN('ssh', Str:D $key \-\-> int){
 !https://github\&.com/grizzlysmit/syscon/blob/main/docs/images/sc\-ssh\&.png
 
 Top of Document [#table-of-contents]
+.SS ping
+
+.RS 4m
+.EX
+$ sc ping $key
+
+
+.EE
+.RE
+.P
+!https://github\&.com/grizzlysmit/syscon/blob/main/docs/images/ping\&.png
+
+.RS 4m
+.EX
+multi sub MAIN('ping', Str:D $key \-\-> int){
+    if ping($key) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+
+.EE
+.RE
+.P
+Top of Document [#table-of-contents]
