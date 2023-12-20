@@ -1,111 +1,97 @@
-This is my SysCon project
-=========================
+Table of Contents
+-----------------
 
- - [Introduction](#introduction)
- - [The work horse functions](#the-work-horse-functions)
- - [Utility functions](#utility-functions)
- - [Vanity functions](#vanity-functions)
- - [Global options   -?|-h|--help](#global-options-----h--help)
+  * [NAME](#name)
 
-## Introduction
+  * [AUTHOR](#author)
 
-The purpose of this code is to keep track of a lot of servers, and use them easily. There are four main functions  to use the servers.
+  * [VERSION](#version)
 
-## The work horse functions
+  * [TITLE](#title)
 
- 1. syscon.raku ssh `<key>` 
- 1. syscon.raku ping `<key>` 
- 1. syscon.raku get home `<key>` `[<args> ...]` `[-r|--recursive]`
- 1. syscon.raku put home `<key>` `[<args> ...]` `[-r|--recursive]`
- 
-where 
- - `<key>`            Is a key that identifies the server. 
- - `[<args> ...]`     Is a list of zero or more files to either get or put (using `scp`).
- - `[-r|--recursive]` Is a pair of flag's which if present will cause the file to be copied recursively,  good for coping directories and their content.
- - `ssh`              Says **ssh** to the server denoted by `<key>`.
- - `ping`             says **ping** the server denoted by `<key>`.
+  * [SUBTITLE](#subtitle)
 
+  * [COPYRIGHT](#copyright)
 
- ## Utility functions
+  * [Introduction](#introduction)
 
-There are 10 utility functions:
- 1. syscon.raku edit configs                                                                                                             
- 1. syscon.raku list keys  `[<prefix>]`  `[-c|--color|--colour]` `[-l|--page-length[=Int]]` `[-p|--pattern=<Str>]` `[-e|--ecma-pattern=<Str>]`     
- 1. syscon.raku list all  `[<prefix>]`  `[-c|--color|--colour]` `[-l|--page-length`[=Int]]` `[-p|--pattern=<Str>]` `[-e|--ecma-pattern=<Str>]`      
- 1. syscon.raku list hosts  `[<prefix>]`  `[-c|--color|--colour]` `[-l|--page-length`[=Int]]` `[-p|--pattern=<Str>]` `[-e|--ecma-pattern=<Str>]`    
- 1. syscon.raku list by both  `[<prefix>]`  `[-c|--color|--colour]` `[-l|--page-length`[=Int]]` `[-p|--pattern=<Str>]` `[-e|--ecma-pattern=<Str>]`  
- 1. syscon.raku add `<key>` `<host>` `[<port>]`  `[-s|--set|--force]` `[-c|--comment=<Str>]`                                                       
- 1. syscon.raku delete `<key>`   `[-o|--comment-out]`                                                                                        
- 1. syscon.raku del `<key>`   `[-o|--comment-out]`                                                                                           
- 1. syscon.raku comment `<key>` `<comment>`                                                                                                  
- 1. syscon.raku alias `<key>` `<target>`   `[-s|--set|--force]` `[-d|--really-force|--overwrite-hosts]` `[-c|--comment=<Str>]`                      
+    * [Motivations](#motivations)
 
-where 
- - `edit configs`      Is a function for low level configuration of the two con fig files `~/.local/share/syscon/hosts.h_ts` and `~/.local/share/syscon/editors` it will open the files in your prefered editor `gvim` for me you can specify the editor to use in the `~/.local/share/syscon/editors` file,  it will use the first one theat is available. or you can specify the editor to use using these environment variables:
+NAME
+====
 
-          * `GUI_EDITOR`   A vartiable I created for specifing ones preferred GUI editor.
-                           This takes precedence.
-          * `VISUAL`       A standard variable used to indicate a prefered editor.
-          * `EDITOR`       Another standard variable to denote a preffered editor.
+Syscon 
 
- - `list keys`         Is a function to list all or some of the keys in `~/.local/share/syscon/hosts.h_ts` where:
+AUTHOR
+======
 
-          * `<prefix>`                 If present only list those keys starting with that prefix.  
-          * `-c|--color|--colour`      Is a flag to tell the program to use colour in the output.
-          * `-l|--page-length[=Int]`   Sets  the page length after which a new header will be placed
-                                       in the output. takes a int value (i.e. `--page-length=20`)
-                                       (default 50).
-          * `-p|--pattern=<Str>`       If supplied will filer the output based on the raku regex
-                                       `<Str>` (default is `--pattern='^ .* $'`).
-          * `-e|--ecma-pattern=<Str>`  Same as `--pattern` above except the pattern is in EcmaScript
-                                       or JavaScript regex language. `--pattern` trumps this one if
-                                       present, and is preferred due to imperfections in the
-                                       `ECMA262Regex` modules translations of it to raku regex.
+Francis Grizzly Smit (grizzly@smit.id.au)
 
- - `list all`        Is the same as `list keys` except it shows you what the keys map to, **key `=>` host**, means key maps to host **host**,  where as **key --> target** is an alias with **target** being another key, this is like a symbolic link for hosts.
- - `list host`       Is the same again but the `<prefix>` and `--pattern` etc apply to the host side of the terms.
- - `list by both`    Is the same again but the `<prefix>` and `--pattern` etc apply to both the key and the host.
- - `add` `<key>` `<host>` `[<port>]`  `[-s|--set|--force]` `[-c|--comment=<Str>]`      Allows you to add a new **key `=>` host** pair to the `~/.local/share/syscon/hosts.h_ts` file,  where:
+VERSION
+=======
 
-          * `<key>`                    Is the key to add.
-          * `<host>`                   Is the host to add.
-          * `<port>`                   Is an optional port (defaults to 22 if not present).
-          * `-s|--set|--force`         If present tell the program to replace any mapping that
-                                       already exist for `<key>`.
-          * `-c|--comment=<Str>`       If present supplies the comment string for the entry.
+v0.1.18
 
- - `delete`  `<key>`   `[-o|--comment-out]`      Deletes or comments out a mapping. Where:
+TITLE
+=====
 
-          * `-o|--comment-out`         Tells us to only comment the entry out rather than
-                                       delete it.
-                                       TODO: add a function to uncomment it and a function
-                                       to find all the commented out entries.
+Syscon
 
- - `del` `<key>`   `[-o|--comment-out]`  Just an alias to delete.
- - `comment` `<key>` `<comment>`       adds comment `<comment>` to entry `<key>`.
- - `alias` `<key>` `<target>`   `[-s|--set|--force]` `[-d|--really-force|--overwrite-hosts]` `[-c|--comment=<Str>]`     Adds an alias to the file,  where:
+SUBTITLE
+========
 
-          * `-s|--set|--force`                          Allows for overiting existing aliases.
-          * `-d|--really-force|--overwrite-hosts`       Alows for overwriting **key `=>` host** pairs.
-                                                        By default alias lacks that permission.
+A module **`Syscon`** and a program **`syscon`** or **`sc`** for short, which keeps tarck of assorted servers and helps to connect to them.
 
+COPYRIGHT
+=========
 
-## Vanity functions
+LGPL V3.0+ [LICENSE](https://github.com/grizzlysmit/syscon/blob/main/LICENSE)
 
- 1. syscon.raku tidy file                                                                                                                
- 1. syscon.raku sort file                                                                                                                
- 1. syscon.raku show file    `[-c|--color|--colour]`                                                                                       
- 1. syscon.raku help    `[-n|--nocolor|--nocolour]` 
+Introduction
+============
 
+A module **`Syscon`** and a program **`syscon`** or **`sc`** for short, which keeps tarck of assorted servers and helps to connect to them.
 
- - `tidy file`                            Tidies `~/.local/share/syscon/hosts.h_ts` so that every thing lines up pretty and neat.
- - `sort file`                            Sorts the file into order so that the keys will be ordered.
- - `show file`                            Shows the contents of the file.
- - `help` `-n|--nocolor|--nocolour`       Display usage by default coloured. unless `-n|--nocolor|--nocolour` are present in which case plain text will be output.
+[Top of Document](#table-of-contents)
 
+Motivations
+-----------
 
-## Global options   -?|-h|--help
+I have to keep track of many servers (> 100) but who can remember all the host names, and ports?? That is where this app comes in I can connect to a server by ssh by.
 
-The global help option of `-?|-h|--help` display coloured usage details.
+```bash
+$ syscon.raku ssh <key>
+```
 
+or for short
+
+```bash
+$ sc ssh <key>
+```
+
+Equally you can use
+
+```bash
+$ sc put home <key> <files> ……
+```
+
+To run 
+
+```bash
+$ scp -P $port <files> …… $host:
+```
+
+  * Where 
+
+    * **`$host`** is generally something like **`username@example.com`**
+
+    * **`$port`** is a port number.
+
+    * **key** is the key to retrieve the host and port form the server.
+
+      * It's put home because I may add put <other-place> at a later date.
+
+[Top of Document](#able-of-contents)
+
+This is the module.
 

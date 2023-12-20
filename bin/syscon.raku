@@ -6,6 +6,86 @@ my %*SUB-MAIN-OPTS;
 %*SUB-MAIN-OPTS«named-anywhere» = True;
 #%*SUB-MAIN-OPTS<bundling>       = True;
 
+=begin pod
+
+=begin head2
+
+Table of  Contents
+
+=end head2
+
+=item L<NAME|#name>
+=item L<AUTHOR|#author>
+=item L<VERSION|#version>
+=item L<TITLE|#title>
+=item L<SUBTITLE|#subtitle>
+=item L<COPYRIGHT|#copyright>
+=item L<Introduction|#introduction>
+=item2 L<Motivations|#motivations>
+
+=NAME syscon 
+=AUTHOR Francis Grizzly Smit (grizzly@smit.id.au)
+=VERSION v0.1.18
+=TITLE syscon
+=SUBTITLE A module B<C<Syscon>> and a program B<C<syscon>> or B<C<sc>> for short, which keeps tarck of assorted servers and helps to connect to them.
+
+=COPYRIGHT
+LGPL V3.0+ L<LICENSE|https://github.com/grizzlysmit/syscon/blob/main/LICENSE>
+
+=head1 Introduction
+
+A module B<C<Syscon>> and a program B<C<syscon>> or B<C<sc>> for short, which keeps tarck of assorted
+servers and helps to connect to them.
+
+L<Top of Document|#table-of-contents>
+
+=head2 Motivations
+
+I have to keep track of many servers (> 100) but who can remember all the host names, and ports??
+That is where this app comes in I can connect to a server by ssh by.
+
+=begin code :lang<bash>
+
+$ syscon.raku ssh <key>
+
+=end code
+
+or for short
+
+=begin code :lang<bash>
+
+$ sc ssh <key>
+
+=end code
+
+Equally you can use
+
+=begin code :lang<bash>
+
+$ sc put home <key> <files> ……
+
+=end code
+
+To run 
+
+=begin code :lang<bash>
+
+$ scp -P $port <files> …… $host:
+
+=end code
+
+=item1 Where 
+=item2 B<C<$host>> is generally something like B<C<username@example.com>>
+=item2 B<C<$port>> is a port number.
+=item2 B<key> is the key to retrieve the host and port form the server.
+=item3 It's put home because I may add put <other-place> at a later date.
+
+L<Top of Document|#able-of-contents>
+
+This is the app 
+
+=end pod
+
 
 use Gzz::Text::Utils;
 #use Syntax::Highlighters;
