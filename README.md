@@ -93,5 +93,5 @@ $ scp -P $port <files> …… $host:
 
 [Top of Document](#able-of-contents)
 
-This is the module, you can find the apps docs [here](https://github.com/grizzlysmit/syscon/docs/syscon.md).
+This is the module, you can find the apps docs [here](https://github.com/grizzlysmit/syscon/blob/main/docs/syscon.md).
 
