@@ -1,0 +1,103 @@
+.pc
+.TH Syscon.rakumod 1 2023-12-20
+.SS Table of Contents
+.IP \(bu 2m
+NAME [#name]
+.IP \(bu 2m
+AUTHOR [#author]
+.IP \(bu 2m
+VERSION [#version]
+.IP \(bu 2m
+TITLE [#title]
+.IP \(bu 2m
+SUBTITLE [#subtitle]
+.IP \(bu 2m
+COPYRIGHT [#copyright]
+.IP \(bu 2m
+Introduction [#introduction]
+.RS 2n
+.IP \(bu 2m
+Motivations [#motivations]
+.RE
+.SH "NAME"
+Syscon 
+.SH "AUTHOR"
+Francis Grizzly Smit (grizzly@smit\&.id\&.au)
+.SH "VERSION"
+v0\&.1\&.18
+.SH "TITLE"
+Syscon
+.SH "SUBTITLE"
+A module \fBSyscon\fR and a program \fBsyscon\fR or \fBsc\fR for short, which keeps tarck of assorted servers and helps to connect to them\&.
+.SH "COPYRIGHT"
+LGPL V3\&.0+ LICENSE [https://github.com/grizzlysmit/syscon/blob/main/LICENSE]
+.SH Introduction
+
+A module \fBSyscon\fR and a program \fBsyscon\fR or \fBsc\fR for short, which keeps tarck of assorted servers and helps to connect to them\&.
+
+Top of Document [#table-of-contents]
+.SS Motivations
+
+I have to keep track of many servers (> 100) but who can remember all the host names, and ports?? That is where this app comes in I can connect to a server by ssh by\&.
+
+.RS 4m
+.EX
+$ syscon\&.raku ssh <key>
+
+
+.EE
+.RE
+.P
+or for short
+
+.RS 4m
+.EX
+$ sc ssh <key>
+
+
+.EE
+.RE
+.P
+Equally you can use
+
+.RS 4m
+.EX
+$ sc put home <key> <files> ……
+
+
+.EE
+.RE
+.P
+To run 
+
+.RS 4m
+.EX
+$ scp \-P $port <files> …… $host:
+
+
+.EE
+.RE
+.IP \(bu 2m
+Where 
+.RS 2n
+.IP \(bu 2m
+\fB$host\fR is generally something like \fBusername@example\&.com\fR
+.RE
+.RS 2n
+.IP \(bu 2m
+\fB$port\fR is a port number\&.
+.RE
+.RS 2n
+.IP \(bu 2m
+\fBkey\fR is the key to retrieve the host and port form the server\&.
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+It's put home because I may add put <other\-place> at a later date\&.
+.RE
+.RE
+
+Top of Document [#able-of-contents]
+
+This is the module\&.
