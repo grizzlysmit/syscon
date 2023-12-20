@@ -31,6 +31,7 @@ Table of  Contents
 
 =COPYRIGHT
 LGPL V3.0+ L<LICENSE|https://github.com/grizzlysmit/syscon/blob/main/LICENSE>
+LGPL V3.0+ L<LICENSE|#blob/main/LICENSE>
 
 =head1 Introduction
 
@@ -82,7 +83,7 @@ $ scp -P $port <files> …… $host:
 
 L<Top of Document|#able-of-contents>
 
-This is the app 
+This is the app, you can find the modules docs L<here|https://github.com/grizzlysmit/syscon>
 
 =end pod
 

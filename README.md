@@ -45,7 +45,7 @@ A module **`Syscon`** and a program **`syscon`** or **`sc`** for short, which ke
 COPYRIGHT
 =========
 
-LGPL V3.0+ [LICENSE](https://github.com/grizzlysmit/syscon/blob/main/LICENSE)
+LGPL V3.0+ [LICENSE](https://github.com/grizzlysmit/syscon/blob/main/LICENSE) LGPL V3.0+ [LICENSE](#blob/main/LICENSE)
 
 Introduction
 ============
@@ -93,5 +93,5 @@ $ scp -P $port <files> …… $host:
 
 [Top of Document](#able-of-contents)
 
-This is the module.
+This is the module, you can find the apps docs [here](#docs/syscon.md).
 
