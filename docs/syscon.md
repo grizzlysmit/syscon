@@ -21,7 +21,7 @@ Table of Contents
 
     * [sc ssh](#sc-ssh)
 
-    * [USAGE](#usage)
+    * [sc ping](#sc-ping)
 
     * [USAGE](#usage)
 
@@ -145,7 +145,7 @@ multi sub MAIN('ssh', Str:D $key --> int){
 
 [Top of Document](#table-of-contents)
 
-### ping
+### sc ping
 
 ```bash
 $ sc ping $key

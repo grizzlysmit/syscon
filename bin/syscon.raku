@@ -24,7 +24,7 @@ Table of  Contents
 =item2 L<Motivations|#motivations>
 =item1 L<USAGE|#usage>
 =item2 L<sc ssh|#sc-ssh>
-=item2 L<USAGE|#usage>
+=item2 L<sc ping|#sc-ping>
 =item2 L<USAGE|#usage>
 =item2 L<USAGE|#usage>
 =item2 L<USAGE|#usage>
@@ -168,7 +168,7 @@ multi sub MAIN('ssh', Str:D $key --> int){
 
 =begin pod
 
-=head3 ping
+=head3 sc ping
 
 =begin code :lang<bash>
 
