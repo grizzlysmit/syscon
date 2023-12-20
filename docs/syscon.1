@@ -46,6 +46,16 @@ sc get home [#sc-get-home]
 .RS 2n
 .RS 2n
 .IP \(bu 2m
+sc put home [#sc-put-home]
+.RE
+.RE
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
 USAGE [#usage]
 .RE
 .RE
@@ -175,7 +185,7 @@ ssh \-p $port $host
 .EE
 .RE
 .P
-by the \fBssh(…)\fR function
+by the \fBssh(…)\fR function defined in \fBSyscon\&.rakumod\fR\&.
 
 .RS 4m
 .EX
@@ -233,7 +243,7 @@ multi sub MAIN('ping', Str:D $key \-\-> int){
 Top of Document [#table-of-contents]
 .SS sc get home
 
-Get some files on the remote system and deposite them here (in the directory the user is currently in)\&.
+Get some files on the remote system and deposit them here (in the directory the user is currently in)\&.
 
 .RS 4m
 .EX
@@ -245,4 +255,49 @@ $ sc get home $key $files\-on\-remote\-system……
 .P
 !https://github\&.com/grizzlysmit/syscon/blob/main/docs/images/sc\-get\-home\&.png
 
+Defined as 
+
+.RS 4m
+.EX
+multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args \-\-> int){
+    if _get('home', $key, :$recursive, |@args) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+
+.EE
+.RE
+.P
+Using the \fB_get(…)\fR function defined in \fBSyscon\&.rakumod\fR\&.
+
+Top of Document [#table-of-contents]
+.SS sc put home
+
+.RS 4m
+.EX
+$ sc put home $key $files……
+
+
+.EE
+.RE
+.P
+!https://github\&.com/grizzlysmit/syscon/blob/main/docs/images/sc\-put\-home\&.png
+
+.RS 4m
+.EX
+multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args \-\-> int){
+    if _put('home', $key, :$recursive, |@args) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+
+.EE
+.RE
+.P
 Top of Document [#table-of-contents]

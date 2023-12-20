@@ -587,6 +587,7 @@ footer {
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_ssh">sc ssh</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_ping">sc ping</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_get_home">sc get home</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#sc_put_home">sc put home</a></td></tr>
 </table></div>
 </nav><div id="syscon"></div><div class="subtitle"><p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
 <ul>
@@ -607,6 +608,10 @@ footer {
 <li><p><a href="#sc-ssh">sc ssh</a></p></li>
 <li><p><a href="#sc-ping">sc ping</a></p></li>
 <li><p><a href="#sc-get-home">sc get home</a></p></li>
+<li><p><a href="#sc-put-home">sc put home</a></p></li>
+</ul>
+<li><p><a href="#usage">USAGE</a></p></li>
+<ul>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
@@ -650,7 +655,7 @@ footer {
 <h3 id="sc_ssh"><a href="#syscon" class="u" title="go to top of document">sc ssh</a></h3>
 <p>Runs</p><pre class="pod-block-code">ssh -p $port $host
 
-</pre><p>by the <strong><code>ssh(…)</code></strong> function</p><pre class="pod-block-code">multi sub MAIN('ssh', Str:D $key --&gt; int){
+</pre><p>by the <strong><code>ssh(…)</code></strong> function defined in <strong>Syscon.rakumod</strong>.</p><pre class="pod-block-code">multi sub MAIN('ssh', Str:D $key --&gt; int){
     if ssh($key) {
         return 0;
     } else {
@@ -676,10 +681,29 @@ footer {
 }
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_get_home"><a href="#syscon" class="u" title="go to top of document">sc get home</a></h3>
-<p>Get some files on the remote system and deposite them here (in the directory the user is currently in).</p><pre class="pod-block-code">$ sc get home $key $files-on-remote-system……
+<p>Get some files on the remote system and deposit them here (in the directory the user is currently in).</p><pre class="pod-block-code">$ sc get home $key $files-on-remote-system……
 
-</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-20T20:04:15Z</span></div></footer>
+</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png</a></p><p>Defined as </p><pre class="pod-block-code">multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
+    if _get('home', $key, :$recursive, |@args) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+</pre><p>Using the <strong><code>_get(…)</code></strong> function defined in <strong>Syscon.rakumod</strong>.</p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_put_home"><a href="#syscon" class="u" title="go to top of document">sc put home</a></h3>
+<pre class="pod-block-code">$ sc put home $key $files……
+
+</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png</a></p><pre class="pod-block-code">multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
+    if _put('home', $key, :$recursive, |@args) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-20T20:46:01Z</span></div></footer>
 	</body>
 </html>
 

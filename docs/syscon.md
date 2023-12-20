@@ -27,6 +27,10 @@ Table of Contents
 
       * [sc get home](#sc-get-home)
 
+      * [sc put home](#sc-put-home)
+
+    * [USAGE](#usage)
+
       * [USAGE](#usage)
 
       * [USAGE](#usage)
@@ -134,7 +138,7 @@ Runs
 ssh -p $port $host
 ```
 
-by the **`ssh(…)`** function
+by the **`ssh(…)`** function defined in **Syscon.rakumod**.
 
 ```raku
 multi sub MAIN('ssh', Str:D $key --> int){
@@ -180,13 +184,47 @@ multi sub MAIN('ping', Str:D $key --> int){
 
 ### sc get home
 
-Get some files on the remote system and deposite them here (in the directory the user is currently in).
+Get some files on the remote system and deposit them here (in the directory the user is currently in).
 
 ```bash
 $ sc get home $key $files-on-remote-system……
 ```
 
 ![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png)
+
+Defined as 
+
+```raku
+multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --> int){
+    if _get('home', $key, :$recursive, |@args) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+```
+
+Using the **`_get(…)`** function defined in **Syscon.rakumod**.
+
+[Top of Document](#table-of-contents)
+
+### sc put home
+
+```bash
+$ sc put home $key $files……
+```
+
+![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png)
+
+```raku
+multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --> int){
+    if _put('home', $key, :$recursive, |@args) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+```
 
 [Top of Document](#table-of-contents)
 

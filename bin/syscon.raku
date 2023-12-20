@@ -27,6 +27,8 @@ Table of  Contents
 =item3 L<sc ssh|#sc-ssh>
 =item3 L<sc ping|#sc-ping>
 =item3 L<sc get home|#sc-get-home>
+=item3 L<sc put home|#sc-put-home>
+=item2 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -140,7 +142,7 @@ ssh -p $port $host
 
 =end code
 
-by the B<C<ssh(…)>> function
+by the B<C<ssh(…)>> function defined in B<Syscon.rakumod>.
 
 =begin code :lang<raku>
 
@@ -216,7 +218,7 @@ multi sub MAIN('ping', Str:D $key --> int){
 
 =head3 sc get home
 
-Get some files on the remote system and deposite them here (in the directory the user is currently in).
+Get some files on the remote system and deposit them here (in the directory the user is currently in).
 
 =begin code :lang<bash>
 
@@ -225,6 +227,22 @@ $ sc get home $key $files-on-remote-system……
 =end code
 
 !L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png>
+
+Defined as 
+
+=begin code :lang<raku>
+
+multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --> int){
+    if _get('home', $key, :$recursive, |@args) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+=end code
+
+Using the B<C<_get(…)>> function defined in B<Syscon.rakumod>.
 
 L<Top of Document|#table-of-contents>
 
@@ -237,6 +255,34 @@ multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args -
         return 1;
     }
 }
+
+=begin pod
+
+=head3 sc put home
+
+=begin code :lang<bash>
+
+$ sc put home $key $files……
+
+=end code
+
+!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png>
+
+=begin code :lang<raku>
+
+multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --> int){
+    if _put('home', $key, :$recursive, |@args) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+=end code
+
+L<Top of Document|#table-of-contents>
+
+=end pod
 
 multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --> int){
     if _put('home', $key, :$recursive, |@args) {
