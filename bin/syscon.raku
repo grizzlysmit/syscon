@@ -104,7 +104,7 @@ $ sc --help
 
 =end code
 
-L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png>
+!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png>
 
 =end pod
 

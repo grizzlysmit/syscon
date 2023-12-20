@@ -103,5 +103,5 @@ This is the app, you can find the modules docs [here](https://github.com/grizzly
 $ sc --help
 ```
 
-[https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png)
+![https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png)
 
