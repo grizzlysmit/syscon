@@ -137,7 +137,7 @@ ssh -p $port $host
 
 =end code
 
-by the B<C<ssh(…)>>
+by the B<C<ssh(…)>> function
 
 =begin code :lang<raku>
 

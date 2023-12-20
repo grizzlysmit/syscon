@@ -129,7 +129,7 @@ Runs
 ssh -p $port $host
 ```
 
-by the **`ssh(…)`**
+by the **`ssh(…)`** function
 
 ```raku
 multi sub MAIN('ssh', Str:D $key --> int){
