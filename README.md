@@ -91,7 +91,7 @@ $ scp -P $port <files> …… $host:
 
       * It's put home because I may add put <other-place> at a later date.
 
-[Top of Document](#able-of-contents)
+[Top of Document](#table-of-contents)
 
 This is the module, you can find the apps docs [here](https://github.com/grizzlysmit/syscon/blob/main/docs/syscon.md).
 

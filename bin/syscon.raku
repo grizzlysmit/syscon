@@ -88,7 +88,7 @@ $ scp -P $port <files> …… $host:
 =item2 B<key> is the key to retrieve the host and port form the server.
 =item3 It's put home because I may add put <other-place> at a later date.
 
-L<Top of Document|#able-of-contents>
+L<Top of Document|#table-of-contents>
 
 This is the app, you can find the modules docs L<here|https://github.com/grizzlysmit/syscon>
 
