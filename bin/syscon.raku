@@ -98,13 +98,15 @@ use Syscon;
 
 =head3 USAGE
 
-=begin code :lang<bash>
+=begin code :lang<sh>
 
 $ sc --help
 
 =end code
 
 !L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png>
+
+L<Top of Document|#table-of-contents>
 
 =end pod
 
