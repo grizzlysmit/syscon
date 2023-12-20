@@ -19,19 +19,21 @@ Table of Contents
 
   * [USAGE](#usage)
 
-    * [sc ssh](#sc-ssh)
+    * [The actual work horses of the library](#the-actual-work-horses-of-the-library)
 
-    * [sc ping](#sc-ping)
+      * [sc ssh](#sc-ssh)
 
-    * [USAGE](#usage)
+      * [sc ping](#sc-ping)
 
-    * [USAGE](#usage)
+      * [sc get home](#sc-get-home)
 
-    * [USAGE](#usage)
+      * [USAGE](#usage)
 
-    * [USAGE](#usage)
+      * [USAGE](#usage)
 
-    * [USAGE](#usage)
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
 
 NAME
 ====
@@ -121,6 +123,9 @@ $ sc --help
 
 [Top of Document](#table-of-contents)
 
+The actual work horses of the library
+-------------------------------------
+
 ### sc ssh
 
 Runs
@@ -170,6 +175,18 @@ multi sub MAIN('ping', Str:D $key --> int){
     }
 }
 ```
+
+[Top of Document](#table-of-contents)
+
+### sc get home
+
+Get some files on the remote system and deposite them here (in the directory the user is currently in).
+
+```bash
+$ sc get home $key $files-on-remote-system……
+```
+
+![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png)
 
 [Top of Document](#table-of-contents)
 

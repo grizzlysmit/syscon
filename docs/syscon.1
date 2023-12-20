@@ -1,5 +1,5 @@
 .pc
-.TH syscon.raku 1 2023-12-20
+.TH syscon.raku 1 2023-12-21
 .SS Table of Contents
 .IP \(bu 2m
 NAME [#name]
@@ -23,31 +23,49 @@ Motivations [#motivations]
 USAGE [#usage]
 .RS 2n
 .IP \(bu 2m
+The actual work horses of the library [#the-actual-work-horses-of-the-library]
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
 sc ssh [#sc-ssh]
 .RE
+.RE
+.RS 2n
 .RS 2n
 .IP \(bu 2m
 sc ping [#sc-ping]
 .RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+sc get home [#sc-get-home]
+.RE
+.RE
+.RS 2n
 .RS 2n
 .IP \(bu 2m
 USAGE [#usage]
 .RE
+.RE
+.RS 2n
 .RS 2n
 .IP \(bu 2m
 USAGE [#usage]
 .RE
+.RE
+.RS 2n
 .RS 2n
 .IP \(bu 2m
 USAGE [#usage]
 .RE
+.RE
+.RS 2n
 .RS 2n
 .IP \(bu 2m
 USAGE [#usage]
 .RE
-.RS 2n
-.IP \(bu 2m
-USAGE [#usage]
 .RE
 .SH "NAME"
 syscon 
@@ -144,6 +162,7 @@ $ sc \-\-help
 !https://github\&.com/grizzlysmit/syscon/blob/main/docs/images/usage\&.png
 
 Top of Document [#table-of-contents]
+.SS The actual work horses of the library
 .SS sc ssh
 
 Runs
@@ -211,4 +230,19 @@ multi sub MAIN('ping', Str:D $key \-\-> int){
 .EE
 .RE
 .P
+Top of Document [#table-of-contents]
+.SS sc get home
+
+Get some files on the remote system and deposite them here (in the directory the user is currently in)\&.
+
+.RS 4m
+.EX
+$ sc get home $key $files\-on\-remote\-system……
+
+
+.EE
+.RE
+.P
+!https://github\&.com/grizzlysmit/syscon/blob/main/docs/images/sc\-get\-home\&.png
+
 Top of Document [#table-of-contents]

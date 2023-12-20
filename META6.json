@@ -14,7 +14,7 @@
         "Gzz::Text::Utils",
         "Syntax::Highlighters",
         "GUI::Editors",
-        "use Usage::Utils",
+        "Usage::Utils",
         "Display::Listings"
     ],
     "provides" : {

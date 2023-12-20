@@ -23,13 +23,14 @@ Table of  Contents
 =item1 L<Introduction|#introduction>
 =item2 L<Motivations|#motivations>
 =item1 L<USAGE|#usage>
-=item2 L<sc ssh|#sc-ssh>
-=item2 L<sc ping|#sc-ping>
-=item2 L<USAGE|#usage>
-=item2 L<USAGE|#usage>
-=item2 L<USAGE|#usage>
-=item2 L<USAGE|#usage>
-=item2 L<USAGE|#usage>
+=item2 L<The actual work horses of the library|#the-actual-work-horses-of-the-library>
+=item3 L<sc ssh|#sc-ssh>
+=item3 L<sc ping|#sc-ping>
+=item3 L<sc get home|#sc-get-home>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
 
 =NAME syscon 
 =AUTHOR Francis Grizzly Smit (grizzly@smit.id.au)
@@ -127,6 +128,8 @@ L<Top of Document|#table-of-contents>
 
 =begin pod
 
+=head2 The actual work horses of the library
+
 =head3 sc ssh
 
 Runs
@@ -208,6 +211,24 @@ multi sub MAIN('ping', Str:D $key --> int){
         return 1;
     }
 }
+
+=begin pod
+
+=head3 sc get home
+
+Get some files on the remote system and deposite them here (in the directory the user is currently in).
+
+=begin code :lang<bash>
+
+$ sc get home $key $files-on-remote-system……
+
+=end code
+
+!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png>
+
+L<Top of Document|#table-of-contents>
+
+=end pod
 
 multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --> int){
     if _get('home', $key, :$recursive, |@args) {
