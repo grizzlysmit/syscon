@@ -320,7 +320,7 @@ multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args -
 
 =head2 Utility functions
 
-=head3 Utility functions
+=head3 sc edit configs
 
 =begin code :lang<bash>
 

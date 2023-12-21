@@ -243,7 +243,7 @@ multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args -
 Utility functions
 -----------------
 
-### Utility functions
+### sc edit configs
 
 ```bash
 $ sc edit configs
