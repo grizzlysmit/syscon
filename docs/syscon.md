@@ -249,7 +249,7 @@ Utility functions
 $ sc edit configs
 ```
 
-Implemented by the **`edit-configs`** function in the **GUI::Editors.rakumod** module. This open your config files in your preferred GUI editor, if you have one, if you don't have one of those setup it will try for a good substitute, failing that it will Fail and print an error message. 
+Implemented by the **`edit-configs`** function in the **GUI::Editors.rakumod** module. This open your configuration files in your preferred GUI editor, if you have one, if you don't have one of those setup it will try for a good substitute, failing that it will Fail and print an error message. 
 
 Do not use this it's for experts only, instead use the **set-*(…)** functions below.
 

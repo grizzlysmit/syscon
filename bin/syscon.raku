@@ -329,7 +329,7 @@ $ sc edit configs
 =end code
 
 Implemented by the B<C<edit-configs>> function in the B<GUI::Editors.rakumod> module.
-This open your config files in your preferred GUI editor, if you have one, if 
+This open your configuration files in your preferred GUI editor, if you have one, if 
 you don't have one of those setup it will try for a good substitute, failing
 that it will Fail and print an error message. 
 
