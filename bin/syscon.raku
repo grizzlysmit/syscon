@@ -29,7 +29,7 @@ Table of  Contents
 =item3 L<sc get home|#sc-get-home>
 =item3 L<sc put home|#sc-put-home>
 =item2 L<Utility functions|#utility-functions>
-=item3 L<USAGE|#usage>
+=item3 L<sc edit configs|#sc-edit-configs>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -318,15 +318,34 @@ multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args -
 
 =begin pod
 
+=head2 Utility functions
+
 =head3 Utility functions
 
 =begin code :lang<bash>
 
-$ sc --help
+$ sc edit configs
 
 =end code
 
-!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png>
+Implemented by the B<C<edit-configs>> function in the B<GUI::Editors.rakumod> module.
+This open your config files in your preferred GUI editor, if you have one, if 
+you don't have one of those setup it will try for a good substitute, failing
+that it will Fail and print an error message. 
+
+Do not use this it's for experts only, instead use the B<set-*(…)> functions below.
+
+=begin code :lang<raku>
+
+multi sub MAIN('edit', 'configs') returns Int {
+   if edit-configs() {
+       exit 0;
+   } else {
+       exit 1;
+   } 
+}
+
+=end code
 
 L<Top of Document|#table-of-contents>
 

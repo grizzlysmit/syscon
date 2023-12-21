@@ -588,6 +588,7 @@ footer {
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_ping">sc ping</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_get_home">sc get home</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_put_home">sc put home</a></td></tr>
+ <tr class="toc-level-2"><td class="toc-text"><a href="#Utility_functions">Utility functions</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#Utility_functions">Utility functions</a></td></tr>
 </table></div>
 </nav><div id="syscon"></div><div class="subtitle"><p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
@@ -613,7 +614,7 @@ footer {
 </ul>
 <li><p><a href="#utility-functions">Utility functions</a></p></li>
 <ul>
-<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#sc-edit-configs">sc edit configs</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
@@ -716,11 +717,20 @@ footer {
 <li><p><strong><code>multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, *@args --</code> Bool) is export</strong>&gt; is a function in <strong>Sysycon.rakumod</strong></p></li>
 </ul>
 </ul>
-<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="Utility_functions"><a href="#syscon" class="u" title="go to top of document">Utility functions</a></h3>
-<pre class="pod-block-code">$ sc --help
+<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h2 id="Utility_functions"><a href="#syscon" class="u" title="go to top of document">Utility functions</a></h2>
+<h3 id="Utility_functions"><a href="#syscon" class="u" title="go to top of document">Utility functions</a></h3>
+<pre class="pod-block-code">$ sc edit configs
 
-</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-21T02:23:20Z</span></div></footer>
+</pre><p>Implemented by the <strong><code>edit-configs</code></strong> function in the <strong>GUI::Editors.rakumod</strong> module. This open your config files in your preferred GUI editor, if you have one, if you don't have one of those setup it will try for a good substitute, failing that it will Fail and print an error message. </p><p>Do not use this it's for experts only, instead use the <strong>set-*(…)</strong> functions below.</p><pre class="pod-block-code">multi sub MAIN('edit', 'configs') returns Int {
+   if edit-configs() {
+       exit 0;
+   } else {
+       exit 1;
+   } 
+}
+
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-21T02:53:14Z</span></div></footer>
 	</body>
 </html>
 

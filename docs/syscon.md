@@ -31,7 +31,7 @@ Table of Contents
 
     * [Utility functions](#utility-functions)
 
-      * [USAGE](#usage)
+      * [sc edit configs](#sc-edit-configs)
 
       * [USAGE](#usage)
 
@@ -240,13 +240,28 @@ multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args -
 
 [Top of Document](#table-of-contents)
 
+Utility functions
+-----------------
+
 ### Utility functions
 
 ```bash
-$ sc --help
+$ sc edit configs
 ```
 
-![https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png)
+Implemented by the **`edit-configs`** function in the **GUI::Editors.rakumod** module. This open your config files in your preferred GUI editor, if you have one, if you don't have one of those setup it will try for a good substitute, failing that it will Fail and print an error message. 
+
+Do not use this it's for experts only, instead use the **set-*(…)** functions below.
+
+```raku
+multi sub MAIN('edit', 'configs') returns Int {
+   if edit-configs() {
+       exit 0;
+   } else {
+       exit 1;
+   } 
+}
+```
 
 [Top of Document](#table-of-contents)
 
