@@ -588,6 +588,7 @@ footer {
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_ping">sc ping</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_get_home">sc get home</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_put_home">sc put home</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#Utility_functions">Utility functions</a></td></tr>
 </table></div>
 </nav><div id="syscon"></div><div class="subtitle"><p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
 <ul>
@@ -610,7 +611,7 @@ footer {
 <li><p><a href="#sc-get-home">sc get home</a></p></li>
 <li><p><a href="#sc-put-home">sc put home</a></p></li>
 </ul>
-<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#utility-functions">Utility functions</a></p></li>
 <ul>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
@@ -694,7 +695,14 @@ footer {
 </pre><p>Using the <strong><code>_get(…)</code></strong> function defined in <strong>Syscon.rakumod</strong>.</p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_put_home"><a href="#syscon" class="u" title="go to top of document">sc put home</a></h3>
 <pre class="pod-block-code">$ sc put home $key $files……
 
-</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png</a></p><pre class="pod-block-code">multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
+</pre><ul>
+<li><p>Where</p></li>
+<ul>
+<li><p><strong><code>$key</code></strong> is as always the key to identify the host in question.</p></li>
+<li><p><strong><code>$files</code></strong>…… is a list of files to copy to the remote server.</p></li>
+</ul>
+</ul>
+<p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png</a></p><p>Implemented as</p><pre class="pod-block-code">multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
     if _put('home', $key, :$recursive, |@args) {
         return 0;
     } else {
@@ -702,8 +710,17 @@ footer {
     }
 }
 
-</pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-20T21:08:25Z</span></div></footer>
+</pre><ul>
+<li><p>Where</p></li>
+<ul>
+<li><p><strong><code>multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, *@args --</code> Bool) is export</strong>&gt; is a function in <strong>Sysycon.rakumod</strong></p></li>
+</ul>
+</ul>
+<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="Utility_functions"><a href="#syscon" class="u" title="go to top of document">Utility functions</a></h3>
+<pre class="pod-block-code">$ sc --help
+
+</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-21T02:16:11Z</span></div></footer>
 	</body>
 </html>
 

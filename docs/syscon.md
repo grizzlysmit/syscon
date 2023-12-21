@@ -29,7 +29,7 @@ Table of Contents
 
       * [sc put home](#sc-put-home)
 
-    * [USAGE](#usage)
+    * [Utility functions](#utility-functions)
 
       * [USAGE](#usage)
 
@@ -214,7 +214,15 @@ Using the **`_get(…)`** function defined in **Syscon.rakumod**.
 $ sc put home $key $files……
 ```
 
+  * Where
+
+    * **`$key`** is as always the key to identify the host in question.
+
+    * **`$files`**…… is a list of files to copy to the remote server.
+
 ![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png)
+
+Implemented as
 
 ```raku
 multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --> int){
@@ -225,6 +233,20 @@ multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args -
     }
 }
 ```
+
+  * Where
+
+    * **`multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, *@args --` Bool) is export**> is a function in **Sysycon.rakumod**
+
+[Top of Document](#table-of-contents)
+
+### Utility functions
+
+```bash
+$ sc --help
+```
+
+![https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png)
 
 [Top of Document](#table-of-contents)
 

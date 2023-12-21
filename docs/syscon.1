@@ -51,7 +51,7 @@ sc put home [#sc-put-home]
 .RE
 .RS 2n
 .IP \(bu 2m
-USAGE [#usage]
+Utility functions [#utility-functions]
 .RE
 .RS 2n
 .RS 2n
@@ -283,8 +283,20 @@ $ sc put home $key $files……
 
 .EE
 .RE
-.P
+.IP \(bu 2m
+Where
+.RS 2n
+.IP \(bu 2m
+\fB$key\fR is as always the key to identify the host in question\&.
+.RE
+.RS 2n
+.IP \(bu 2m
+\fB$files\fR…… is a list of files to copy to the remote server\&.
+.RE
+
 !https://github\&.com/grizzlysmit/syscon/blob/main/docs/images/sc\-put\-home\&.png
+
+Implemented as
 
 .RS 4m
 .EX
@@ -299,5 +311,24 @@ multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args \
 
 .EE
 .RE
+.IP \(bu 2m
+Where
+.RS 2n
+.IP \(bu 2m
+\fBmulti sub _put('home', Str:D $key, Bool :r(:$recursive) = False, *@args \-\- Bool) is export\fR> is a function in \fBSysycon\&.rakumod\fR
+.RE
+
+Top of Document [#table-of-contents]
+.SS Utility functions
+
+.RS 4m
+.EX
+$ sc \-\-help
+
+
+.EE
+.RE
 .P
+!https://github\&.com/grizzlysmit/syscon/blob/main/docs/images/usage\&.png
+
 Top of Document [#table-of-contents]

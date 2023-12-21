@@ -28,7 +28,7 @@ Table of  Contents
 =item3 L<sc ping|#sc-ping>
 =item3 L<sc get home|#sc-get-home>
 =item3 L<sc put home|#sc-put-home>
-=item2 L<USAGE|#usage>
+=item2 L<Utility functions|#utility-functions>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -266,7 +266,13 @@ $ sc put home $key $files……
 
 =end code
 
+=item1 Where
+=item2 B<C<$key>> is as always the key to identify the host in question.
+=item2 B<C<$files>>…… is a list of files to copy to the remote server.
+
 !L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png>
+
+Implemented as
 
 =begin code :lang<raku>
 
@@ -279,6 +285,14 @@ multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args -
 }
 
 =end code
+
+=item1 Where
+=begin item2 
+
+B<C<multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, *@args --> Bool) is export>>
+is a function in B<Sysycon.rakumod>
+
+=end item2
 
 L<Top of Document|#table-of-contents>
 
@@ -301,6 +315,22 @@ multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args -
     #********************************#
     ##################################
 #»»»
+
+=begin pod
+
+=head3 Utility functions
+
+=begin code :lang<bash>
+
+$ sc --help
+
+=end code
+
+!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png>
+
+L<Top of Document|#table-of-contents>
+
+=end pod
 
 multi sub MAIN('edit', 'configs') returns Int {
    if edit-configs() {
