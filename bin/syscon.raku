@@ -30,7 +30,7 @@ Table of  Contents
 =item3 L<sc put home|#sc-put-home>
 =item2 L<Utility functions|#utility-functions>
 =item3 L<sc edit configs|#sc-edit-configs>
-=item3 L<USAGE|#usage>
+=item3 L<sc list keys|#sc-list-keys>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -367,7 +367,28 @@ multi sub MAIN('edit', 'configs') returns Int {
    } 
 }
 
-multi sub MAIN('list', 'keys', Str $prefix = '', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False, Int:D :l(:$page-length) = 50, Str :p(:$pattern) = Str, Str :e(:$ecma-pattern) = Str) returns Int {
+=begin pod
+
+=head3 sc list keys 
+
+=begin code :lang<bash>
+
+$ sc list keys
+
+=end code
+
+!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-keys.png>
+
+L<Top of Document|#table-of-contents>
+
+=end pod
+
+multi sub MAIN('list', 'keys', Str $prefix = '',
+                               Bool:D :c(:color(:$colour)) = False,
+                               Bool:D :s(:$syntax) = False,
+                               Int:D :l(:$page-length) = 50,
+                               Str :p(:$pattern) = Str,
+                               Str :e(:$ecma-pattern) = Str) returns Int {
     my Regex $_pattern;
     with $pattern {
         $_pattern = rx:i/ <$pattern> /;
@@ -573,6 +594,27 @@ multi sub MAIN('restore', 'db', Str $restore-from = Str --> Bool) {
     } else {
         die "Error: restore backup failed!!!";
     }
+}
+
+multi sub MAIN('list', 'db', 'backups', Str:D $prefix = '',
+                               Bool:D :c(:color(:$colour)) = False,
+                               Bool:D :s(:$syntax) = False,
+                               Int:D :l(:$page-length) = 30,
+                               Str :p(:$pattern) = Str,
+                               Str :e(:$ecma-pattern) = Str) returns Int {
+    my Regex $_pattern;
+    with $pattern {
+        $_pattern = rx:i/ <$pattern> /;
+    } orwith $ecma-pattern {
+        $_pattern = ECMA262Regex.compile("^$ecma-pattern\$");
+    } else {
+        $_pattern = rx:i/^ .* $/;
+    }
+    if list-db-backups($prefix, $colour, $syntax, $_pattern, $page-length) {
+        exit 0;
+    } else {
+        exit 1;
+    } 
 }
 
 #`«««

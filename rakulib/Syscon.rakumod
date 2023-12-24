@@ -88,6 +88,7 @@ use Syntax::Highlighters;
 use GUI::Editors;
 use Usage::Utils;
 use Display::Listings;
+use File::Utils;
 #use Grammar::Debugger;
 #use Grammar::Tracer;
 #use trace;
@@ -247,46 +248,88 @@ role HostPortActions {
 }
 
 grammar HostsFile is Key is HostPort {
-    token TOP           {  [ <line> [ \v+ <line> ]* \v* ]? }
-    token line          {  [ <host-line> || <alias> ] }
-    token host-line     { ^^ <key> \h+ '=>' <host-port> [ '#' \h* <comment> \h* ]? $$ }
-    token alias         { ^^ <key> \h+ '-->' \h+ <target=.key> \h+ [ '#' \h* <comment> \h* ]? $$ }
-    token comment       { <-[\n]>* }
+    token TOP                 {  [ <line> [ \v+ <line> ]* \v* ]? }
+    regex line                { [ <white-space-line> || <host-line> || <alias> || <header-line> || <line-of-hashes> || <comment-line> ] }
+    regex white-space-line    { ^^ \h* $$ }
+    token header-line         { ^^ \h* '#' <header> \h* $$ }
+    token header              { 'key' \h+ 'sep' \h+ 'host-spec' \h+ ':' \h+ '#' \h+ 'comment' }
+    token line-of-hashes      { ^^ \h* '#'+ $$ }
+    regex comment-line        { ^^ \h* '#' <-[\v]>* $$ }
+    token host-line           { ^^ <key> \h+ '=>' <host-port> [ '#' \h* <comment> \h* ]? $$ }
+    token alias               { ^^ <key> \h+ '-->' \h+ <target=.key> \h+ [ '#' \h* <comment> \h* ]? $$ }
+    token comment             { <-[\n]>* }
 }
 
+my $line-no = 0;
 class HostFileActions does KeyActions does HostPortActions {
+    #regex line                { [ <white-space-line> || <host-line> || <alias> || <header-line> || <line-of-hashes> || <comment-line> ] }
     method line($/) {
-        my %val;
-        if $/<host-line> {
-            %val = $/<host-line>.made;
+        my %line;
+        if $/<white-space-line> {
+            %line = $/<white-space-line>.made;
+        }elsif $/<host-line> {
+            %line = $/<host-line>.made;
         } elsif $/<alias> {
-            %val = $/<alias>.made;
+            %line = $/<alias>.made;
+        } elsif $/<header-line> {
+            %line = $/<header-line>.made;
+        } elsif $/<line-of-hashes> {
+            %line = $/<line-of-hashes>.made;
+        } elsif $/<comment-line> {
+            %line = $/<comment-line>.made;
         }
-        make %val;
+        make %line;
     }
-    method comment($/)   { make $/<comment>.made }
+    method white-space-line($/) {
+        $line-no++;
+        my %white-space-line = type => 'white-space-line', line-no => $line-no, value => ~$/;
+        make ~$line-no => %white-space-line;
+    }
+    method header-line($/) {
+        $line-no++;
+        my %header-line = type => 'header-line', line-no => $line-no, value => $/<header>.made;
+        make ~$line-no => %header-line;
+    }
+    method header($/) {
+        my $header = ~$/;
+        make $header;
+    }
+    method line-of-hashes($/) {
+        $line-no++;
+        my %line-of-hashes = type => 'line-of-hashes', line-no => $line-no, value => ~$/;
+        make '##' => %line-of-hashes;
+    }
+    method comment-line($/) {
+        $line-no++;
+        my %comment-line = type => 'comment-line', line-no => $line-no, value => ~$/;
+        make ~$line-no => %comment-line;
+    }
+    method comment($/)   { make ~$/; }
     method host-line   ($/)  {
-        my %val = $/<host-port>.made;
-        %val«type» = 'host';
+        my %host-line = $/<host-port>.made;
+        %host-line«type» = 'host';
         if $/<comment> {
             my Str $com = ~($/<comment>).trim;
-            %val«comment» = $com;
+            %host-line«comment» = $com;
         }
-        make $/<key>.made => %val;
+        $line-no++;
+        %host-line«line-no» = $line-no;
+        make $/<key>.made => %host-line;
     }
     method alias  ($/) {
-        my %val =  type => 'alias', host => $/<target>.made;
+        $line-no++;
+        my %alias =  type => 'alias', line-no => $line-no, host => $/<target>.made;
         if $/<comment> {
             my $com = ~($/<comment>).trim;
             #$com ~~ s:g/ $<closer> = [ '}' ] /\\$<closer>/;
-            %val«comment» = $com;
+            %alias«comment» = $com;
         }
-        make $/<key>.made => %val;
+        make $/<key>.made => %alias;
     }
     method target ($/) { make $/<key>.made }
     method TOP($match) {
-        my %lines = $match<line>.map: *.made;
-        $match.make: %lines;
+        my %top = $match<line>.map: *.made;
+        $match.make: %top;
     }
 } # class HostFileActions does KeyActions does HostPortActions #
 
@@ -570,7 +613,21 @@ my Str  @lines     = @LINES.grep({ !rx/^ \h* '#' .* $/ }).grep({ !rx/^ \h* $/ })
 my $actions = HostFileActions;
 #my $test = HostsFile.parse(@lines.join("\x0A"), :enc('UTF-8'), :$actions).made;
 #dd $test, $?NL;
-my %the-lot = |(HostsFile.parse(@lines.join("\x0A"), :enc('UTF-8'), :$actions).made);
+my %whole-file = |(HostsFile.parse(@LINES.join("\x0A"), :enc('UTF-8'), :$actions).made);
+#my %the-lot = |(HostsFile.parse(@lines.join("\x0A"), :enc('UTF-8'), :$actions).made);
+#`«««
+my %t = |%whole-file.kv.grep( -> $k, %v { %v«type» eq 'host' || %v«type» eq 'alias' }).map: -> @val {
+                                                                                                        my $ky = @val[0];
+                                                                                                        my %vl = |@val[1];
+                                                                                                        $ky => %vl
+                                                                                                    };
+dd %t;
+#»»»
+my %the-lot = |%whole-file.kv.grep( -> $k, %v { %v«type» eq 'host' || %v«type» eq 'alias' }).map: -> @val {
+                                                                                                              my $ky = @val[0];
+                                                                                                              my %vl = |@val[1];
+                                                                                                              $ky => %vl
+                                                                                                          };
 
 ####################
 #                  #
@@ -616,163 +673,141 @@ sub valid-key(Str:D $key --> Bool) is export {
 }
 
 
-sub list-keys(Str $prefix, Regex:D $pattern --> Array[Str]) is export {
-    my Str @keys;
-    for %the-lot.keys -> $key {
-        if $key.starts-with($prefix, :ignorecase) && $key ~~ $pattern {
-            @keys.push($key);
+sub make-array( --> Array) is export {
+    my @results;
+    for %the-lot.kv -> $key, %val {
+        my Str $comment = Str;
+        $comment = %val«comment» with %val«comment»;
+        my %row = key => $key;
+        with $comment {
+            %row«comment» = $comment;
         }
+        #dd %row;
+        @results.push(%row);
     }
-    return @keys;
+    #dd @results;
+    #@results = @results.map( -> %elt { %elt }).Array;
+    #dd @results;
+    return @results;
 }
 
-sub say-list-keys(Str $prefix, Bool:D $colour is copy, Bool:D $syntax, Regex:D $pattern, Int:D $page-length --> Bool:D) is export {
-    if $syntax {
-        $colour = True;
-    }
-    my @keys = list-keys($prefix, $pattern).sort: { .lc };
-    my Int:D $key-width        = 0;
-    my Int:D $comment-width    = 0;
-    my Bool:D $comment-present = False;
-    for @keys -> $key {
-        my %val = %the-lot{$key};
-        my Str $comment = Str;
-        $comment = %val«comment» with %val«comment»;
-        $key-width           = max($key-width,     wcswidth($key));
-        with $comment {
-            $comment-width   = max($comment-width, wcswidth($comment));
-            $comment-present = True;
+sub say-list-keys(Str $prefix, Bool:D $colour, Bool:D $syntax, Regex:D $pattern, Int:D $page-length --> Bool:D) is export {
+    my @rows = make-array();
+    my Str:D @fields = |qw[key comment];
+    #dd @fields, @rows;
+    my %defaults;
+    sub include-row(Str:D $prefix, Regex:D $pattern, Int:D $idx, Str:D @fields, %row --> Bool:D) {
+        for @fields -> $field {
+            my Str:D $value = ~(%row{$field} // '');
+            #dd $field, $value;
+            return True if $value.starts-with($prefix, :ignorecase) && $value ~~ $pattern;
         }
-    }
-    $key-width      += 2;
-    $comment-width  += 2;
-    my Int:D $width  = 0;
-    if $comment-present {
-        $width       = $key-width + $comment-width + 3;
-    } else {
-        $width       = $key-width;
-    }
-    my Int:D $cnt = 0;
-    if $colour {
-        if $comment-present {
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s # %-*s", $key-width, 'key', $comment-width, 'comment') ~ t.text-reset;
-            $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ ('=' x $width) ~ t.text-reset;
-            $cnt++;
-        } else {
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $key-width, 'key') ~ t.text-reset;
-            $cnt++;
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ ('=' x $width) ~ t.text-reset;
-            $cnt++;
-        }
-    } else {
-        if $comment-present {
-            printf "%-*s # %-*s\n", $key-width, 'key', $comment-width, 'comment';
-            say '=' x $width;
-        } else {
-            printf "%-*s\n", $key-width, 'key';
-            say '=' x $width;
-        }
-    }
-    for @keys -> $key {
-        my %val = %the-lot{$key};
-        my Str $comment = Str;
-        $comment = %val«comment» with %val«comment»;
-        with $comment {
-            if $colour {
-                if $syntax {
-                    my $cline = (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.red ~ sprintf("%-*s", $key-width, $key);
-                    $cline   ~= t.bright-blue ~ sprintf(" # %-*s", $comment-width, $comment);
-                    put $cline ~ t.text-reset;
-                } else {
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s # %-*s", $key-width, $key, $comment-width, $comment) ~ t.text-reset;
-                }
-                $cnt++;
+        return False;
+    } # sub include-row(Str:D $prefix, Regex:D $pattern, Int:D $idx, Str:D @fields, %row --> Bool:D) #
+    sub head-value(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) {
+        #dd $indx, $field, $colour, $syntax, @fields;
+        if $colour {
+            if $syntax { 
+                return t.color(0, 255, 255) ~ $field;
             } else {
-                printf "%-*s # %-*s\n", $key-width, $key, $comment-width, $comment;
-                $cnt++;
+                return t.color(0, 255, 255) ~ $field;
             }
         } else {
-            if $comment-present {
-                $comment = '';
-                if $colour {
-                    if $syntax {
-                        put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s # %-*s", $key-width, $key, $comment-width, $comment) ~ t.text-reset;
-                    } else {
-                        put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s # %-*s", $key-width, $key, $comment-width, $comment) ~ t.text-reset;
-                    }
-                    $cnt++;
-                } else {
-                    printf "%-*s # %-*s\n", $key-width, $key, $comment-width, $comment;
-                    $cnt++;
+            return $field;
+        }
+    } # sub head-value(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) #
+    sub head-between(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) {
+        if $colour {
+            if $syntax {
+                given $field {
+                    when 'key'     { return t.color(0, 255, 255)   ~ ' # ';   }
+                    when 'comment' { return t.color(0, 0, 255)     ~ '  ';    }
+                    default { return ''; }
                 }
             } else {
-                if $colour {
-                    if $syntax {
-                        put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.red ~ sprintf("%-*s", $key-width, $key) ~ t.text-reset;
-                    } else {
-                        put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $key-width, $key) ~ t.text-reset;
-                    }
-                    $cnt++;
-                } else {
-                    $key.say;
-                    $cnt++;
+                given $field {
+                    when 'key'     { return t.color(0, 255, 255)   ~ ' # ';   }
+                    when 'comment' { return t.color(0, 255, 255)   ~ '  ';    }
+                    default { return ''; }
                 }
             }
+        } else {
+            given $field {
+                when 'key'     { return ' # ';   }
+                when 'comment' { return '  ';    }
+                default        { return '';      }
+            }
         }
-        if $cnt % $page-length == 0 {
-            if $colour {
-                if $comment-present {
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
-                    $cnt++;
-                    my Str $cline;
-                    if $syntax {
-                        $cline  = (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.red ~ sprintf("%-*s", $key-width, 'key');
-                        $cline ~= t.bright-blue ~ sprintf(" # %-*s", $comment-width, 'comment');
-                    } else {
-                        $cline = (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s # %-*s", $key-width, 'key', $comment-width, 'comment');
-                    }
-                    put $cline ~ t.text-reset;
-                    $cnt++;
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ ('=' x $width) ~ t.text-reset;
-                    $cnt++;
-                } else {
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, centre('', $width, '=')) ~ t.text-reset;
-                    $cnt++;
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $key-width, 'key') ~ t.text-reset;
-                    $cnt++;
-                    put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ ('=' x $width) ~ t.text-reset;
-                    $cnt++;
+    } # sub head-between(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) #
+    sub field-value(Int:D $idx, Str:D $field, $value, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) {
+        my Str:D $val = ~($value // ''); #`««« assumming $value is a Str:D »»»
+        #dd $val, $value, $field;
+        if $syntax {
+            given $field {
+                when 'key'     { return t.color(0, 255, 255) ~ $val; }
+                when 'comment' { return t.color(0, 0, 255) ~ $val;   }
+                default        { return t.color(255, 0, 0) ~ '';     }
+            } # given $field #
+        } elsif $colour {
+            given $field {
+                when 'key'     { return t.color(0, 0, 255) ~ $val; }
+                when 'comment' { return t.color(0, 0, 255) ~ $val; }
+                default        { return t.color(255, 0, 0) ~ '';   }
+            }
+        } else {
+            given $field {
+                when 'key'     { return $val;                      }
+                when 'comment' { return ~$val;                     }
+                default        { return '';                        }
+            }
+        }
+    } # sub field-value(Int:D $idx, Str:D $field, $value, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) #
+    sub between(Int:D $idx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) {
+        if $syntax {
+                given $field {
+                    when 'key'     { return t.color(0, 0, 255) ~ ' # '; }
+                    when 'comment' { return t.color(0, 0, 255) ~ '  ';  }
+                    default        { return t.color(255, 0, 0) ~ '';    }
                 }
+        } elsif $colour {
+                given $field {
+                    when 'key'     { return t.color(0, 0, 255) ~ ' # '; }
+                    when 'comment' { return t.color(0, 0, 255) ~ '  ';  }
+                    default        { return t.color(255, 0, 0) ~ '';    }
+                }
+        } else {
+                given $field {
+                    when 'key'     { return ' # '; }
+                    when 'comment' { return '  ';  }
+                    default        { return '';    }
+                }
+        }
+    } # sub between(Int:D $idx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) #
+    sub row-formatting(Int:D $cnt, Bool:D $colour, Bool:D $syntax --> Str:D) {
+        if $colour {
+            if $syntax { 
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3; # three heading lines. #
+                return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
             } else {
-                if $comment-present {
-                    say '=' x $width;
-                    printf "%-*s # %-*s\n", $key-width, 'key', $comment-width, 'comment';
-                    say '=' x $width;
-                } else {
-                    say '=' x $width;
-                    printf "%-*s\n", $key-width, 'key';
-                    say '=' x $width;
-                }
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3;
+                return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
             }
-        } # if $cnt % $page-length == 0 #
-    } # for @keys -> $key #
-    if $colour {
-        if $comment-present {
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s   %-*s", $key-width, '', $comment-width, '') ~ t.text-reset;
-            $cnt++;
         } else {
-            put (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $key-width, '') ~ t.text-reset;
-            $cnt++;
+            return '';
         }
-    } else {
-        if $comment-present {
-            printf("%-*s   %-*s\n", $key-width, '', $comment-width, '');
-        } else {
-            ''.say;
-        }
-    }
-    return True;
+    } # sub row-formatting(Int:D $cnt, Bool:D $colour, Bool:D $syntax --> Str:D) #
+    return list-by($prefix, $colour, $syntax, $page-length,
+                  $pattern, @fields, %defaults, @rows,
+                  :&include-row, 
+                  :&head-value, 
+                  :&head-between,
+                  :&field-value, 
+                  :&between,
+                  :&row-formatting);
 } # sub say-list-keys(Str $prefix, Bool:D $colour is copy, Bool:D $syntax, Regex:D $pattern, Int:D $page-length --> Bool:D) is export #
 
 sub list-all(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool:D) is export {
@@ -2876,6 +2911,142 @@ sub restore-db-file(IO::Path $restore-from --> Bool) is export {
         return False;
     }
 }
+
+sub list-db-backups(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Regex:D $pattern, Int:D $page-length --> Bool:D) is export {
+    $colour = True if $syntax;
+    my IO::Path @backups = $config.IO.dir(:test(rx/ ^ 
+                                                           'hosts.h_ts.' \d ** 4 '-' \d ** 2 '-' \d ** 2
+                                                               [ 'T' \d **2 [ [ '.' || ':' ] \d ** 2 ] ** {0..2} [ [ '.' || '·' ] \d+ 
+                                                                   [ [ '+' || '-' ] \d ** 2 [ '.' || ':' ] \d ** 2 || 'z' ]?  ]?
+                                                               ]?
+                                                           $
+                                                         /
+                                                       )
+                                                );
+    #dd @backups;
+    my $actions = HostFileActions;
+    @backups .=grep: -> IO::Path $fl { 
+                                my @file = $fl.slurp.split("\n");
+                                HostsFile.parse(@file.join("\x0A"), :enc('UTF-8'), :$actions).made;
+                            };
+    @backups .=sort;
+    my @_backups = @backups.map: -> IO::Path $f {
+          my %elt = backup => $f.basename, perms => symbolic-perms($f, :$colour, :$syntax),
+                      user => $f.user, group => $f.group, size => $f.s, modified => $f.modified;
+          %elt;
+      };
+    #dd @backups;
+    my Str:D @fields = 'perms', 'size', 'user', 'group', 'modified', 'backup';
+    my       %defaults;
+    my Str:D %fancynames = perms => 'Permissions', size => 'Size',
+                             user => 'User', group => 'Group',
+                             modified => 'Date Modified', backup => 'Backup';
+    sub include-row(Str:D $prefix, Regex:D $pattern, Int:D $idx, Str:D @fields, %row --> Bool:D) {
+        my Str:D $value = ~(%row«backup» // '');
+        return True if $value.starts-with($prefix, :ignorecase) && $value ~~ $pattern;
+        return False;
+    } # sub include-row(Str:D $prefix, Regex:D $pattern, Int:D $idx, Str:D @fields, %row --> Bool:D) #
+    sub head-value(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) {
+        #dd $indx, $field, $colour, $syntax, @fields;
+        if $colour {
+            if $syntax { 
+                return t.color(0, 255, 255) ~ %fancynames{$field};
+            } else {
+                return t.color(0, 255, 255) ~ %fancynames{$field};
+            }
+        } else {
+            return %fancynames{$field};
+        }
+    } # sub head-value(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) #
+    sub head-between(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) {
+        return ' ';
+    } # sub head-between(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) #
+    sub field-value(Int:D $idx, Str:D $field, $value, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) {
+        my Str:D $val = ~($value // ''); #`««« assumming $value is a Str:D »»»
+        #dd $val, $value, $field;
+        if $syntax {
+            given $field {
+                when 'perms'    { return $val; }
+                when 'size'     {
+                    my Int:D $size = +$value;
+                    return t.color(255, 0, 0) ~ format-bytes($size);
+                }
+                when 'user'     { return t.color(255, 255, 0) ~ uid2username(+$value);    }
+                when 'group'    { return t.color(255, 255, 0) ~ gid2groupname(+$value);   }
+                when 'modified' {
+                    my Instant:D $m = +$value;
+                    my DateTime:D $dt = $m.DateTime.local;
+                    return t.color(0, 0, 235) ~ $dt.Str;  
+                }
+                when 'backup'   { return t.color(255, 0, 255) ~ $val; }
+                default         { return t.color(255, 0, 0) ~ $val;   }
+            } # given $field #
+        } elsif $colour {
+            given $field {
+                when 'perms'    { return $val; }
+                when 'size'     {
+                    my Int:D $size = +$value;
+                    return t.color(0, 0, 255) ~ format-bytes($size);
+                }
+                when 'user'     { return t.color(0, 0, 255) ~ uid2username(+$value);    }
+                when 'group'    { return t.color(0, 0, 255) ~ gid2groupname(+$value);   }
+                when 'modified' {
+                    my Instant:D $m = +$value;
+                    my DateTime:D $dt = $m.DateTime.local;
+                    return t.color(0, 0, 255) ~ $dt.Str;  
+                }
+                when 'backup'   { return t.color(0, 0, 255) ~ $val;   }
+                default         { return t.color(255, 0, 0) ~ $val;   }
+            } # given $field #
+        } else {
+            given $field {
+                when 'perms'    { return $val; }
+                when 'size'     {
+                    my Int:D $size = +$value;
+                    return format-bytes($size);
+                }
+                when 'user'     { return uid2username(+$value);    }
+                when 'group'    { return gid2groupname(+$value);   }
+                when 'modified' {
+                    my Instant:D $m = +$value;
+                    my DateTime:D $dt = $m.DateTime.local;
+                    return $dt.Str;  
+                }
+                when 'backup'   { return $val;   }
+                default         { return $val;   }
+            } # given $field #
+        }
+    } # sub field-value(Int:D $idx, Str:D $field, $value, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) #
+    sub between(Int:D $idx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) {
+        return ' ';
+    } # sub between(Int:D $idx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) #
+    sub row-formatting(Int:D $cnt, Bool:D $colour, Bool:D $syntax --> Str:D) {
+        if $colour {
+            if $syntax { 
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3; # three heading lines. #
+                return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
+            } else {
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3;
+                return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
+            }
+        } else {
+            return '';
+        }
+    } # sub row-formatting(Int:D $cnt, Bool:D $colour, Bool:D $syntax --> Str:D) #
+    return list-by($prefix, $colour, $syntax, $page-length,
+                  $pattern, @fields, %defaults, @_backups,
+                  :!sort,
+                  :&include-row, 
+                  :&head-value, 
+                  :&head-between,
+                  :&field-value, 
+                  :&between,
+                  :&row-formatting);
+} # sub list-db-backups(Boo:D $colour is copy, Bool:D $syntax --> Bool:D) is export #
 
 sub test( --> True) is export {
     #«««

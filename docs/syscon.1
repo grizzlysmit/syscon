@@ -1,5 +1,5 @@
 .pc
-.TH syscon.raku 1 2023-12-21
+.TH syscon.raku 1 2023-12-25
 .SS Table of Contents
 .IP \(bu 2m
 NAME [#name]
@@ -62,7 +62,7 @@ sc edit configs [#sc-edit-configs]
 .RS 2n
 .RS 2n
 .IP \(bu 2m
-USAGE [#usage]
+sc list keys [#sc-list-keys]
 .RE
 .RE
 .RS 2n
@@ -396,4 +396,17 @@ multi sub MAIN('edit', 'configs') returns Int {
 .EE
 .RE
 .P
+Top of Document [#table-of-contents]
+.SS sc list keys 
+
+.RS 4m
+.EX
+$ sc list keys
+
+
+.EE
+.RE
+.P
+!https://github\&.com/grizzlysmit/syscon/blob/main/docs/images/sc\-list\-keys\&.png
+
 Top of Document [#table-of-contents]

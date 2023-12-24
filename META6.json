@@ -15,7 +15,8 @@
         "Syntax::Highlighters",
         "GUI::Editors",
         "Usage::Utils",
-        "Display::Listings"
+        "Display::Listings",
+        "File::Utils"
     ],
     "provides" : {
         "Syscon" : "lib/Syscon.rakumod",

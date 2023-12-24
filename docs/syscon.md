@@ -33,7 +33,7 @@ Table of Contents
 
       * [sc edit configs](#sc-edit-configs)
 
-      * [USAGE](#usage)
+      * [sc list keys](#sc-list-keys)
 
       * [USAGE](#usage)
 
@@ -278,6 +278,16 @@ multi sub MAIN('edit', 'configs') returns Int {
    } 
 }
 ```
+
+[Top of Document](#table-of-contents)
+
+### sc list keys 
+
+```bash
+$ sc list keys
+```
+
+![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-keys.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-keys.png)
 
 [Top of Document](#table-of-contents)
 
