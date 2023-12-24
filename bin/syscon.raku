@@ -738,10 +738,12 @@ multi sub MAIN('help', Bool:D :n(:nocolor(:$nocolour)) = False, *%named-args, *@
    exit 0;
 }
 
+#`«««
 multi sub MAIN('test') returns Int {
    test();
    exit 0;
 }
+#»»»
 
 #`«««
     ***********************************************************
