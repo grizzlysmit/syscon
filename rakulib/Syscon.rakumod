@@ -1007,267 +1007,275 @@ sub list-by-all(Str:D $prefix, Bool:D $colour, Bool:D $syntax, Int:D $page-lengt
             return '';
         }
     } #`««« sub row-formatting(Int:D $cnt, Bool:D $colour, Bool:D $syntax --> Str:D) »»»
-    #`«««
-    return list-by($prefix, $colour, $syntax, $page-length, $pattern, $key-name, @fields, %defaults, %the-lot,
-                                          :start-cnt(-3), :starts-with-blank, :overline-header(''), :underline-header, :underline('='), 
-                                          :put-line-at-bottom, :line-at-bottom, :line-at-bottom('='), 
-                                            :&include-row, :&head-value, :&head-between, :&field-value, :&between, :&row-formatting);
-    #»»»
     return list-by($prefix, $colour, $syntax, $page-length, $pattern, $key-name, @fields, %defaults, %the-lot,
                                             :&include-row, :&head-value, :&head-between, :&field-value, :&between, :&row-formatting);
 } #`««« sub list-by-all(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool:D) is export »»»
 
-sub list-commented(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export {
-    $colour = True if $syntax;
+sub list-commented(Str:D $prefix, Bool:D $colour, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool) is export {
+    my @data;
     my IO::Handle:D $input  = "$config/hosts.h_ts".IO.open:     :r, :nl-in("\n")   :chomp;
-    my Int:D $key-width        = 0;
-    my Int:D $host-width       = 0;
-    my Int:D $port-width       = 0;
-    my Int:D $comment-width    = 0;
-    my Str $ln;
-    if $colour {
+    my $actions = CommentedLineActions;
+    my $ln = $input.get;
+    while !$input.eof {
+        my %row;
+        #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
+        #dd $test;
+        my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
+        my Str $key         = %val«key»;
+        my %v               = %val«value»;
+        my Str:D $type      = %v«type»;
+        %row                = key => $key, type => $type;
+        if $type eq 'commeted-alias' || $type eq 'commeted-host' {
+            my Str $host;
+            with %v«host» {
+                $host        = %v«host»;
+                %row«host»   =  $host;
+            }
+            my Int $port = 0;
+            if $type eq 'commeted-host' {
+                $port           = %v«port».Int;
+                %row«port»      = $port;
+            }
+            with %v«comment» {
+                my Str $comment = %v«comment»;
+                %row«comment»   = $comment;
+            }
+            @data.push: %row;
+        }
         $ln = $input.get;
-        while !$input.eof {
-            my $actions = CommentedLineActions;
-            #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
-            #dd $test;
-            my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
-            my Str $key         = %val«key»;
-            my %v               = %val«value»;
-            my Str:D $type      = %v«type»;
-            unless $type eq 'empty-str' || $type eq 'comment-line' {
-                #`««
-                unless $type eq 'commeted-host' || $type eq 'commeted-alias' || $type eq 'header-line' {
-                    $ln = $input.get;
-                    next;
-                }
-                #»»
-                my Str $host;
-                with %val«host» {
-                    $host        = %v«host»;
-                }
-                $key-width          = max($key-width,     wcswidth("#$key"));
-                $host-width         = max($host-width,    wcswidth($host)) with $host;
-                my Int $port = 0;
-                if $type eq 'commeted-host' {
-                    $port = %v«port».Int;
-                    $port-width     = max($port-width,    wcswidth($port));
-                }
-                with %v«comment» {
-                    my Str $comment = %v«comment»;
-                    $comment-width  = max($comment-width,    wcswidth("# $comment"));
-                }
+    } # while !$input.eof #
+    if $ln {
+        my %row;
+        #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
+        #dd $test;
+        my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
+        my Str $key         = %val«key»;
+        my %v               = %val«value»;
+        my Str:D $type      = %v«type»;
+        %row                = key => $key, type => $type;
+        if $type eq 'commeted-alias' || $type eq 'commeted-host' {
+            my Str $host;
+            with %v«host» {
+                $host      = %v«host»;
+                %row«host»   =  $host;
             }
-            $ln = $input.get;
-        } # while !$input.eof #
-        if $ln {
-            my $actions = CommentedLineActions;
-            #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
-            #dd $test;
-            my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
-            my Str $key         = %val«key»;
-            my %v               = %val«value»;
-            my Str:D $type      = %v«type»;
-            unless $key eq 'empty-str' || $key eq 'comment-line' {
-                my Str $host;
-                with %val«host» {
-                    $host      = %v«host»;
-                }
-                $key-width          = max($key-width,     wcswidth("#$key"));
-                $host-width         = max($host-width,    wcswidth($host)) with $host;
-                my Int $port = 0;
-                if $type eq 'commeted-host' {
-                    $port = %v«port».Int;
-                    $port-width     = max($port-width,    wcswidth($port));
-                }
-                with %v«comment» {
-                    my Str $comment = %v«comment»;
-                    $comment-width  = max($comment-width,    wcswidth("# $comment"));
-                }
+            my Int $port = 0;
+            if $type eq 'commeted-host' {
+                $port           = %v«port».Int;
+                %row«port»      = $port;
             }
-        } # $ln #
-        #$key-width     += 2;
-        #$host-width    += 2;
-        $port-width    += 3;
-        #$comment-width += 2;
-        $key-width = 20 if $key-width < 20;
-        $host-width = 70 if $host-width < 70;
-        $port-width = 10 if $port-width < 10;
-        my Int:D $width = $key-width + 5 + $host-width + $port-width + 3 + $comment-width;
-        $input.seek(0, SeekFromBeginning);
-        $ln = $input.get;
-        my Int:D $cnt = 0;
-        my Bool:D $cond = $cnt %% 2;
-        while !$input.eof {
-            my $actions = CommentedLineActions;
-            #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
-            #dd $test;
-            my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
-            my Str $key = %val«key»;
-            my %v = %val«value»;
-            my Str:D $type = %v«type»;
-            $cond = $cnt %% 2;
-            if $type eq 'empty-str' {
-                #put ($cond ?? t.bg-color(191,191,191) !! t.bg-color(255,255,255)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, %val«value»«val») ~ t.text-reset;
-            } elsif $type eq 'comment-line' {
-                #put ($cond ?? t.bg-color(191,191,191) !! t.bg-color(255,255,255)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, %val«value»«val») ~ t.text-reset;
-            } elsif $type eq 'row-of-hashes' {
-                put ($cond ?? t.bg-color(191,191,191) !! t.bg-color(255,255,255)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, '#' x $width) ~ t.text-reset;
-            } elsif $type eq 'header-line' {
-                put ($cond ?? t.bg-color(191,191,191) !! t.bg-color(255,255,255)) ~ t.bold ~ t.bright-blue ~
-                      sprintf("%-*s%3s %-*s   : %-*s # %-*s", $key-width, '#key', 'sep', $host-width - 1, 'host', $port-width - 3, 'port', $comment-width, 'comment')
-                                                                                                                                                   ~ t.text-reset;
+            with %v«comment» {
+                my Str $comment = %v«comment»;
+                %row«comment»   = $comment;
+            }
+            @data.push: %row;
+        }
+    } # $ln #
+    $input.close();
+    my Str:D @fields = 'key', 'host', 'port', 'comment';
+    my   %defaults = port => 22;
+    sub include-row(Str:D $prefix, Regex:D $pattern, Int:D $idx, Str:D @fields, %row --> Bool:D) {
+        for @fields -> $field {
+            my Str:D $value = '';
+            with %row{$field} { #`««« if %row{$field} does not exist then a Any will be retured,
+                                  and if some cases, you may return undefined values so use
+                                  some sort of guard this is one way to do that, you could
+                                  use %row{$field}:exists or :!exists or // perhaps.
+                                  TIMTOWTDI rules as always. »»»
+                $value = ~%row{$field};
+            }
+            return True if $value.starts-with($prefix, :ignorecase) && $value ~~ $pattern;
+        }
+        return False;
+    } # sub include-row(Str:D $prefix, Regex:D $pattern, Str:D $key, @fields, %row --> Bool:D) #
+    sub head-value(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) {
+        if $syntax {
+            t.color(0, 255, 255) ~ (($field eq 'key') ?? "#$field" !! $field);
+        } elsif $colour {
+            t.color(0, 255, 255) ~ (($field eq 'key') ?? "#$field" !! $field);
+        } else {
+            return (($field eq 'key') ?? "#$field" !! $field);
+        }
+    } #`««« sub head-value(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) »»»
+    sub head-between(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) {
+        if $colour {
+            if $syntax {
+                given $field {
+                    when 'key'     { return t.color(0, 255, 255) ~ ' sep '; }
+                    when 'host'    { return t.color(0, 255, 255) ~ ' : ';   }
+                    when 'port'    { return t.color(0, 255, 255)   ~ ' # ';   }
+                    when 'comment' { return t.color(0, 0, 255)   ~ '  ';    }
+                    default { return ''; }
+                }
             } else {
-                unless $type eq 'commeted-host' || $type eq 'commeted-alias' {
-                    $ln = $input.get;
-                    next;
+                given $field {
+                    when 'key'     { return t.color(0, 255, 255)   ~ ' sep '; }
+                    when 'host'    { return t.color(0, 255, 255)   ~ ' : ';   }
+                    when 'port'    { return t.color(0, 255, 255)   ~ ' # ';   }
+                    when 'comment' { return t.color(0, 255, 255)   ~ '  ';    }
+                    default { return ''; }
                 }
-                my Str:D $host = %v«host»;
-                my Int $port = 0;
-                my Str:D $type-spec = '-->';
-                if $type eq 'commeted-host' {
-                    $port = %v«port».Int;
-                    $type-spec = ' =>';
-                }
-                my Str $cline;
-                if $syntax {
-                    $cline = ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,255,0) ~ sprintf("%-*s", $key-width, "#$key");
-                    $cline ~= t.red ~ sprintf("%3s", $type-spec);
-                    if $port > 0 {
-                        $cline ~= t.color(255,0,255) ~ sprintf(" %-*s", $host-width, $host);
-                        $cline ~= t.red ~ sprintf(" %-*s", 3, " : ");
-                        $cline ~= t.color(255,0,255) ~ sprintf("%-*d", $port-width - 2, $port);
-                    }else {
-                        $cline ~= t.color(0,255,0) ~ sprintf(" %-*s", $host-width, $host);
-                        $cline ~= t.red ~ sprintf(" %-*s", 3, "   ");
-                        $cline ~= t.color(255,0,255) ~ sprintf("%-*s", $port-width - 2, '');
-                    }
-                    with %v«comment» {
-                        my Str $comment = %v«comment»;
-                        $cline ~= t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, $comment.trim);
-                    } else {
-                        $cline ~= t.color(0,0,255) ~ sprintf("#  %-*s", $comment-width, '');
-                    }
-                } else {
-                    $cline = ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("#%-*s", $key-width - 1, $key);
-                    $cline ~= sprintf("%3s", $type-spec);
-                    if $port > 0 {
-                        $cline ~= sprintf(" %-*s", $host-width, $host);
-                        $cline ~= sprintf(" %-*s", 3, " : ");
-                        $cline ~= sprintf("%-*d", $port-width - 3, $port);
-                    }else {
-                        $cline ~= sprintf(" %-*s", $host-width, $host);
-                        $cline ~= sprintf(" %-*s", $port-width, "");
-                    }
-                    with %v«comment» {
-                        my Str $comment = %v«comment»;
-                        $cline ~= sprintf(" # %-*s", $comment-width, $comment);
-                    } else {
-                        $cline ~= sprintf(" # %-*s", $comment-width, '');
-                    }
-                }
-                put $cline ~ t.text-reset;
             }
-            $ln = $input.get;
-            $cnt++;
-        } # while !$input.eof #
-        if $ln {
-            my $actions = CommentedLineActions;
-            #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
-            #dd $test;
-            my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
-            my Str $key = %val«key»;
-            my %v = %val«value»;
-            my Str:D $type = %v«type»;
-            $cond = $cnt %% 2;
-            if $type eq 'empty-str' {
-                #put ($cond ?? t.bg-color(191,191,191) !! t.bg-color(255,255,255)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, %val«value»«val») ~ t.text-reset;
-            } elsif $type eq 'comment-line' {
-                #put ($cond ?? t.bg-color(191,191,191) !! t.bg-color(255,255,255)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, %val«value»«val») ~ t.text-reset;
-            } else {
-                if $type eq 'commeted-host' || $type eq 'commeted-alias' {
-                    my Str:D $host = %v«host»;
-                    my Int $port = 0;
-                    my Str:D $type-spec = '-->';
+        } else {
+            given $field {
+                when 'key'     { return ' sep '; }
+                when 'host'    { return ' : ';   }
+                when 'port'    { return ' # ';   }
+                when 'comment' { return '  ';    }
+                default        { return '';      }
+            }
+        }
+    } #`««« sub head-between(Int:D $idx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) »»»
+    sub field-value(Int:D $idx, Str:D $field, $value, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) {
+        if $syntax {
+            given $field {
+                when 'key'     { return t.color(0, 255, 255) ~ '#' ~ ~$value; }
+                when 'host'    {
+                    my Str:D $type = %row«type»;
                     if $type eq 'commeted-host' {
-                        $port = %v«port».Int;
-                        $type-spec = ' =>';
-                    }
-                    my Str $cline;
-                    if $syntax {
-                        $cline = ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,255,0) ~ sprintf("%-*s", $key-width, "#$key");
-                        $cline ~= ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.red ~ sprintf("%3s", $type-spec);
-                        if $port > 0 {
-                            $cline ~= t.color(255,0,255) ~ sprintf(" %-*s", $host-width, $host);
-                            $cline ~= t.red ~ sprintf(" %-*s", 3, " : ");
-                            $cline ~= t.color(255,0,255) ~ sprintf("%-*d", $port-width - 3, $port);
-                        }else {
-                            $cline ~= t.color(0,255,0) ~ sprintf(" %-*s", $host-width, $host);
-                            $cline ~= t.red ~ sprintf(" %-*s", $port-width, "");
-                        }
-                        with %v«comment» {
-                            my Str $comment = %v«comment»;
-                            $cline ~= t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, $comment.trim);
-                        } else {
-                            $cline ~= t.color(0,0,255) ~ sprintf(" # %-*s", $comment-width, '');
-                        }
+                        return t.color(255, 0, 255) ~ ~$value;
                     } else {
-                        $cline = ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.color(0,0,255) ~ sprintf("%-*s", $key-width, "#$key");
-                        $cline ~= sprintf("%3s", $type-spec);
-                        if $port > 0 {
-                            $cline ~= sprintf(" %-*s", $host-width, $host);
-                            $cline ~= sprintf(" %-*s", 3, " : ");
-                            $cline ~= sprintf("%-*d", $port-width - 3, $port);
-                        }else {
-                            $cline ~= sprintf(" %-*s", $host-width, $host);
-                            $cline ~= sprintf(" %-*s", $port-width, "");
-                        }
-                        with %v«comment» {
-                            my Str $comment = %v«comment»;
-                            $cline ~= sprintf(" # %-*s", $comment-width, $comment);
+                        return t.color(0, 255, 255) ~ ~$value;
+                    }
+                }
+                when 'port'    { 
+                    my Str:D $type = %row«type»;
+                    if $type eq 'commeted-host' {
+                        return t.color(255, 0, 255) ~ ~$value;
+                    } else {
+                        return t.color(255, 0, 255) ~ '';
+                    }
+                }
+                when 'comment' { return t.color(0, 0, 255) ~ ~$value; }
+                default        { return t.color(255, 0, 0) ~ '';      }
+            } # given $field #
+        } elsif $colour {
+            given $field {
+                when 'key'     { return t.color(0, 0, 255) ~ '#' ~ ~$value; }
+                when 'host'    { return t.color(0, 0, 255) ~       ~$value; }
+                when 'port'    { 
+                    my Str:D $type = %row«type»;
+                    if $type eq 'commeted-host' {
+                        return t.color(0, 0, 255) ~ ~$value;
+                    } else {
+                        return t.color(0, 0, 255) ~ '';
+                    }
+                }
+                when 'comment' { return t.color(0, 0, 255) ~ ~$value; }
+                default        { return t.color(255, 0, 0) ~ '';      }
+            }
+        } else {
+            given $field {
+                when 'key'     { return '#' ~ ~$value; }
+                when 'host'    { return       ~$value; }
+                when 'port'    { 
+                    my Str:D $type = %row«type»;
+                    if $type eq 'commeted-host' {
+                        return ~$value;
+                    } else {
+                        return '';
+                    }
+                }
+                when 'comment' { return ~$value; }
+                default        { return '';      }
+            }
+        }
+    } #`««« sub field-value(Int:D $idx, Str:D $field, $value, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) »»»
+    sub between(Int:D $idx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) {
+        if $syntax {
+                given $field {
+                    when 'key'     {
+                        my Str:D $type = %row«type»;
+                        if $type eq 'commeted-host' {
+                            return t.color(255, 0, 0) ~ '  => ';
+                        } else {
+                            return t.color(255, 0, 0) ~ ' --> ';
                         }
                     }
-                    put $cline ~ t.text-reset;
+                    when 'host'    {
+                        my Str:D $type = %row«type»;
+                        if $type eq 'commeted-host' {
+                            return t.color(255, 0, 0) ~ ' : ';
+                        } else {
+                            return t.color(255, 0, 0) ~ '   ';
+                        }
+                    }
+                    when 'port'    { return t.color(0, 0, 255) ~ ' # '; }
+                    when 'comment' { return t.color(0, 0, 255) ~ '  ';  }
+                    default        { return t.color(255, 0, 0) ~ '';    }
                 }
-            }
-            $cnt++;
-        } # $ln #
-        $cond = $cnt %% 2;
-        put ($cond ?? t.bg-color(63,63,63) !! t.bg-color(127,127,127)) ~ t.bold ~ t.bright-blue ~ sprintf("%-*s", $width, '') ~ t.text-reset;
-    } else {
-        $ln = $input.get;
-        while !$input.eof {
-            my $actions = CommentedLineActions;
-            #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
-            #dd $test;
-            my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
-            my Str $key = %val«key»;
-            if $key eq '' || $key eq '#' {
-                say $ln;
+        } elsif $colour {
+                given $field {
+                    when 'key'     {
+                        my Str:D $type = %row«type»;
+                        if $type eq 'commeted-host' {
+                            return t.color(0, 0, 255) ~ '  => ';
+                        } else {
+                            return t.color(0, 0, 255) ~ ' --> ';
+                        }
+                    }
+                    when 'host'    {
+                        my Str:D $type = %row«type»;
+                        if $type eq 'commeted-host' {
+                            return t.color(0, 0, 255) ~ ' : ';
+                        } else {
+                            return t.color(0, 0, 255) ~ '   ';
+                        }
+                    }
+                    when 'port'    { return t.color(0, 0, 255) ~ ' # '; }
+                    when 'comment' { return t.color(0, 0, 255) ~ '  ';  }
+                    default        { return t.color(255, 0, 0) ~ '';    }
+                }
+        } else {
+                given $field {
+                    when 'key'     {
+                        my Str:D $type = %row«type»;
+                        if $type eq 'commeted-host' {
+                            return '  => ';
+                        } else {
+                            return ' --> ';
+                        }
+                    }
+                    when 'host'    {
+                        my Str:D $type = %row«type»;
+                        if $type eq 'commeted-host' {
+                            return ' : ';
+                        } else {
+                            return '   ';
+                        }
+                    }
+                    when 'port'    { return ' # '; }
+                    when 'comment' { return '  ';  }
+                    default        { return '';    }
+                }
+        }
+    } #`««« sub between(Int:D $idx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) »»»
+    sub row-formatting(Int:D $cnt, Bool:D $colour, Bool:D $syntax --> Str:D) {
+        if $colour {
+            if $syntax { 
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3; # three heading lines. #
+                return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
             } else {
-                my %v = %val«value»;
-                my Str:D $type = %v«type»;
-                say $ln unless $type eq 'host' || $type eq 'alias';
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3;
+                return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
             }
-            $ln = $input.get;
-        } # while !$input.eof #
-        if $ln {
-            my $actions = CommentedLineActions;
-            #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
-            #dd $test;
-            my %val = CommentedLine.parse($ln, :enc('UTF-8'), :$actions).made;
-            my Str $key = %val«key»;
-            my %v = %val«value»;
-            my Str:D $type = %v«type»;
-            if $type eq 'empty-str' || $type eq 'comment-line' {
-                say $ln;
-            } else {
-                say $ln unless $type eq 'host' || $type eq 'alias';
-            }
-        } # $ln #
-    }
-    $input.close;
-} # sub list-commented(Bool:D $colour is copy, Bool:D $syntax --> Bool) is export #
+        } else {
+            return '';
+        }
+    } #`««« sub row-formatting(Int:D $cnt, Bool:D $colour, Bool:D $syntax --> Str:D) »»»
+    return list-by($prefix, $colour, $syntax, $page-length,
+                  $pattern, @fields, %defaults, @data,
+                  :&include-row, 
+                  :&head-value, 
+                  :&head-between,
+                  :&field-value, 
+                  :&between,
+                  :&row-formatting);
+} # sub list-commented(Str:D $prefix, Bool:D $colour, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool) is export #
 
 sub stats(Bool:D $colour is copy, Bool:D $syntax --> Bool:D) is export {
     $colour = True if $syntax;

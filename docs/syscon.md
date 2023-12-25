@@ -37,7 +37,7 @@ Table of Contents
 
       * [sc list by all](#sc-list-by-all)
 
-      * [USAGE](#usage)
+      * [sc list trash](#sc-list-trash)
 
       * [USAGE](#usage)
 
@@ -304,4 +304,18 @@ sc list by all
 ```
 
 ![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png)
+
+### sc list trash
+
+```bash
+sc list trash --help
+```
+
+![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash--help.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash--help.png)
+
+```bash
+sc list trash --help
+```
+
+![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash.png)
 

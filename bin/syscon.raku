@@ -32,7 +32,7 @@ Table of  Contents
 =item3 L<sc edit configs|#sc-edit-configs>
 =item3 L<sc list keys|#sc-list-keys>
 =item3 L<sc list by all|#sc-list-by-all>
-=item3 L<USAGE|#usage>
+=item3 L<sc list trash|#sc-list-trash>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -446,16 +446,43 @@ multi sub MAIN('list', 'by', 'all', Str:D $prefix = '', Bool:D :c(:color(:$colou
                     Bool:D :s(:$syntax) = False, Int:D :l(:$page-length) = 50, Str :p(:$pattern) = Str,
                                                                 Str :e(:$ecma-pattern) = Str) returns Int »»»
 
-multi sub MAIN('list', 'commented', 'out', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
-   if list-commented($colour, $syntax) {
-       exit 0;
-   } else {
-       exit 1;
-   } 
-}
+=begin pod
 
-multi sub MAIN('list', 'trash', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
-   if list-commented($colour, $syntax) {
+=head3 sc list trash
+
+=begin code :lang<bash>
+
+sc list trash --help
+
+=end code
+
+!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash--help.png>
+
+=begin code :lang<bash>
+
+sc list trash --help
+
+=end code
+
+!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash.png>
+
+=end pod
+
+multi sub MAIN('list', 'trash', Str:D $prefix = '',
+                               Bool:D :c(:color(:$colour)) = False,
+                               Bool:D :s(:$syntax) = False,
+                               Int:D :l(:$page-length) = 30,
+                               Str :p(:$pattern) = Str,
+                               Str :e(:$ecma-pattern) = Str) returns Int {
+    my Regex $_pattern;
+    with $pattern {
+        $_pattern = rx:i/ <$pattern> /;
+    } orwith $ecma-pattern {
+        $_pattern = ECMA262Regex.compile("^$ecma-pattern\$");
+    } else {
+        $_pattern = rx:i/^ .* $/;
+    }
+   if list-commented($prefix, $colour, $syntax, $page-length, $_pattern) {
        exit 0;
    } else {
        exit 1;
