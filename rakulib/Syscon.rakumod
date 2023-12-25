@@ -605,7 +605,6 @@ class HostValidActions does HostPortActions {
 
 
 my Str  @LINES     = slurp("$config/hosts.h_ts").split("\n");
-#dd @LINES;
 my Str  @lines     = @LINES.grep({ !rx/^ \h* '#' .* $/ }).grep({ !rx/^ \h* $/ });
 #dd @lines;
 #my Str  %the-hosts = @lines.map( { my Str $e = $_; $e ~~ s/ '#' .* $$ //; $e } ).map( { $_.trim() } ).grep({ !rx/ [ ^^ \s* '#' .* $$ || ^^ \s* $$ ] / }).map: { my ($key, $value) = $_.split(rx/ \s*  '=>' \s* /, 2); my $e = $key => $value; $e };
@@ -1755,9 +1754,9 @@ sub add-comment(Str:D $key, Str:D $comment --> Bool) is export {
     my IO::Handle:D $input  = "$config/hosts.h_ts".IO.open:     :r, :nl-in("\n")   :chomp;
     my IO::Handle:D $output = "$config/hosts.h_ts.new".IO.open: :w, :nl-out("\n"), :chomp(True);
     my Str $ln;
-    while $ln = $input.get {
-        $*OUT.flush;
-        my $actions = LineActions;
+    my $actions = LineActions;
+    $ln = $input.get;
+    while !$input.eof {
         #my $test = Line.parse($ln, :enc('UTF-8'), :$actions).made;
         #dd $test;
         my %val = Line.parse($ln, :enc('UTF-8'), :$actions).made;
@@ -1783,7 +1782,32 @@ sub add-comment(Str:D $key, Str:D $comment --> Bool) is export {
         } else {
             $output.say: $ln
         }
-    }
+    } # while !$input.eof #
+    if $ln {
+        my %val = Line.parse($ln, :enc('UTF-8'), :$actions).made;
+        if %val {
+            my Str $k = %val«key»;
+            my %v = %val«value»;
+            my Str:D $type = %v«type»;
+            my Str:D $host = %v«host»;
+            $host         .=trim;
+            my Int $port = 0;
+            my Str:D $type-spec = '-->';
+            if $type eq 'host' {
+                $port = %v«port».Int;
+                $type-spec = ' =>';
+            }
+            my Str $line = sprintf "%-20s %s %-40s %-9s", ~$k, $type-spec, $host, (($port == 0) ?? '' !! ": $port");
+            if $key eq $k {
+                $line ~= " # $comment" unless $comment.trim eq '';
+            } orwith %v«comment» {
+                $line ~= " # %v«comment»" unless %v«comment».trim eq '';
+            }
+            $output.say: $line;
+        } else {
+            $output.say: $ln
+        }
+    } # if $ln #
     $input.close;
     $output.close;
     if "$config/hosts.h_ts.new".IO.move: "$config/hosts.h_ts" {
@@ -1791,9 +1815,11 @@ sub add-comment(Str:D $key, Str:D $comment --> Bool) is export {
     } else {
         return False;
     }
-}
+} # sub add-comment(Str:D $key, Str:D $comment --> Bool) is export #
 
-sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy, Bool:D $overwrite-hosts, Str $comment is copy --> Bool) is export {
+sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy,
+                Bool:D $overwrite-hosts,
+                Str $comment is copy --> Bool) is export {
     unless valid-key($key) {
         $*ERR.say: "invalid key: $key";
         return False;

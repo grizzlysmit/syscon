@@ -416,6 +416,14 @@ sc list by all --help
 
 !L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all.png>
 
+=begin code :lang<bash>
+
+sc list by all
+
+=end code
+
+!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png>
+
 =end pod
 
 multi sub MAIN('list', 'by', 'all', Str:D $prefix = '', Bool:D :c(:color(:$colour)) = False,
@@ -470,7 +478,10 @@ multi sub MAIN('statistics', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$sy
    } 
 } # multi sub MAIN('statistics', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int #
 
-multi sub MAIN('add', Str:D $key, Str:D $host, PortVal:D $port = 22, Bool:D :s(:set(:$force)) = False, Str :c(:$comment) = Str) returns Int {
+multi sub MAIN('add', Str:D $key, Str:D $host,
+                PortVal:D $port = 22,
+                Bool:D :s(:set(:$force)) = False,
+                Str :c(:$comment) = Str) returns Int {
    if add-host($key, $host, $port, $force, $comment) {
        exit 0;
    } else {
@@ -534,7 +545,10 @@ multi sub MAIN('comment', Str:D $key, Str:D $comment) returns Int {
     } 
 }
 
-multi sub MAIN('alias', Str:D $key, Str:D $target, Bool:D :s(:set(:$force)) = False, Bool:D :d(:really-force(:$overwrite-hosts)) = False, Str :c(:$comment) = Str) returns Int {
+multi sub MAIN('alias', Str:D $key, Str:D $target,
+                                Bool:D :s(:set(:$force)) = False,
+                                Bool:D :d(:really-force(:$overwrite-hosts)) = False,
+                                Str :c(:$comment) = Str) returns Int {
    if add-alias($key, $target, $force, $overwrite-hosts, $comment) {
        exit 0;
    } else {

@@ -299,3 +299,9 @@ sc list by all --help
 
 ![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all.png)
 
+```bash
+sc list by all
+```
+
+![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png)
+
