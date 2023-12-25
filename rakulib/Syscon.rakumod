@@ -1399,7 +1399,7 @@ sub add-host(Str:D $key, Str:D $host is copy, PortVal:D $port, Bool $force, Str 
     return True;
 } # sub add-host(Str:D $key, Str:D $host, PortVal:D $port, Bool $force, Str $comment --> Bool) is export #
 
-sub delete-key(Str:D $key, Bool:D $comment-out --> Bool) is export {
+sub delete-key(Str:D $key, Bool:D $trash --> Bool) is export {
     CATCH {
         when X::IO::Rename {
             $*ERR.say: $_;
@@ -1420,7 +1420,7 @@ sub delete-key(Str:D $key, Bool:D $comment-out --> Bool) is export {
     $ln = $input.get;
     while !$input.eof {
         if $ln ~~ rx/^ $key \h* [ '-->' || '=>' ] \h* [ <-[ # : ]>+ ] \h* [ ':' \h* \d+ ]? \h* [ '#' \h* .* ]? $/ {
-            if $comment-out {
+            if $trash {
                 $output.say: "#$ln";
             }
         } else {
@@ -1430,7 +1430,7 @@ sub delete-key(Str:D $key, Bool:D $comment-out --> Bool) is export {
     }
     if $ln {
         if $ln ~~ rx/^ $key \h* [ '-->' || '=>' ] \h* [ <-[ # : ]>+ ] \h* [ ':' \h* \d+ ]? \h* [ '#' \h* .* ]? $/ {
-            if $comment-out {
+            if $trash {
                 $output.say: "#$ln";
             }
         } else {
@@ -1444,7 +1444,7 @@ sub delete-key(Str:D $key, Bool:D $comment-out --> Bool) is export {
     } else {
         return False;
     }
-} # sub delete-key(Str:D $key, Bool:D $comment-out --> Bool) is export #
+} # sub delete-key(Str:D $key, Bool:D $trash --> Bool) is export #
 
 sub undelete(Str:D $key-to-find --> Bool) is export {
     #`«««

@@ -39,7 +39,7 @@ Table of Contents
 
       * [sc list trash](#sc-list-trash)
 
-      * [USAGE](#usage)
+      * [sc trash](#sc-trash)
 
       * [USAGE](#usage)
 
@@ -322,4 +322,18 @@ sc list trash --help
 ![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash.png)
 
 [Top of Document](#table-of-contents)
+
+### sc trash
+
+```raku
+sc trash --help
+```
+
+![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash--help.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash--help.png)
+
+```raku
+sc trash
+```
+
+![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash.png)
 

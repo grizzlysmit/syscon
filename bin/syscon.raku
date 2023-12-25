@@ -33,7 +33,7 @@ Table of  Contents
 =item3 L<sc list keys|#sc-list-keys>
 =item3 L<sc list by all|#sc-list-by-all>
 =item3 L<sc list trash|#sc-list-trash>
-=item3 L<USAGE|#usage>
+=item3 L<sc trash|#sc-trash>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -493,6 +493,56 @@ multi sub MAIN('list', 'trash', Str:D $prefix = '',
    } 
 }
 
+=begin pod
+
+=head3 sc trash
+
+=begin code :lang<raku>
+
+sc trash --help
+
+=end code
+
+!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash--help.png>
+
+=begin code :lang<raku>
+
+sc trash
+
+=end code
+
+!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash.png>
+
+=end pod
+
+multi sub MAIN('trash', *@keys) returns Int {
+    my Int:D $result = 0;
+    for @keys -> $key {
+        unless delete-key($key, True) {
+            $result++;
+        } 
+    }
+    exit $result;
+}
+
+multi sub MAIN('empty', 'trash') returns Int {
+   if empty-trash() {
+       exit 0;
+   } else {
+       exit 1;
+   } 
+}
+
+multi sub MAIN('undelete', *@keys) returns Int {
+    my Int:D $result = 0;
+    for @keys -> $key {
+        unless undelete($key) {
+            $result++;
+        } 
+    }
+    exit $result;
+}
+
 multi sub MAIN('stats', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
    if stats($colour, $syntax) {
        exit 0;
@@ -520,48 +570,20 @@ multi sub MAIN('add', Str:D $key, Str:D $host,
    }
 }
 
-multi sub MAIN('delete', Bool:D :o(:$comment-out) = False, *@keys) returns Int {
+multi sub MAIN('delete', Bool:D :d(:delete(:$do-not-trash)) = False, *@keys) returns Int {
     my Int:D $result = 0;
     for @keys -> $key {
-        unless delete-key($key, $comment-out) {
+        unless delete-key($key, !$do-not-trash) {
             $result++;
         } 
     }
     exit $result;
 }
 
-multi sub MAIN('del', Bool:D :o(:$comment-out) = False, *@keys) returns Int {
+multi sub MAIN('del', Bool:D :d(:delete(:$do-not-trash)) = False, *@keys) returns Int {
     my Int:D $result = 0;
     for @keys -> $key {
-        unless delete-key($key, $comment-out) {
-            $result++;
-        } 
-    }
-    exit $result;
-}
-
-multi sub MAIN('trash', *@keys) returns Int {
-    my Int:D $result = 0;
-    for @keys -> $key {
-        unless delete-key($key, True) {
-            $result++;
-        } 
-    }
-    exit $result;
-}
-
-multi sub MAIN('empty', 'trash') returns Int {
-   if empty-trash() {
-       exit 0;
-   } else {
-       exit 1;
-   } 
-}
-
-multi sub MAIN('undelete', *@keys) returns Int {
-    my Int:D $result = 0;
-    for @keys -> $key {
-        unless undelete($key) {
+        unless delete-key($key, !$do-not-trash) {
             $result++;
         } 
     }
