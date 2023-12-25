@@ -301,11 +301,11 @@ sc list by all --help
 
 ```bash
 sc list by all
-
-L<Top of Document|#table-of-contents>
 ```
 
 ![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png)
+
+[Top of Document](#table-of-contents)
 
 ### sc list trash
 

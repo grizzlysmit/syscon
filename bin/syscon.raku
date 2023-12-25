@@ -420,11 +420,11 @@ sc list by all --help
 
 sc list by all
 
-L<Top of Document|#table-of-contents>
-
 =end code
 
 !L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png>
+
+L<Top of Document|#table-of-contents>
 
 =end pod
 
