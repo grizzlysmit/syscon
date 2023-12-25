@@ -513,6 +513,8 @@ sc trash
 
 !L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash.png>
 
+L<Top of Document|#table-of-contents>
+
 =end pod
 
 multi sub MAIN('trash', *@keys) returns Int {

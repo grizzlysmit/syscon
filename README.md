@@ -337,3 +337,5 @@ sc trash
 
 ![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash.png)
 
+[Top of Document](#table-of-contents)
+
