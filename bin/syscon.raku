@@ -31,7 +31,7 @@ Table of  Contents
 =item2 L<Utility functions|#utility-functions>
 =item3 L<sc edit configs|#sc-edit-configs>
 =item3 L<sc list keys|#sc-list-keys>
-=item3 L<USAGE|#usage>
+=item3 L<sc list by all|#sc-list-by-all>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -373,7 +373,7 @@ multi sub MAIN('edit', 'configs') returns Int {
 
 =begin code :lang<bash>
 
-$ sc list keys
+$ sc list keys --help
 
 =end code
 
@@ -404,53 +404,19 @@ multi sub MAIN('list', 'keys', Str $prefix = '',
     } 
 }
 
-multi sub MAIN('list', 'all', Str:D $prefix = '', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False, Int:D :l(:$page-length) = 50, Str :p(:$pattern) = Str, Str :e(:$ecma-pattern) = Str) returns Int {
-    my Regex $_pattern;
-    with $pattern {
-        $_pattern = rx:i/ <$pattern> /;
-    } orwith $ecma-pattern {
-        $_pattern = ECMA262Regex.compile("^$ecma-pattern\$");
-    } else {
-        $_pattern = rx:i/^ .* $/;
-    }
-    if list-all($prefix, $colour, $syntax, $page-length, $_pattern) {
-       exit 0;
-    } else {
-       exit 1;
-    } 
-} # multi sub MAIN('list', 'all', Str $prefix = '', Bool:D :c(:color(:$colour)) = False, Str :p(:$pattern) = Str, Str :e(:$ecma-pattern) = Str) returns Int #
+=begin pod
 
-multi sub MAIN('list', 'hosts', Str:D $prefix = '', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False, Int:D :l(:$page-length) = 50, Str :p(:$pattern) = Str, Str :e(:$ecma-pattern) = Str) returns Int {
-    my Regex $_pattern;
-    with $pattern {
-        $_pattern = rx:i/ <$pattern> /;
-    } orwith $ecma-pattern {
-        $_pattern = ECMA262Regex.compile("^$ecma-pattern\$");
-    } else {
-        $_pattern = rx:i/^ .* $/;
-    }
-    if list-hosts($prefix, $colour, $syntax, $page-length, $_pattern) {
-       exit 0;
-    } else {
-       exit 1;
-    } 
-} # multi sub MAIN('list', 'all', Str $prefix = '', Bool:D :c(:color(:$colour)) = False, Str :p(:$pattern) = Str, Str :e(:$ecma-pattern) = Str) returns Int #
+=head3 sc list by all --help
 
-multi sub MAIN('list', 'by', 'both', Str:D $prefix = '', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False, Int:D :l(:$page-length) = 50, Str :p(:$pattern) = Str, Str :e(:$ecma-pattern) = Str) returns Int {
-    my Regex $_pattern;
-    with $pattern {
-        $_pattern = rx:i/ <$pattern> /;
-    } orwith $ecma-pattern {
-        $_pattern = ECMA262Regex.compile("^$ecma-pattern\$");
-    } else {
-        $_pattern = rx:i/^ .* $/;
-    }
-    if list-by-both($prefix, $colour, $syntax, $page-length, $_pattern) {
-       exit 0;
-    } else {
-       exit 1;
-    } 
-} # multi sub MAIN('list', 'all', Str $prefix = '', Bool:D :c(:color(:$colour)) = False, Str :p(:$pattern) = Str, Str :e(:$ecma-pattern) = Str) returns Int #
+=begin code :lang<bash>
+
+sc list by all --help
+
+=end code
+
+!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all.png>
+
+=end pod
 
 multi sub MAIN('list', 'by', 'all', Str:D $prefix = '', Bool:D :c(:color(:$colour)) = False,
                     Bool:D :s(:$syntax) = False, Int:D :l(:$page-length) = 50, Str :p(:$pattern) = Str,

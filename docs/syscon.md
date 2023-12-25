@@ -35,7 +35,7 @@ Table of Contents
 
       * [sc list keys](#sc-list-keys)
 
-      * [USAGE](#usage)
+      * [sc list by all](#sc-list-by-all)
 
       * [USAGE](#usage)
 
@@ -284,10 +284,18 @@ multi sub MAIN('edit', 'configs') returns Int {
 ### sc list keys 
 
 ```bash
-$ sc list keys
+$ sc list keys --help
 ```
 
 ![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-keys.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-keys.png)
 
 [Top of Document](#table-of-contents)
+
+### sc list by all --help
+
+```bash
+sc list by all --help
+```
+
+![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all.png)
 
