@@ -101,7 +101,7 @@ $ scp -P $port <files> …… $host:
 
 L<Top of Document|#table-of-contents>
 
-This is the app, you can find the modules docs L<here|https://github.com/grizzlysmit/syscon>
+This is the app, you can find the modules docs L<here|https://github.com/grizzlysmit/syscon/blob/main/docs/Syscon.md>
 
 =end pod
 
@@ -420,6 +420,8 @@ sc list by all --help
 
 sc list by all
 
+L<Top of Document|#table-of-contents>
+
 =end code
 
 !L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png>
@@ -465,6 +467,8 @@ sc list trash --help
 =end code
 
 !L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash.png>
+
+L<Top of Document|#table-of-contents>
 
 =end pod
 
