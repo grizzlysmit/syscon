@@ -291,7 +291,7 @@ $ sc list keys --help
 
 [Top of Document](#table-of-contents)
 
-### sc list by all --help
+### sc list by all
 
 ```bash
 sc list by all --help

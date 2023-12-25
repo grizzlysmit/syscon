@@ -406,7 +406,7 @@ multi sub MAIN('list', 'keys', Str $prefix = '',
 
 =begin pod
 
-=head3 sc list by all --help
+=head3 sc list by all
 
 =begin code :lang<bash>
 
