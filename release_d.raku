@@ -8,7 +8,7 @@ sub MAIN() {
         my Str:D $archive  = "git archive --format=tar.gz --output=$filename HEAD";
         $archive.say;
         shell($archive);
-        shell("git add $filename");
+        #shell("git add $filename");
         my Str:D $fez = "fez upload --file=$filename";
         $fez.say;
         shell($fez);

@@ -36,6 +36,11 @@ Table of  Contents
 =item3 L<sc trash|#sc-trash>
 =item3 L<sc empty trash|#sc-empty-trash>
 =item3 L<sc undelete|#sc-undelete>
+=item3 L<sc stats|#sc-stats>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -579,20 +584,56 @@ multi sub MAIN('undelete', *@keys) returns Int {
     exit $result;
 }
 
-multi sub MAIN('stats', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
-   if stats($colour, $syntax) {
-       exit 0;
-   } else {
-       exit 1;
-   } 
+=begin pod
+
+=head3 sc stats
+
+=begin code :lang<bash>
+
+=end code
+
+!L<image not available here go to the github page|/docs/images/sc-undelete.png>
+
+=end pod
+
+multi sub MAIN('stats', Str:D $prefix = '',
+                               Bool:D :c(:color(:$colour)) = False,
+                               Bool:D :s(:$syntax) = False,
+                               Str :p(:$pattern) = Str,
+                               Str :e(:$ecma-pattern) = Str) returns Int {
+    my Regex $_pattern;
+    with $pattern {
+        $_pattern = rx:i/ <$pattern> /;
+    } orwith $ecma-pattern {
+        $_pattern = ECMA262Regex.compile("^$ecma-pattern\$");
+    } else {
+        $_pattern = rx:i/^ .* $/;
+    }
+    if stats($prefix, $colour, $syntax, $_pattern) {
+        exit 0;
+    } else {
+        exit 1;
+    } 
 } # multi sub MAIN('stats', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int #
 
-multi sub MAIN('statistics', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
-   if stats($colour, $syntax) {
-       exit 0;
-   } else {
-       exit 1;
-   } 
+multi sub MAIN('statistics', Str:D $prefix = '',
+                               Bool:D :c(:color(:$colour)) = False,
+                               Bool:D :s(:$syntax) = False,
+                               Str :p(:$pattern) = Str,
+                               Str :e(:$ecma-pattern) = Str) returns Int {
+    my Regex $_pattern;
+    with $pattern {
+        $_pattern = rx:i/ <$pattern> /;
+    } orwith $ecma-pattern {
+        $_pattern = ECMA262Regex.compile("^$ecma-pattern\$");
+    } else {
+        $_pattern = rx:i/^ .* $/;
+    }
+    if stats($prefix, $colour, $syntax, $_pattern) {
+        exit 0;
+    } else {
+        exit 1;
+    } 
 } # multi sub MAIN('statistics', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int #
 
 multi sub MAIN('add', Str:D $key, Str:D $host,

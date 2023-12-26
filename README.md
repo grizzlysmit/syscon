@@ -45,6 +45,16 @@ Table of Contents
 
       * [sc undelete](#sc-undelete)
 
+      * [sc stats](#sc-stats)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
       * [USAGE](#usage)
 
       * [USAGE](#usage)
@@ -358,4 +368,12 @@ sc undelete --help
 ![image not available here go to the github page](/docs/images/sc-undelete.png)
 
 [Top of Document](#table-of-contents)
+
+### sc stats
+
+```bash
+
+```
+
+![image not available here go to the github page](/docs/images/sc-undelete.png)
 

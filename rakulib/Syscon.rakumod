@@ -1277,72 +1277,103 @@ sub list-commented(Str:D $prefix, Bool:D $colour, Bool:D $syntax, Int:D $page-le
                   :&row-formatting);
 } # sub list-commented(Str:D $prefix, Bool:D $colour, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool) is export #
 
-sub stats(Bool:D $colour is copy, Bool:D $syntax --> Bool:D) is export {
-    $colour = True if $syntax;
-    my $total-lines       = %stats«lines-total»;
-    my $header-lines      = %stats«header-lines»;
-    my $rows-of-hashes    = %stats«rows-of-hashes»;
-    my $empty-lines       = %stats«empty-strs»;
-    my $comment-lines     = %stats«comment-lines»;
-    my $commented-aliases = %stats«commented-aliases»;
-    my $commented-hosts   = %stats«commented-hosts»;
-    my $commented-lines   = %stats«commented»;
-    my $size              = %stats«lines»;
-    my $hosts             = %stats«hosts»;
-    my $aliases           = %stats«aliases»;
-    if $colour {
-        if $syntax {
-            put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("%-44s", '')                                                                               ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.bright-blue ~ sprintf("%-44s", 'statistics')                                                                     ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("%-44s", '=' x 44)                                                                         ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.red         ~ 'number of lines in file:          ' ~ t.color(255, 0, 255) ~ sprintf("%-10s", $total-lines)       ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.red         ~ 'number of header lines in file:   ' ~ t.color(255, 0, 255) ~ sprintf("%-10s", $header-lines)      ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.red         ~ 'rows of hashes in file:           ' ~ t.color(255, 0, 255) ~ sprintf("%-10s", $rows-of-hashes)    ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.red         ~ 'empty lines in file:              ' ~ t.color(255, 0, 255) ~ sprintf("%-10s", $empty-lines)       ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.red         ~ 'comment lines:                    ' ~ t.color(255, 0, 255) ~ sprintf("%-10s", $comment-lines)     ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.red         ~ 'trashed lines:                    ' ~ t.color(255, 0, 255) ~ sprintf("%-10s", $commented-lines)   ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.red         ~ 'trashed hosts in db:              ' ~ t.color(255, 0, 255) ~ sprintf("%-10s", $commented-hosts)   ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.red         ~ 'trashed aliases in db:            ' ~ t.color(255, 0, 255) ~ sprintf("%-10s", $commented-aliases) ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.red         ~ 'number of elts in db:             ' ~ t.color(255, 0, 255) ~ sprintf("%-10s", $size)              ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.red         ~ 'number of hosts in db:            ' ~ t.color(255, 0, 255) ~ sprintf("%-10s", $hosts)             ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.red         ~ 'number of aliases in db:          ' ~ t.color(255, 0, 255) ~ sprintf("%-10s", $aliases)           ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("%-44s", '')                                                                               ~ t.text-reset;
-        } else {
-            put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("%-44s", '')                                                   ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.bright-blue ~ sprintf("%-44s", 'statistics')                                         ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("%-44s", '=' x 44)                                             ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.bright-blue ~ sprintf("number of lines in file:          %-10s", $total-lines)       ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("number of header lines in file:   %-10s", $header-lines)      ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.bright-blue ~ sprintf("rows of hashes in file:           %-10s", $rows-of-hashes)    ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("empty lines in file:              %-10s", $empty-lines)       ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.bright-blue ~ sprintf("comment lines:                    %-10s", $comment-lines)     ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("trashed lines:                    %-10s", $commented-lines)   ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.bright-blue ~ sprintf("trashed hosts in db:              %-10s", $commented-hosts)   ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("trashed aliases in db:            %-10s", $commented-aliases) ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.bright-blue ~ sprintf("number of elts in db:             %-10s", $size)              ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("number of hosts in db:            %-10s", $hosts)             ~ t.text-reset;
-            put t.bg-yellow         ~ t.bold ~ t.bright-blue ~ sprintf("number of aliases in db:          %-10s", $aliases)           ~ t.text-reset;
-            put t.bg-color(0,255,0) ~ t.bold ~ t.bright-blue ~ sprintf("%-44s", '')                                                   ~ t.text-reset;
-        }
-    } else {
-        "".say;
-        'statistics'.say;
-        ('=' x 35).say;
-        printf("number of lines in file:          %-10s\n", $total-lines);
-        printf("number of header lines in file:   %-10s\n", $header-lines);
-        printf("rows of hashes in file:           %-10s\n", $rows-of-hashes);
-        printf("empty lines in file:              %-10s\n", $empty-lines);
-        printf("comment lines:                    %-10s\n", $comment-lines);
-        printf("trashed lines:                    %-10s\n", $commented-lines);
-        printf("trashed hosts in db:              %-10s\n", $commented-hosts);
-        printf("trashed aliases in db:            %-10s\n", $commented-aliases);
-        printf("number of elts in db:             %-10s\n", $size);
-        printf("number of hosts in db:            %-10s\n", $hosts);
-        printf("number of aliases in db:          %-10s\n", $aliases);
-        printf("%-44s\n", '');
+sub stats(Str:D $prefix, Bool:D $colour, Bool:D $syntax, Regex:D $pattern --> Bool:D) is export {
+    my Str:D @quanties = 'lines-total', 'header-lines', 'rows-of-hashes',
+                          'empty-strs', 'comment-lines', 'commented',
+                          'commented-hosts', 'commented-aliases', 'lines', 'hosts', 'aliases';
+    my @rows;
+    for @quanties -> $quantity {
+        my %row = quantity => $quantity, value => %stats{$quantity};
+        @rows.push: %row;
     }
-    return True;
-} # sub stats(Bool:D $colour is copy, Bool:D $syntax --> Bool:D) is export #
+    my Str:D @fields     = 'quantity', 'value';
+    my Str:D %fancynames = quantity => 'Quantity', value => 'Number';
+    my Str:D %prompts    = lines-total => 'number of lines in file:',
+                           header-lines => 'number of header lines in file:',
+                           rows-of-hashes => 'rows of hashes in file:',
+                           empty-strs => 'empty lines in file:',
+                           comment-lines => 'comment lines:',
+                           commented => 'trashed lines:',
+                           commented-aliases => 'trashed aliases in db:',
+                           commented-hosts => 'trashed hosts in db:',
+                           lines => 'number of elts in db:',
+                           hosts => 'number of hosts in db:',
+                           aliases => 'number of aliases in db:';
+    my %defaults;
+    my $page-length = 30; # basically $page-length is redundant here. #
+    sub include-row(Str:D $prefix, Regex:D $pattern, Int:D $idx, Str:D @fields, %row --> Bool:D) {
+        my Str:D $value = ~(%prompts{%row«quantity»} // '');
+        return True if $value.starts-with($prefix, :ignorecase) && $value ~~ $pattern;
+        return False;
+    } # sub include-row(Str:D $prefix, Regex:D $pattern, Int:D $idx, Str:D @fields, %row --> Bool:D) #
+    sub head-value(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) {
+        #dd $indx, $field, $colour, $syntax, @fields;
+        if $colour {
+            if $syntax { 
+                return t.color(0, 255, 255) ~ %fancynames{$field};
+            } else {
+                return t.color(0, 255, 255) ~ %fancynames{$field};
+            }
+        } else {
+            return %fancynames{$field};
+        }
+    } # sub head-value(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) #
+    sub head-between(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) {
+        return ' ' x 5;
+    } # sub head-between(Int:D $indx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields --> Str:D) #
+    sub field-value(Int:D $idx, Str:D $field, $value, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) {
+        my Str:D $val = ~($value // ''); #`««« assumming $value is a Str:D »»»
+        #dd $val, $value, $field;
+        if $syntax {
+            given $field {
+                when 'quantity' { return t.color(255, 0, 0)   ~ %prompts{$val}; }
+                when 'value'    { return t.color(255, 0, 255) ~ $val;           }
+                default         { return t.color(255, 0, 0)   ~ $val;           }
+            } # given $field #
+        } elsif $colour {
+            given $field {
+                when 'quantity' { return t.color(0, 0, 255) ~ %prompts{$val}; }
+                when 'value'    { return t.color(0, 0, 255) ~ $val;           }
+                default         { return t.color(255, 0, 0) ~ $val;           }
+            } # given $field #
+        } else {
+            given $field {
+                when 'quantity' { return %prompts{$val}; }
+                when 'value'    { return $val;           }
+                default         { return $val;           }
+            } # given $field #
+        }
+    } # sub field-value(Int:D $idx, Str:D $field, $value, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) #
+    sub between(Int:D $idx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) {
+        return ' ' x 5;
+    } # sub between(Int:D $idx, Str:D $field, Bool:D $colour, Bool:D $syntax, Str:D @fields, %row --> Str:D) #
+    sub row-formatting(Int:D $cnt, Bool:D $colour, Bool:D $syntax --> Str:D) {
+        if $colour {
+            if $syntax { 
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3; # three heading lines. #
+                return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,195,0)) ~ t.bold ~ t.bright-blue;
+            } else {
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3;
+                return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
+                return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,195,0)) ~ t.bold ~ t.bright-blue;
+            }
+        } else {
+            return '';
+        }
+    } # sub row-formatting(Int:D $cnt, Bool:D $colour, Bool:D $syntax --> Str:D) #
+    return list-by($prefix, $colour, $syntax, $page-length,
+                  $pattern, @fields, %defaults, @rows,
+                  :!sort,
+                  :&include-row, 
+                  :&head-value, 
+                  :&head-between,
+                  :&field-value, 
+                  :&between,
+                  :&row-formatting);
+} # sub stats(Str:D $prefix, Bool:D $colour, Bool:D $syntax, Regex:D $pattern --> Bool:D) is export #
 
 subset PortVal is export of Int where 0 < * <= 9_223_372_036_854_775_807;
 
