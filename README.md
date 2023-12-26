@@ -381,6 +381,8 @@ sc stats
 
 An alias of stats see above [sc stats](#sc-stats).
 
+[Top of Document](#table-of-contents)
+
 ### sc add
 
 ```bash
@@ -402,4 +404,6 @@ sc add <key> <host> [<port>]  [-s|--set|--force] [-c|--comment=<Str>]
       * Example use.
 
         ![sc add ex grizzlysmit@example.com 344 --comment="an example host"](/docs/images/sc-add.png)
+
+[Top of Document](#table-of-contents)
 

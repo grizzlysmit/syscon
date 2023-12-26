@@ -624,6 +624,8 @@ multi sub MAIN('stats', Str:D $prefix = '',
 
 An alias of stats see above L<sc stats|#sc-stats>.
 
+L<Top of Document|#table-of-contents>
+
 =end pod
 
 multi sub MAIN('statistics', Str:D $prefix = '',
@@ -668,6 +670,8 @@ Example use.
 !L<sc add ex grizzlysmit@example.com 344 --comment="an example host"|/docs/images/sc-add.png>
 
 =end item3
+
+L<Top of Document|#table-of-contents>
 
 =end pod
 
