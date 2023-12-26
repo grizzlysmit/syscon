@@ -788,12 +788,12 @@ sub say-list-keys(Str $prefix, Bool:D $colour, Bool:D $syntax, Regex:D $pattern,
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3; # three heading lines. #
                 return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
-                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,195,0)) ~ t.bold ~ t.bright-blue;
             } else {
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3;
                 return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
-                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,195,0)) ~ t.bold ~ t.bright-blue;
             }
         } else {
             return '';
@@ -996,12 +996,12 @@ sub list-by-all(Str:D $prefix, Bool:D $colour, Bool:D $syntax, Int:D $page-lengt
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3; # three heading lines. #
                 return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
-                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,195,0)) ~ t.bold ~ t.bright-blue;
             } else {
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3;
                 return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
-                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,195,0)) ~ t.bold ~ t.bright-blue;
             }
         } else {
             return '';
@@ -1256,12 +1256,12 @@ sub list-commented(Str:D $prefix, Bool:D $colour, Bool:D $syntax, Int:D $page-le
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3; # three heading lines. #
                 return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
-                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,195,0)) ~ t.bold ~ t.bright-blue;
             } else {
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3;
                 return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
-                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,195,0)) ~ t.bold ~ t.bright-blue;
             }
         } else {
             return '';
@@ -2275,7 +2275,11 @@ sub restore-db-file(IO::Path $restore-from --> Bool) is export {
     }
 }
 
-sub list-db-backups(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Regex:D $pattern, Int:D $page-length --> Bool:D) is export {
+sub list-db-backups(Str:D $prefix,
+                    Bool:D $colour is copy,
+                    Bool:D $syntax,
+                    Regex:D $pattern,
+                    Int:D $page-length --> Bool:D) is export {
     $colour = True if $syntax;
     my IO::Path @backups = $config.IO.dir(:test(rx/ ^ 
                                                            'hosts.h_ts.' \d ** 4 '-' \d ** 2 '-' \d ** 2
@@ -2389,12 +2393,12 @@ sub list-db-backups(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Regex
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3; # three heading lines. #
                 return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
-                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,195,0)) ~ t.bold ~ t.bright-blue;
             } else {
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -3;
                 return t.bg-color(0, 0, 127) ~ t.bold ~ t.bright-blue if $cnt == -2;
                 return t.bg-color(255, 0, 255) ~ t.bold ~ t.bright-blue if $cnt == -1;
-                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,255,0)) ~ t.bold ~ t.bright-blue;
+                return (($cnt % 2 == 0) ?? t.bg-yellow !! t.bg-color(0,195,0)) ~ t.bold ~ t.bright-blue;
             }
         } else {
             return '';
@@ -2409,7 +2413,11 @@ sub list-db-backups(Str:D $prefix, Bool:D $colour is copy, Bool:D $syntax, Regex
                   :&field-value, 
                   :&between,
                   :&row-formatting);
-} # sub list-db-backups(Boo:D $colour is copy, Bool:D $syntax --> Bool:D) is export #
+} #`««« sub list-db-backups(Str:D $prefix,
+                            Bool:D $colour is copy,
+                            Bool:D $syntax,
+                            Regex:D $pattern,
+                            Int:D $page-length --> Bool:D) is export »»»
 
 sub test( --> True) is export {
     #«««

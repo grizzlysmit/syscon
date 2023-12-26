@@ -594,6 +594,7 @@ footer {
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_list_by_all">sc list by all</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_list_trash">sc list trash</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_trash">sc trash</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#sc_empty_trash">sc empty trash</a></td></tr>
 </table></div>
 </nav><div id="syscon"></div><div class="subtitle"><p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
 <ul>
@@ -639,7 +640,7 @@ footer {
 </section>
 <section>
 <h1 id="Copyright"><a href="#syscon" class="u" title="go to top of document">COPYRIGHT</a></h1>
-<p>LGPL V3.0+ <a href="https://github.com/grizzlysmit/syscon/blob/main/LICENSE">LICENSE</a></p>
+<p>LGPL V3.0+ <a href="/LICENSE.html">LICENSE</a></p>
 </section>
 <h1 id="Introduction"><a href="#syscon" class="u" title="go to top of document">Introduction</a></h1>
 <p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p><p><a href="#table-of-contents">Top of Document</a></p><h2 id="Motivations"><a href="#syscon" class="u" title="go to top of document">Motivations</a></h2>
@@ -662,10 +663,10 @@ footer {
 </ul>
 </ul>
 </ul>
-<p><a href="#table-of-contents">Top of Document</a></p><p>This is the app, you can find the modules docs <a href="https://github.com/grizzlysmit/syscon/blob/main/docs/Syscon.md">here</a></p></section><section name="pod"><h3 id="USAGE"><a href="#syscon" class="u" title="go to top of document">USAGE</a></h3>
+<p><a href="#table-of-contents">Top of Document</a></p><p>This is the app, you can find the modules docs <a href="/docs/Syscon.md.html">here</a></p></section><section name="pod"><h3 id="USAGE"><a href="#syscon" class="u" title="go to top of document">USAGE</a></h3>
 <pre class="pod-block-code">$ sc --help
 
-</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h2 id="The_actual_work_horses_of_the_library"><a href="#syscon" class="u" title="go to top of document">The actual work horses of the library</a></h2>
+</pre><p>!<a href="/docs/images/usage.png.html">/docs/images/usage.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h2 id="The_actual_work_horses_of_the_library"><a href="#syscon" class="u" title="go to top of document">The actual work horses of the library</a></h2>
 <h3 id="sc_ssh"><a href="#syscon" class="u" title="go to top of document">sc ssh</a></h3>
 <p>Runs</p><pre class="pod-block-code">ssh -p $port $host
 
@@ -677,7 +678,7 @@ footer {
     }
 }
 
-</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_ping"><a href="#syscon" class="u" title="go to top of document">sc ping</a></h3>
+</pre><p>!<a href="/docs/images/sc-ssh.png.html">/docs/images/sc-ssh.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_ping"><a href="#syscon" class="u" title="go to top of document">sc ping</a></h3>
 <p>Runs</p><pre class="pod-block-code">$ sc ping $server
 
 </pre><ul>
@@ -686,7 +687,7 @@ footer {
 <li><p><strong><code>$server</code></strong> is the domain part of the host value i.e. with the <strong><code>username@</code></strong> removed.</p></li>
 </ul>
 </ul>
-<p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/ping.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/ping.png</a></p><p>by the <strong><code>sc ping $key</code></strong></p><pre class="pod-block-code">multi sub MAIN('ping', Str:D $key --&gt; int){
+<p>!<a href="/docs/images/ping.png.html">/docs/images/ping.png</a></p><p>by the <strong><code>sc ping $key</code></strong></p><pre class="pod-block-code">multi sub MAIN('ping', Str:D $key --&gt; int){
     if ping($key) {
         return 0;
     } else {
@@ -697,7 +698,7 @@ footer {
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_get_home"><a href="#syscon" class="u" title="go to top of document">sc get home</a></h3>
 <p>Get some files on the remote system and deposit them here (in the directory the user is currently in).</p><pre class="pod-block-code">$ sc get home $key $files-on-remote-system……
 
-</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png</a></p><p>Defined as </p><pre class="pod-block-code">multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
+</pre><p>!<a href="/docs/images/sc-get-home.png.html">/docs/images/sc-get-home.png</a></p><p>Defined as </p><pre class="pod-block-code">multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
     if _get('home', $key, :$recursive, |@args) {
         return 0;
     } else {
@@ -715,7 +716,7 @@ footer {
 <li><p><strong><code>$files</code></strong>…… is a list of files to copy to the remote server.</p></li>
 </ul>
 </ul>
-<p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png</a></p><p>Implemented as</p><pre class="pod-block-code">multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
+<p>!<a href="/docs/images/sc-put-home.png.html">/docs/images/sc-put-home.png</a></p><p>Implemented as</p><pre class="pod-block-code">multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
     if _put('home', $key, :$recursive, |@args) {
         return 0;
     } else {
@@ -744,23 +745,26 @@ footer {
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_keys_"><a href="#syscon" class="u" title="go to top of document">sc list keys </a></h3>
 <pre class="pod-block-code">$ sc list keys --help
 
-</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-keys.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-keys.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_by_all"><a href="#syscon" class="u" title="go to top of document">sc list by all</a></h3>
+</pre><p>!<a href="/docs/images/sc-list-keys.png.html">/docs/images/sc-list-keys.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_by_all"><a href="#syscon" class="u" title="go to top of document">sc list by all</a></h3>
 <pre class="pod-block-code">sc list by all --help
 
-</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all.png</a></p><pre class="pod-block-code">sc list by all
+</pre><p>!<a href="/docs/images/sc-list-by-all.png.html">/docs/images/sc-list-by-all.png</a></p><pre class="pod-block-code">sc list by all
 
-</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_trash"><a href="#syscon" class="u" title="go to top of document">sc list trash</a></h3>
+</pre><p>!<a href="/docs/images/sc-list-by-all-pattern.png.html">/docs/images/sc-list-by-all-pattern.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_trash"><a href="#syscon" class="u" title="go to top of document">sc list trash</a></h3>
 <pre class="pod-block-code">sc list trash --help
 
-</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash--help.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash--help.png</a></p><pre class="pod-block-code">sc list trash --help
+</pre><p>!<a href="/docs/images/sc-list-trash--help.png.html">/docs/images/sc-list-trash--help.png</a></p><pre class="pod-block-code">sc list trash --help
 
-</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_trash"><a href="#syscon" class="u" title="go to top of document">sc trash</a></h3>
+</pre><p>!<a href="/docs/images/sc-list-trash.png.html">/docs/images/sc-list-trash.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_trash"><a href="#syscon" class="u" title="go to top of document">sc trash</a></h3>
 <pre class="pod-block-code">sc trash --help
 
-</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash--help.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash--help.png</a></p><pre class="pod-block-code">sc trash
+</pre><p>!<a href="/docs/images/sc-trash--help.png.html">/docs/images/sc-trash--help.png</a></p><pre class="pod-block-code">sc trash
 
-</pre><p>!<a href="https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash.png">https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-25T17:53:12Z</span></div></footer>
+</pre><p>!<a href="/docs/images/sc-trash.png.html">/docs/images/sc-trash.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_empty_trash"><a href="#syscon" class="u" title="go to top of document">sc empty trash</a></h3>
+<pre class="pod-block-code">sc empty trash --help
+
+</pre></section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-26T04:56:42Z</span></div></footer>
 	</body>
 </html>
 

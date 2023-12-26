@@ -49,7 +49,7 @@ Table of  Contents
 =SUBTITLE A module B<C<Syscon>> and a program B<C<syscon>> or B<C<sc>> for short, which keeps tarck of assorted servers and helps to connect to them.
 
 =COPYRIGHT
-LGPL V3.0+ L<LICENSE|https://github.com/grizzlysmit/syscon/blob/main/LICENSE>
+LGPL V3.0+ L<LICENSE|/LICENSE>
 
 =head1 Introduction
 
@@ -101,7 +101,7 @@ $ scp -P $port <files> …… $host:
 
 L<Top of Document|#table-of-contents>
 
-This is the app, you can find the modules docs L<here|https://github.com/grizzlysmit/syscon/blob/main/docs/Syscon.md>
+This is the app, you can find the modules docs L<here|/docs/Syscon.md>
 
 =end pod
 
@@ -122,7 +122,7 @@ $ sc --help
 
 =end code
 
-!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png>
+!L</docs/images/usage.png>
 
 L<Top of Document|#table-of-contents>
 
@@ -165,7 +165,7 @@ multi sub MAIN('ssh', Str:D $key --> int){
 =end code
 
 
-!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png>
+!L</docs/images/sc-ssh.png>
 
 L<Top of Document|#table-of-contents>
 
@@ -194,7 +194,7 @@ $ sc ping $server
 =item1 Where
 =item2 B<C<$server>> is the domain part of the host value i.e. with the B<C<username@>> removed.
 
-!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/ping.png>
+!L</docs/images/ping.png>
 
 by the B<C<sc ping $key>>
 
@@ -234,7 +234,7 @@ $ sc get home $key $files-on-remote-system……
 
 =end code
 
-!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png>
+!L</docs/images/sc-get-home.png>
 
 Defined as 
 
@@ -278,7 +278,7 @@ $ sc put home $key $files……
 =item2 B<C<$key>> is as always the key to identify the host in question.
 =item2 B<C<$files>>…… is a list of files to copy to the remote server.
 
-!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png>
+!L</docs/images/sc-put-home.png>
 
 Implemented as
 
@@ -377,7 +377,7 @@ $ sc list keys --help
 
 =end code
 
-!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-keys.png>
+!L</docs/images/sc-list-keys.png>
 
 L<Top of Document|#table-of-contents>
 
@@ -414,7 +414,7 @@ sc list by all --help
 
 =end code
 
-!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all.png>
+!L</docs/images/sc-list-by-all.png>
 
 =begin code :lang<bash>
 
@@ -422,7 +422,7 @@ sc list by all
 
 =end code
 
-!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png>
+!L</docs/images/sc-list-by-all-pattern.png>
 
 L<Top of Document|#table-of-contents>
 
@@ -458,7 +458,7 @@ sc list trash --help
 
 =end code
 
-!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash--help.png>
+!L</docs/images/sc-list-trash--help.png>
 
 =begin code :lang<bash>
 
@@ -466,7 +466,7 @@ sc list trash --help
 
 =end code
 
-!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash.png>
+!L</docs/images/sc-list-trash.png>
 
 L<Top of Document|#table-of-contents>
 
@@ -503,7 +503,7 @@ sc trash --help
 
 =end code
 
-!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash--help.png>
+!L</docs/images/sc-trash--help.png>
 
 =begin code :lang<raku>
 
@@ -511,7 +511,7 @@ sc trash
 
 =end code
 
-!L<https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash.png>
+!L</docs/images/sc-trash.png>
 
 L<Top of Document|#table-of-contents>
 
@@ -526,6 +526,18 @@ multi sub MAIN('trash', *@keys) returns Int {
     }
     exit $result;
 }
+
+=begin pod
+
+=head3 sc empty trash
+
+=begin code :lang<bash>
+
+sc empty trash --help
+
+=end code
+
+=end pod
 
 multi sub MAIN('empty', 'trash') returns Int {
    if empty-trash() {
@@ -662,36 +674,67 @@ multi sub MAIN('list', 'db', 'backups', Str:D $prefix = '',
     ##################################
 #»»»
 
-multi sub MAIN('list', 'editors', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
-   if list-editors($colour, $syntax) {
+multi sub MAIN('list', 'editors', Str:D :f(:$prefix) = '',
+                               Bool:D :c(:color(:$colour)) = False,
+                               Bool:D :s(:$syntax) = False,
+                               Int:D :l(:$page-length) = 30,
+                               Str :p(:$pattern) = Str,
+                               Str :e(:$ecma-pattern) = Str) returns Int {
+    my Regex $_pattern;
+    with $pattern {
+        $_pattern = rx:i/ <$pattern> /;
+    } orwith $ecma-pattern {
+        $_pattern = ECMA262Regex.compile("^$ecma-pattern\$");
+    } else {
+        $_pattern = rx:i/^ .* $/;
+    }
+   if list-editors($prefix, $colour, $syntax, $page-length, $_pattern) {
        exit 0;
    } else {
        exit 1;
    } 
 }
 
-multi sub MAIN('list', 'editors', 'file', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
-   if list-editors-file($colour, $syntax) {
+multi sub MAIN('editors', 'stats', Str:D $prefix = '',
+                               Bool:D :c(:color(:$colour)) = False,
+                               Bool:D :s(:$syntax) = False,
+                               Int:D :l(:$page-length) = 30,
+                               Str :p(:$pattern) = Str,
+                               Str :e(:$ecma-pattern) = Str) returns Int {
+    my Regex $_pattern;
+    with $pattern {
+        $_pattern = rx:i/ <$pattern> /;
+    } orwith $ecma-pattern {
+        $_pattern = ECMA262Regex.compile("^$ecma-pattern\$");
+    } else {
+        $_pattern = rx:i/^ .* $/;
+    }
+   if editors-stats($prefix, $colour, $syntax, $page-length, $_pattern) {
        exit 0;
    } else {
        exit 1;
    } 
 }
 
-multi sub MAIN('editors', 'stats', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
-   if editors-stats($colour, $syntax) {
-       exit 0;
-   } else {
-       exit 1;
-   } 
-}
-
-multi sub MAIN('list', 'editors', 'backups', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
-   if list-editors-backups($colour, $syntax) {
-       exit 0;
-   } else {
-       exit 1;
-   } 
+multi sub MAIN('list', 'editors', 'backups', Str:D $prefix = '',
+                               Bool:D :c(:color(:$colour)) = False,
+                               Bool:D :s(:$syntax) = False,
+                               Int:D :l(:$page-length) = 30,
+                               Str :p(:$pattern) = Str,
+                               Str :e(:$ecma-pattern) = Str) returns Int {
+    my Regex $_pattern;
+    with $pattern {
+        $_pattern = rx:i/ <$pattern> /;
+    } orwith $ecma-pattern {
+        $_pattern = ECMA262Regex.compile("^$ecma-pattern\$");
+    } else {
+        $_pattern = rx:i/^ .* $/;
+    }
+    if list-editors-backups($prefix, $colour, $syntax, $_pattern, $page-length) {
+        exit 0;
+    } else {
+        exit 1;
+    } 
 }
 
 multi sub MAIN('backup', 'editors', Bool:D :w(:$use-windows-formatting) = False) returns Int {

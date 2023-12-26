@@ -83,7 +83,7 @@ A module **`Syscon`** and a program **`syscon`** or **`sc`** for short, which ke
 COPYRIGHT
 =========
 
-LGPL V3.0+ [LICENSE](https://github.com/grizzlysmit/syscon/blob/main/LICENSE)
+LGPL V3.0+ [LICENSE](/LICENSE)
 
 Introduction
 ============
@@ -131,7 +131,7 @@ $ scp -P $port <files> …… $host:
 
 [Top of Document](#table-of-contents)
 
-This is the app, you can find the modules docs [here](https://github.com/grizzlysmit/syscon/blob/main/docs/Syscon.md)
+This is the app, you can find the modules docs [here](/docs/Syscon.md)
 
 ### USAGE
 
@@ -139,7 +139,7 @@ This is the app, you can find the modules docs [here](https://github.com/grizzly
 $ sc --help
 ```
 
-![https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/usage.png)
+![/docs/images/usage.png](/docs/images/usage.png)
 
 [Top of Document](#table-of-contents)
 
@@ -166,7 +166,7 @@ multi sub MAIN('ssh', Str:D $key --> int){
 }
 ```
 
-![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-ssh.png)
+![/docs/images/sc-ssh.png](/docs/images/sc-ssh.png)
 
 [Top of Document](#table-of-contents)
 
@@ -182,7 +182,7 @@ $ sc ping $server
 
     * **`$server`** is the domain part of the host value i.e. with the **`username@`** removed.
 
-![https://github.com/grizzlysmit/syscon/blob/main/docs/images/ping.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/ping.png)
+![/docs/images/ping.png](/docs/images/ping.png)
 
 by the **`sc ping $key`**
 
@@ -206,7 +206,7 @@ Get some files on the remote system and deposit them here (in the directory the 
 $ sc get home $key $files-on-remote-system……
 ```
 
-![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-get-home.png)
+![/docs/images/sc-get-home.png](/docs/images/sc-get-home.png)
 
 Defined as 
 
@@ -236,7 +236,7 @@ $ sc put home $key $files……
 
     * **`$files`**…… is a list of files to copy to the remote server.
 
-![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-put-home.png)
+![/docs/images/sc-put-home.png](/docs/images/sc-put-home.png)
 
 Implemented as
 
@@ -287,7 +287,7 @@ multi sub MAIN('edit', 'configs') returns Int {
 $ sc list keys --help
 ```
 
-![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-keys.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-keys.png)
+![/docs/images/sc-list-keys.png](/docs/images/sc-list-keys.png)
 
 [Top of Document](#table-of-contents)
 
@@ -297,13 +297,13 @@ $ sc list keys --help
 sc list by all --help
 ```
 
-![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all.png)
+![/docs/images/sc-list-by-all.png](/docs/images/sc-list-by-all.png)
 
 ```bash
 sc list by all
 ```
 
-![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-by-all-pattern.png)
+![/docs/images/sc-list-by-all-pattern.png](/docs/images/sc-list-by-all-pattern.png)
 
 [Top of Document](#table-of-contents)
 
@@ -313,13 +313,13 @@ sc list by all
 sc list trash --help
 ```
 
-![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash--help.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash--help.png)
+![/docs/images/sc-list-trash--help.png](/docs/images/sc-list-trash--help.png)
 
 ```bash
 sc list trash --help
 ```
 
-![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-list-trash.png)
+![/docs/images/sc-list-trash.png](/docs/images/sc-list-trash.png)
 
 [Top of Document](#table-of-contents)
 
@@ -329,13 +329,19 @@ sc list trash --help
 sc trash --help
 ```
 
-![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash--help.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash--help.png)
+![/docs/images/sc-trash--help.png](/docs/images/sc-trash--help.png)
 
 ```raku
 sc trash
 ```
 
-![https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash.png](https://github.com/grizzlysmit/syscon/blob/main/docs/images/sc-trash.png)
+![/docs/images/sc-trash.png](/docs/images/sc-trash.png)
 
 [Top of Document](#table-of-contents)
+
+### sc empty trash
+
+```bash
+sc empty trash --help
+```
 
