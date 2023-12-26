@@ -667,7 +667,7 @@ footer {
 <p><a href="#table-of-contents">Top of Document</a></p><p>This is the app, you can find the modules docs <a href="/docs/Syscon.md.html">here</a></p></section><section name="pod"><h3 id="USAGE"><a href="#syscon" class="u" title="go to top of document">USAGE</a></h3>
 <pre class="pod-block-code">$ sc --help
 
-</pre><p>!<a href="/docs/images/usage.png.html"><code>sc --help --nocolour Usage: sc ssh &lt;key&gt; sc ping &lt;key&gt; sc get home &lt;key&gt; [&lt;args&gt; ...] [-r|--recursive] sc put home &lt;key&gt; [&lt;args&gt; ...] [-r|--recursive] sc edit configs sc list keys [&lt;prefix&gt;] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;] sc list by all [&lt;prefix&gt;] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;] sc list trash [&lt;prefix&gt;] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;] sc trash [&lt;keys&gt; ...] sc empty trash sc undelete [&lt;keys&gt; ...] sc stats [-c|--color|--colour] [-s|--syntax] sc statistics [-c|--color|--colour] [-s|--syntax] sc add &lt;key&gt; &lt;host&gt; [&lt;port&gt;] [-s|--set|--force] [-c|--comment=&lt;Str&gt;] sc delete [&lt;keys&gt; ...] [-d|--delete|--do-not-trash] sc del [&lt;keys&gt; ...] [-d|--delete|--do-not-trash] sc comment &lt;key&gt; &lt;comment&gt; sc alias &lt;key&gt; &lt;target&gt; [-s|--set|--force] [-d|--really-force|--overwrite-hosts] [-c|--comment=&lt;Str&gt;] sc backup db [-w|--win-format|--use-windows-formating] sc restore db [&lt;restore-from&gt;] sc list db backups [&lt;prefix&gt;] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;] sc list editors [-f|--prefix=&lt;Str&gt;] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;] sc editors stats [&lt;prefix&gt;] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;] sc list editors backups [&lt;prefix&gt;] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;] sc backup editors [-w|--use-windows-formatting] sc restore editors &lt;restore-from&gt; sc set editor &lt;editor&gt; [&lt;comment&gt;] sc set override GUI_EDITOR &lt;value&gt; [&lt;comment&gt;] sc menu restore editors [&lt;message&gt;] [-c|--color|--colour] [-s|--syntax] sc tidy file sc sort file sc show file [-c|--color|--colour] sc help [&lt;args&gt; ...] [-n|--nocolor|--nocolour] [--&lt;named-args&gt;=...]</code></a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h2 id="The_actual_work_horses_of_the_library"><a href="#syscon" class="u" title="go to top of document">The actual work horses of the library</a></h2>
+</pre><p>!<a href="/docs/images/usage.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h2 id="The_actual_work_horses_of_the_library"><a href="#syscon" class="u" title="go to top of document">The actual work horses of the library</a></h2>
 <h3 id="sc_ssh"><a href="#syscon" class="u" title="go to top of document">sc ssh</a></h3>
 <p>Runs</p><pre class="pod-block-code">ssh -p $port $host
 
@@ -679,7 +679,7 @@ footer {
     }
 }
 
-</pre><p>!<a href="/docs/images/sc-ssh.png.html"><code>sc ssh rak ssh -p 22 rakbat.local Welcome to Ubuntu 23.10 (GNU/Linux 6.5.0-14-generic x86_64) * Documentation: https://help.ubuntu.com * Management: https://landscape.canonical.com * Support: https://ubuntu.com/advantage 0 updates can be applied immediately. Last login: Thu Dec 21 07:43:01 2023 from 192.168.188.15</code></a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_ping"><a href="#syscon" class="u" title="go to top of document">sc ping</a></h3>
+</pre><p>!<a href="/docs/images/sc-ssh.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_ping"><a href="#syscon" class="u" title="go to top of document">sc ping</a></h3>
 <p>Runs</p><pre class="pod-block-code">$ sc ping $key
 
 </pre><ul>
@@ -688,7 +688,7 @@ footer {
 <li><p><strong><code>$key</code></strong> a key in the db.</p></li>
 </ul>
 </ul>
-<p>!<a href="/docs/images/ping.png.html"><code>sc ping rak ping rakbat.local PING rakbat.local (192.168.188.13) 56(84) bytes of data. 64 bytes from rakbat.local (192.168.188.13): icmp_seq=1 ttl=64 time=0.855 ms 64 bytes from rakbat.local (192.168.188.13): icmp_seq=2 ttl=64 time=0.256 ms 64 bytes from rakbat.local (192.168.188.13): icmp_seq=3 ttl=64 time=0.609 ms 64 bytes from rakbat.local (192.168.188.13): icmp_seq=4 ttl=64 time=0.568 ms 64 bytes from rakbat.local (192.168.188.13): icmp_seq=5 ttl=64 time=0.518 ms 64 bytes from rakbat.local (192.168.188.13): icmp_seq=6 ttl=64 time=0.493 ms 64 bytes from rakbat.local (192.168.188.13): icmp_seq=7 ttl=64 time=0.288 ms ^C --- rakbat.local ping statistics --- 7 packets transmitted, 7 received, 0% packet loss, time 6136ms rtt min/avg/max/mdev = 0.256/0.512/0.855/0.187 ms</code></a></p><p>by the <strong><code>sc ping $key</code></strong></p><pre class="pod-block-code">multi sub MAIN('ping', Str:D $key --&gt; int){
+<p>!<a href="/docs/images/ping.png.html">image not available here go to the github page</a></p><p>by the <strong><code>sc ping $key</code></strong></p><pre class="pod-block-code">multi sub MAIN('ping', Str:D $key --&gt; int){
     if ping($key) {
         return 0;
     } else {
@@ -699,7 +699,7 @@ footer {
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_get_home"><a href="#syscon" class="u" title="go to top of document">sc get home</a></h3>
 <p>Get some files on the remote system and deposit them here (in the directory the user is currently in).</p><pre class="pod-block-code">$ sc get home $key $files-on-remote-system……
 
-</pre><p>!<a href="/docs/images/sc-get-home.png.html">/docs/images/sc-get-home.png</a></p><p>Defined as </p><pre class="pod-block-code">multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
+</pre><p>!<a href="/docs/images/sc-get-home.png.html">image not available here go to the github page</a></p><p>Defined as </p><pre class="pod-block-code">multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
     if _get('home', $key, :$recursive, |@args) {
         return 0;
     } else {
@@ -717,7 +717,7 @@ footer {
 <li><p><strong><code>$files</code></strong>…… is a list of files to copy to the remote server.</p></li>
 </ul>
 </ul>
-<p>!<a href="/docs/images/sc-put-home.png.html">/docs/images/sc-put-home.png</a></p><p>Implemented as</p><pre class="pod-block-code">multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
+<p>!<a href="/docs/images/sc-put-home.png.html">image not available here go to the github page</a></p><p>Implemented as</p><pre class="pod-block-code">multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
     if _put('home', $key, :$recursive, |@args) {
         return 0;
     } else {
@@ -746,29 +746,29 @@ footer {
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_keys_"><a href="#syscon" class="u" title="go to top of document">sc list keys </a></h3>
 <pre class="pod-block-code">$ sc list keys --help
 
-</pre><p>!<a href="/docs/images/sc-list-keys.png.html">/docs/images/sc-list-keys.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_by_all"><a href="#syscon" class="u" title="go to top of document">sc list by all</a></h3>
+</pre><p>!<a href="/docs/images/sc-list-keys.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_by_all"><a href="#syscon" class="u" title="go to top of document">sc list by all</a></h3>
 <pre class="pod-block-code">sc list by all --help
 
-</pre><p>!<a href="/docs/images/sc-list-by-all.png.html">/docs/images/sc-list-by-all.png</a></p><pre class="pod-block-code">sc list by all
+</pre><p>!<a href="/docs/images/sc-list-by-all.png.html">image not available here go to the github page</a></p><pre class="pod-block-code">sc list by all
 
-</pre><p>!<a href="/docs/images/sc-list-by-all-pattern.png.html">/docs/images/sc-list-by-all-pattern.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_trash"><a href="#syscon" class="u" title="go to top of document">sc list trash</a></h3>
+</pre><p>!<a href="/docs/images/sc-list-by-all-pattern.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_trash"><a href="#syscon" class="u" title="go to top of document">sc list trash</a></h3>
 <pre class="pod-block-code">sc list trash --help
 
-</pre><p>!<a href="/docs/images/sc-list-trash--help.png.html">/docs/images/sc-list-trash--help.png</a></p><pre class="pod-block-code">sc list trash --help
+</pre><p>!<a href="/docs/images/sc-list-trash--help.png.html">image not available here go to the github page</a></p><pre class="pod-block-code">sc list trash --help
 
-</pre><p>!<a href="/docs/images/sc-list-trash.png.html">/docs/images/sc-list-trash.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_trash"><a href="#syscon" class="u" title="go to top of document">sc trash</a></h3>
+</pre><p>!<a href="/docs/images/sc-list-trash.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_trash"><a href="#syscon" class="u" title="go to top of document">sc trash</a></h3>
 <pre class="pod-block-code">sc trash --help
 
-</pre><p>!<a href="/docs/images/sc-trash--help.png.html">/docs/images/sc-trash--help.png</a></p><pre class="pod-block-code">sc trash
+</pre><p>!<a href="/docs/images/sc-trash--help.png.html">image not available here go to the github page</a></p><pre class="pod-block-code">sc trash
 
-</pre><p>!<a href="/docs/images/sc-trash.png.html">/docs/images/sc-trash.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_empty_trash"><a href="#syscon" class="u" title="go to top of document">sc empty trash</a></h3>
+</pre><p>!<a href="/docs/images/sc-trash.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_empty_trash"><a href="#syscon" class="u" title="go to top of document">sc empty trash</a></h3>
 <pre class="pod-block-code">sc empty trash --help
 
-</pre><p>!<a href="/docs/images/sc-empty-trash.png.html">/docs/images/sc-empty-trash.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_undelete"><a href="#syscon" class="u" title="go to top of document">sc undelete</a></h3>
+</pre><p>!<a href="/docs/images/sc-empty-trash.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_undelete"><a href="#syscon" class="u" title="go to top of document">sc undelete</a></h3>
 <pre class="pod-block-code">sc undelete --help
 
-</pre><p>!<a href="/docs/images/sc-undelete.png.html">/docs/images/sc-undelete.png</a></p><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-26T17:44:50Z</span></div></footer>
+</pre><p>!<a href="/docs/images/sc-undelete.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-26T18:06:04Z</span></div></footer>
 	</body>
 </html>
 

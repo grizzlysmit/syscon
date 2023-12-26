@@ -139,7 +139,7 @@ This is the app, you can find the modules docs [here](/docs/Syscon.md)
 $ sc --help
 ```
 
-![`sc --help --nocolour Usage: sc ssh <key> sc ping <key> sc get home <key> [<args> ...] [-r|--recursive] sc put home <key> [<args> ...] [-r|--recursive] sc edit configs sc list keys [<prefix>] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>] sc list by all [<prefix>] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>] sc list trash [<prefix>] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>] sc trash [<keys> ...] sc empty trash sc undelete [<keys> ...] sc stats [-c|--color|--colour] [-s|--syntax] sc statistics [-c|--color|--colour] [-s|--syntax] sc add <key> <host> [<port>] [-s|--set|--force] [-c|--comment=<Str>] sc delete [<keys> ...] [-d|--delete|--do-not-trash] sc del [<keys> ...] [-d|--delete|--do-not-trash] sc comment <key> <comment> sc alias <key> <target> [-s|--set|--force] [-d|--really-force|--overwrite-hosts] [-c|--comment=<Str>] sc backup db [-w|--win-format|--use-windows-formating] sc restore db [<restore-from>] sc list db backups [<prefix>] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>] sc list editors [-f|--prefix=<Str>] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>] sc editors stats [<prefix>] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>] sc list editors backups [<prefix>] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>] sc backup editors [-w|--use-windows-formatting] sc restore editors <restore-from> sc set editor <editor> [<comment>] sc set override GUI_EDITOR <value> [<comment>] sc menu restore editors [<message>] [-c|--color|--colour] [-s|--syntax] sc tidy file sc sort file sc show file [-c|--color|--colour] sc help [<args> ...] [-n|--nocolor|--nocolour] [--<named-args>=...]`](/docs/images/usage.png)
+![image not available here go to the github page](/docs/images/usage.png)
 
 [Top of Document](#table-of-contents)
 
@@ -166,7 +166,7 @@ multi sub MAIN('ssh', Str:D $key --> int){
 }
 ```
 
-![`sc ssh rak ssh -p 22 rakbat.local Welcome to Ubuntu 23.10 (GNU/Linux 6.5.0-14-generic x86_64) * Documentation: https://help.ubuntu.com * Management: https://landscape.canonical.com * Support: https://ubuntu.com/advantage 0 updates can be applied immediately. Last login: Thu Dec 21 07:43:01 2023 from 192.168.188.15`](/docs/images/sc-ssh.png)
+![image not available here go to the github page](/docs/images/sc-ssh.png)
 
 [Top of Document](#table-of-contents)
 
@@ -182,7 +182,7 @@ $ sc ping $key
 
     * **`$key`** a key in the db.
 
-![`sc ping rak ping rakbat.local PING rakbat.local (192.168.188.13) 56(84) bytes of data. 64 bytes from rakbat.local (192.168.188.13): icmp_seq=1 ttl=64 time=0.855 ms 64 bytes from rakbat.local (192.168.188.13): icmp_seq=2 ttl=64 time=0.256 ms 64 bytes from rakbat.local (192.168.188.13): icmp_seq=3 ttl=64 time=0.609 ms 64 bytes from rakbat.local (192.168.188.13): icmp_seq=4 ttl=64 time=0.568 ms 64 bytes from rakbat.local (192.168.188.13): icmp_seq=5 ttl=64 time=0.518 ms 64 bytes from rakbat.local (192.168.188.13): icmp_seq=6 ttl=64 time=0.493 ms 64 bytes from rakbat.local (192.168.188.13): icmp_seq=7 ttl=64 time=0.288 ms ^C --- rakbat.local ping statistics --- 7 packets transmitted, 7 received, 0% packet loss, time 6136ms rtt min/avg/max/mdev = 0.256/0.512/0.855/0.187 ms`](/docs/images/ping.png)
+![image not available here go to the github page](/docs/images/ping.png)
 
 by the **`sc ping $key`**
 
@@ -206,7 +206,7 @@ Get some files on the remote system and deposit them here (in the directory the 
 $ sc get home $key $files-on-remote-system……
 ```
 
-![/docs/images/sc-get-home.png](/docs/images/sc-get-home.png)
+![image not available here go to the github page](/docs/images/sc-get-home.png)
 
 Defined as 
 
@@ -236,7 +236,7 @@ $ sc put home $key $files……
 
     * **`$files`**…… is a list of files to copy to the remote server.
 
-![/docs/images/sc-put-home.png](/docs/images/sc-put-home.png)
+![image not available here go to the github page](/docs/images/sc-put-home.png)
 
 Implemented as
 
@@ -287,7 +287,7 @@ multi sub MAIN('edit', 'configs') returns Int {
 $ sc list keys --help
 ```
 
-![/docs/images/sc-list-keys.png](/docs/images/sc-list-keys.png)
+![image not available here go to the github page](/docs/images/sc-list-keys.png)
 
 [Top of Document](#table-of-contents)
 
@@ -297,13 +297,13 @@ $ sc list keys --help
 sc list by all --help
 ```
 
-![/docs/images/sc-list-by-all.png](/docs/images/sc-list-by-all.png)
+![image not available here go to the github page](/docs/images/sc-list-by-all.png)
 
 ```bash
 sc list by all
 ```
 
-![/docs/images/sc-list-by-all-pattern.png](/docs/images/sc-list-by-all-pattern.png)
+![image not available here go to the github page](/docs/images/sc-list-by-all-pattern.png)
 
 [Top of Document](#table-of-contents)
 
@@ -313,13 +313,13 @@ sc list by all
 sc list trash --help
 ```
 
-![/docs/images/sc-list-trash--help.png](/docs/images/sc-list-trash--help.png)
+![image not available here go to the github page](/docs/images/sc-list-trash--help.png)
 
 ```bash
 sc list trash --help
 ```
 
-![/docs/images/sc-list-trash.png](/docs/images/sc-list-trash.png)
+![image not available here go to the github page](/docs/images/sc-list-trash.png)
 
 [Top of Document](#table-of-contents)
 
@@ -329,13 +329,13 @@ sc list trash --help
 sc trash --help
 ```
 
-![/docs/images/sc-trash--help.png](/docs/images/sc-trash--help.png)
+![image not available here go to the github page](/docs/images/sc-trash--help.png)
 
 ```raku
 sc trash
 ```
 
-![/docs/images/sc-trash.png](/docs/images/sc-trash.png)
+![image not available here go to the github page](/docs/images/sc-trash.png)
 
 [Top of Document](#table-of-contents)
 
@@ -345,7 +345,7 @@ sc trash
 sc empty trash --help
 ```
 
-![/docs/images/sc-empty-trash.png](/docs/images/sc-empty-trash.png)
+![image not available here go to the github page](/docs/images/sc-empty-trash.png)
 
 [Top of Document](#table-of-contents)
 
@@ -355,7 +355,7 @@ sc empty trash --help
 sc undelete --help
 ```
 
-![/docs/images/sc-undelete.png](/docs/images/sc-undelete.png)
+![image not available here go to the github page](/docs/images/sc-undelete.png)
 
 [Top of Document](#table-of-contents)
 
