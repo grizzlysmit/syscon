@@ -372,8 +372,8 @@ sc undelete --help
 ### sc stats
 
 ```bash
-
+sc stats
 ```
 
-![image not available here go to the github page](/docs/images/sc-undelete.png)
+![image not available here go to the github page](/docs/images/sc-stats.png)
 

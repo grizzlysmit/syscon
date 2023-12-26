@@ -590,9 +590,11 @@ multi sub MAIN('undelete', *@keys) returns Int {
 
 =begin code :lang<bash>
 
+sc stats
+
 =end code
 
-!L<image not available here go to the github page|/docs/images/sc-undelete.png>
+!L<image not available here go to the github page|/docs/images/sc-stats.png>
 
 =end pod
 
