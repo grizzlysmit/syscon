@@ -34,8 +34,8 @@ Table of  Contents
 =item3 L<sc list by all|#sc-list-by-all>
 =item3 L<sc list trash|#sc-list-trash>
 =item3 L<sc trash|#sc-trash>
-=item3 L<USAGE|#usage>
-=item3 L<USAGE|#usage>
+=item3 L<sc empty trash|#sc-empty-trash>
+=item3 L<sc undelete|#sc-undelete>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -537,6 +537,10 @@ sc empty trash --help
 
 =end code
 
+!L</docs/images/sc-empty-trash.png>
+
+L<Top of Document|#table-of-contents>
+
 =end pod
 
 multi sub MAIN('empty', 'trash') returns Int {
@@ -546,6 +550,20 @@ multi sub MAIN('empty', 'trash') returns Int {
        exit 1;
    } 
 }
+
+=begin pod
+
+=head3 sc undelete
+
+=begin code :lang<bash>
+
+sc undelete --help
+
+=end code
+
+!L</docs/images/sc-undelete.png>
+
+=end pod
 
 multi sub MAIN('undelete', *@keys) returns Int {
     my Int:D $result = 0;

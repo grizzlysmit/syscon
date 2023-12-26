@@ -41,9 +41,9 @@ Table of Contents
 
       * [sc trash](#sc-trash)
 
-      * [USAGE](#usage)
+      * [sc empty trash](#sc-empty-trash)
 
-      * [USAGE](#usage)
+      * [sc undelete](#sc-undelete)
 
       * [USAGE](#usage)
 
@@ -344,4 +344,16 @@ sc trash
 ```bash
 sc empty trash --help
 ```
+
+![/docs/images/sc-empty-trash.png](/docs/images/sc-empty-trash.png)
+
+[Top of Document](#table-of-contents)
+
+### sc undelete
+
+```bash
+sc undelete --help
+```
+
+![/docs/images/sc-undelete.png](/docs/images/sc-undelete.png)
 
