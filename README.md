@@ -47,9 +47,9 @@ Table of Contents
 
       * [sc stats](#sc-stats)
 
-      * [USAGE](#usage)
+      * [sc statistics](#sc-statistics)
 
-      * [USAGE](#usage)
+      * [sc add](#sc-add)
 
       * [USAGE](#usage)
 
@@ -376,4 +376,30 @@ sc stats
 ```
 
 ![image not available here go to the github page](/docs/images/sc-stats.png)
+
+### sc statistics
+
+An alias of stats see above [sc stats](#sc-stats).
+
+### sc add
+
+```bash
+sc add <key> <host> [<port>]  [-s|--set|--force] [-c|--comment=<Str>]
+```
+
+  * Where
+
+    * **`<key>`** is a unused key unless you use one of **`-s|--set|--force`** in which case it will overwrite the old value.
+
+    * **`<host>`** is a host spec of the form **username@dns-address-or-host-name**.
+
+    * **`<port>`** is a port number, if not present defaults to **22**.
+
+    * If **-s**, **--set** or **--force** is present you can overwrite existing entries use with care.
+
+    * If **-c** or **--comment** are present then **`<Str>`** should be a comment string to go with the entry.
+
+      * Example use.
+
+        ![sc add ex grizzlysmit@example.com 344 --comment="an example host"](/docs/images/sc-add.png)
 

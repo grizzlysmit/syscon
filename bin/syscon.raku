@@ -37,8 +37,8 @@ Table of  Contents
 =item3 L<sc empty trash|#sc-empty-trash>
 =item3 L<sc undelete|#sc-undelete>
 =item3 L<sc stats|#sc-stats>
-=item3 L<USAGE|#usage>
-=item3 L<USAGE|#usage>
+=item3 L<sc statistics|#sc-statistics>
+=item3 L<sc add|#sc-add>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -618,6 +618,14 @@ multi sub MAIN('stats', Str:D $prefix = '',
     } 
 } # multi sub MAIN('stats', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int #
 
+=begin pod
+
+=head3 sc statistics
+
+An alias of stats see above L<sc stats|#sc-stats>.
+
+=end pod
+
 multi sub MAIN('statistics', Str:D $prefix = '',
                                Bool:D :c(:color(:$colour)) = False,
                                Bool:D :s(:$syntax) = False,
@@ -637,6 +645,31 @@ multi sub MAIN('statistics', Str:D $prefix = '',
         exit 1;
     } 
 } # multi sub MAIN('statistics', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int #
+
+=begin pod
+
+=head3 sc add
+
+=begin code :lang<bash>
+
+sc add <key> <host> [<port>]  [-s|--set|--force] [-c|--comment=<Str>] 
+
+=end code
+
+=item1 Where
+=item2 B«C«<key>»» is a unused key unless you use one of B<C<-s|--set|--force>> in which case it will overwrite the old value.
+=item2 B«C«<host>»» is a host spec of the form B<username@dns-address-or-host-name>.
+=item2 B«C«<port>»» is a port number, if not present defaults to B<22>.
+=item2 If B<-s>, B<--set> or B<--force> is present you can overwrite existing entries use with care.
+=item2 If B<-c> or B<--comment> are present then B«C«<Str>»» should be a comment string to go with the entry.
+=begin item3
+Example use.
+
+!L<sc add ex grizzlysmit@example.com 344 --comment="an example host"|/docs/images/sc-add.png>
+
+=end item3
+
+=end pod
 
 multi sub MAIN('add', Str:D $key, Str:D $host,
                 PortVal:D $port = 22,

@@ -104,13 +104,13 @@ sc stats [#sc-stats]
 .RS 2n
 .RS 2n
 .IP \(bu 2m
-USAGE [#usage]
+sc statistics [#sc-statistics]
 .RE
 .RE
 .RS 2n
 .RS 2n
 .IP \(bu 2m
-USAGE [#usage]
+sc add [#sc-add]
 .RE
 .RE
 .RS 2n
@@ -546,3 +546,45 @@ sc stats
 .RE
 .P
 !image not available here go to the github page [/docs/images/sc-stats.png]
+.SS sc statistics
+
+An alias of stats see above sc stats [#sc-stats]\&.
+.SS sc add
+
+.RS 4m
+.EX
+sc add <key> <host> [<port>]  [\-s|\-\-set|\-\-force] [\-c|\-\-comment=<Str>] 
+
+
+.EE
+.RE
+.IP \(bu 2m
+Where
+.RS 2n
+.IP \(bu 2m
+\fB<key>\fR is a unused key unless you use one of \fB\-s|\-\-set|\-\-force\fR in which case it will overwrite the old value\&.
+.RE
+.RS 2n
+.IP \(bu 2m
+\fB<host>\fR is a host spec of the form \fBusername@dns\-address\-or\-host\-name\fR\&.
+.RE
+.RS 2n
+.IP \(bu 2m
+\fB<port>\fR is a port number, if not present defaults to \fB22\fR\&.
+.RE
+.RS 2n
+.IP \(bu 2m
+If \fB\-s\fR, \fB\-\-set\fR or \fB\-\-force\fR is present you can overwrite existing entries use with care\&.
+.RE
+.RS 2n
+.IP \(bu 2m
+If \fB\-c\fR or \fB\-\-comment\fR are present then \fB<Str>\fR should be a comment string to go with the entry\&.
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+Example use\&.
+.IP
+!sc add ex grizzlysmit@example\&.com 344 \-\-comment="an example host" [/docs/images/sc-add.png]
+.RE
+.RE

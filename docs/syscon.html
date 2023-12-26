@@ -597,6 +597,8 @@ footer {
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_empty_trash">sc empty trash</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_undelete">sc undelete</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_stats">sc stats</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#sc_statistics">sc statistics</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#sc_add">sc add</a></td></tr>
 </table></div>
 </nav><div id="syscon"></div><div class="subtitle"><p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
 <ul>
@@ -629,8 +631,8 @@ footer {
 <li><p><a href="#sc-empty-trash">sc empty trash</a></p></li>
 <li><p><a href="#sc-undelete">sc undelete</a></p></li>
 <li><p><a href="#sc-stats">sc stats</a></p></li>
-<li><p><a href="#usage">USAGE</a></p></li>
-<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#sc-statistics">sc statistics</a></p></li>
+<li><p><a href="#sc-add">sc add</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
@@ -776,8 +778,25 @@ footer {
 </pre><p>!<a href="/docs/images/sc-undelete.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_stats"><a href="#syscon" class="u" title="go to top of document">sc stats</a></h3>
 <pre class="pod-block-code">sc stats
 
-</pre><p>!<a href="/docs/images/sc-stats.png.html">image not available here go to the github page</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-26T22:04:52Z</span></div></footer>
+</pre><p>!<a href="/docs/images/sc-stats.png.html">image not available here go to the github page</a></p></section><section name="pod"><h3 id="sc_statistics"><a href="#syscon" class="u" title="go to top of document">sc statistics</a></h3>
+<p>An alias of stats see above <a href="#sc-stats">sc stats</a>.</p></section><section name="pod"><h3 id="sc_add"><a href="#syscon" class="u" title="go to top of document">sc add</a></h3>
+<pre class="pod-block-code">sc add &lt;key&gt; &lt;host&gt; [&lt;port&gt;]  [-s|--set|--force] [-c|--comment=&lt;Str&gt;] 
+
+</pre><ul>
+<li><p>Where</p></li>
+<ul>
+<li><p><strong><code>&lt;key&gt;</code></strong> is a unused key unless you use one of <strong><code>-s|--set|--force</code></strong> in which case it will overwrite the old value.</p></li>
+<li><p><strong><code>&lt;host&gt;</code></strong> is a host spec of the form <strong>username@dns-address-or-host-name</strong>.</p></li>
+<li><p><strong><code>&lt;port&gt;</code></strong> is a port number, if not present defaults to <strong>22</strong>.</p></li>
+<li><p>If <strong>-s</strong>, <strong>--set</strong> or <strong>--force</strong> is present you can overwrite existing entries use with care.</p></li>
+<li><p>If <strong>-c</strong> or <strong>--comment</strong> are present then <strong><code>&lt;Str&gt;</code></strong> should be a comment string to go with the entry.</p></li>
+<ul>
+<li><p>Example use.</p><p>!<a href="/docs/images/sc-add.png.html">sc add ex grizzlysmit@example.com 344 --comment=&quot;an example host&quot;</a></p></li>
+</ul>
+</ul>
+</ul>
+</section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-26T22:39:14Z</span></div></footer>
 	</body>
 </html>
 
