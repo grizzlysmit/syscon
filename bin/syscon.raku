@@ -41,7 +41,7 @@ Table of  Contents
 =item3 L<sc add|#sc-add>
 =item3 L<sc delete|#sc-delete>
 =item3 L<sc del|#sc-del>
-=item3 L<USAGE|#usage>
+=item3 L<sc comment|#sc-comment>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -732,6 +732,7 @@ Usage:
 
 =end code
 
+L<Top of Document|#table-of-contents>
 
 =end pod
 
@@ -772,6 +773,8 @@ Usage:
 =item1 Where
 =item2 B«C«<key>»»      An existing key in the db.
 =item2 B«C«<comment>»»  The comment to add.
+
+L<Top of Document|#table-of-contents>
 
 =end pod
 

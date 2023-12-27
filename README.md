@@ -55,7 +55,7 @@ Table of Contents
 
       * [sc del](#sc-del)
 
-      * [USAGE](#usage)
+      * [sc comment](#sc-comment)
 
       * [USAGE](#usage)
 
@@ -456,6 +456,8 @@ Usage:
   sc del [<keys> ...] [-d|--delete|--do-not-trash]
 ```
 
+[Top of Document](#table-of-contents)
+
 ### sc comment
 
 Add or set a comment to a db entry. 
@@ -472,4 +474,6 @@ Usage:
     * **`<key>`** An existing key in the db.
 
     * **`<comment>`** The comment to add.
+
+[Top of Document](#table-of-contents)
 
