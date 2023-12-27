@@ -715,7 +715,7 @@ Usage:
 
 =item1 Where
 =item2 B«C«[<keys> ...]»»                  is a optional list of keys if none are provided then the command does nothing 
-=item2 B<C<[-d|--delete|--do-not-trash]>>  is a falg to really delete, not trash them see L<see|#sc-trash>.
+=item2 B<C<[-d|--delete|--do-not-trash]>>  is a flag to really delete, not trash them see L<see|#sc-trash>.
 
 an alias for delete 
 
