@@ -839,9 +839,9 @@ Usage:
 =item1 Where
 =begin item2
 
-B<-w>, B<--win-format> or B<--use-windows-formating> means that the B<:> in the date time
-will be replaced with B<.> and the B<.> the decimal point between the seconds and fractions 
-of seconds will be maped to B<·>; as widows uses B<:> specially.
+B<-w>, B<--win-format> or B<--use-windows-formating> means that the 'B<:>' in the date time
+will be replaced with 'B<.>' and the 'B<.>' the decimal point between the seconds and fractions 
+of seconds will be maped to 'B<·>'; as widows uses B<:> specially.
 
 =end item2
 =item3 under windows the this will always be the case, so you don't need it there.
