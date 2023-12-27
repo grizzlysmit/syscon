@@ -1821,6 +1821,7 @@ sub add-comment(Str:D $key, Str:D $comment --> Bool) is export {
         } else {
             $output.say: $ln
         }
+        $ln = $input.get;
     } # while !$input.eof #
     if $ln {
         my %val = Line.parse($ln, :enc('UTF-8'), :$actions).made;

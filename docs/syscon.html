@@ -601,6 +601,7 @@ footer {
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_add">sc add</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_delete">sc delete</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_del_">sc del </a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#sc_comment">sc comment</a></td></tr>
 </table></div>
 </nav><div id="syscon"></div><div class="subtitle"><p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
 <ul>
@@ -827,8 +828,20 @@ Usage:
   sc delete [&lt;keys&gt; ...] [-d|--delete|--do-not-trash]                                                                                                 
   sc del [&lt;keys&gt; ...] [-d|--delete|--do-not-trash]
 
-</pre></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-27T20:07:59Z</span></div></footer>
+</pre></section><section name="pod"><h3 id="sc_comment"><a href="#syscon" class="u" title="go to top of document">sc comment</a></h3>
+<p>Add or set a comment to a db entry. </p><pre class="pod-block-code">sc comment --help
+
+Usage:                                                                                                                                                
+  sc comment &lt;key&gt; &lt;comment&gt;                                                                                                                          
+</pre><ul>
+<li><p>Where</p></li>
+<ul>
+<li><p><strong><code>&lt;key&gt;</code></strong> An existing key in the db.</p></li>
+<li><p><strong><code>&lt;comment&gt;</code></strong> The comment to add.</p></li>
+</ul>
+</ul>
+</section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-27T20:55:53Z</span></div></footer>
 	</body>
 </html>
 

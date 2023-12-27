@@ -755,6 +755,26 @@ multi sub MAIN('del', Bool:D :d(:delete(:$do-not-trash)) = False, *@keys) return
     exit $result;
 }
 
+=begin pod
+
+=head3 sc comment
+
+Add or set  a comment to a db entry. 
+
+=begin code :lang<bash>
+
+sc comment --help
+                                                                                                                                                      
+Usage:                                                                                                                                                
+  sc comment <key> <comment>                                                                                                                          
+=end code
+
+=item1 Where
+=item2 B«C«<key>»»      An existing key in the db.
+=item2 B«C«<comment>»»  The comment to add.
+
+=end pod
+
 multi sub MAIN('comment', Str:D $key, Str:D $comment) returns Int {
     if add-comment($key, $comment) {
         exit 0;

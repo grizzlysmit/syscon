@@ -456,3 +456,20 @@ Usage:
   sc del [<keys> ...] [-d|--delete|--do-not-trash]
 ```
 
+### sc comment
+
+Add or set a comment to a db entry. 
+
+```bash
+sc comment --help
+
+Usage:                                                                                                                                                
+  sc comment <key> <comment>
+```
+
+  * Where
+
+    * **`<key>`** An existing key in the db.
+
+    * **`<comment>`** The comment to add.
+
