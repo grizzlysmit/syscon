@@ -134,7 +134,7 @@ sc comment [#sc-comment]
 .RS 2n
 .RS 2n
 .IP \(bu 2m
-USAGE [#usage]
+backup db [#backup-db]
 .RE
 .RE
 .RS 2n
@@ -676,9 +676,9 @@ Where
 .IP \(bu 2m
 \fB[\-d|\-\-delete|\-\-do\-not\-trash]\fR is a flag to really delete, not trash them see see [#sc-trash]\&.
 .RE
-
-an alias for delete 
 .SS sc del 
+
+An alias for delete 
 
 .RS 4m
 .EX
@@ -715,6 +715,72 @@ Where
 .RS 2n
 .IP \(bu 2m
 \fB<comment>\fR The comment to add\&.
+.RE
+
+Top of Document [#table-of-contents]
+.SS sc alias
+
+.RS 4m
+.EX
+sc alias \-\-help
+
+Usage:                                                                                                                                                
+  sc alias <key> <target>  [\-s|\-\-set|\-\-force] [\-d|\-\-really\-force|\-\-overwrite\-hosts] [\-c|\-\-comment=<Str>]
+
+
+.EE
+.RE
+.IP \(bu 2m
+Where
+.RS 2n
+.IP \(bu 2m
+\fB<key>\fR is a new key to add or an exiting one to overwrite if you use \fB\-s\fR, \fB\-\-set\fR or \fB\-\-force\fR\&.
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+\fBNB:\fR \fB\-s\fR, \fB\-\-set\fR or \fB\-\-force\fR only work for \fBaliases\fR to overwrite \fBhosts\fR use \fB\-d\fR, \fB\-\-really\-force\fR or \fB\-\-overwrite\-hosts\fR\&.
+.RE
+.RE
+.RS 2n
+.IP \(bu 2m
+\fB<target>\fR Either a existing host or alias, it is an error if \fB<target>\fR does not exist\&.
+.RE
+.RS 2n
+.IP \(bu 2m
+\fB\-s\fR, \fB\-\-set\fR or \fB\-\-force\fR mean overwrite any existing \fB<key>\fR if it is an alias\&.
+.RE
+.RS 2n
+.IP \(bu 2m
+\fB\-d\fR, \fB\-\-really\-force\fR or \fB\-\-overwrite\-hosts\fR means overwrite anything regardless, use with care\&.
+.RE
+
+Top of Document [#table-of-contents]
+.SS backup db
+
+Backup the file which is the db for this little app, I could use a \fIreal\fR db but as it's just one simple table, I don't need that\&.
+
+.RS 4m
+.EX
+ sc backup db \-\-help
+
+Usage:
+  sc backup db  [\-w|\-\-win\-format|\-\-use\-windows\-formating]
+
+
+.EE
+.RE
+.IP \(bu 2m
+Where
+.RS 2n
+.IP \(bu 2m
+\fB\-w\fR, \fB\-\-win\-format\fR or \fB\-\-use\-windows\-formating\fR means that the \fB:\fR in the date time will be replaced with \fB\&.\fR and the \fB\&.\fR the decimal point between the seconds and fractions of seconds will be maped to \fB·\fR; as widows uses \fB:\fR specially\&.
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+under windows the this will always be the case, so you don't need it there\&.
+.RE
 .RE
 
 Top of Document [#table-of-contents]

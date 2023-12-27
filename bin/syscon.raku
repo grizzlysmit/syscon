@@ -42,7 +42,7 @@ Table of  Contents
 =item3 L<sc delete|#sc-delete>
 =item3 L<sc del|#sc-del>
 =item3 L<sc comment|#sc-comment>
-=item3 L<USAGE|#usage>
+=item3 L<backup db|#backup-db>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -717,9 +717,9 @@ Usage:
 =item2 B«C«[<keys> ...]»»                  is a optional list of keys if none are provided then the command does nothing 
 =item2 B<C<[-d|--delete|--do-not-trash]>>  is a flag to really delete, not trash them see L<see|#sc-trash>.
 
-an alias for delete 
-
 =head3 sc del 
+
+An alias for delete 
 
 
 =begin code :lang<bash>
@@ -786,6 +786,30 @@ multi sub MAIN('comment', Str:D $key, Str:D $comment) returns Int {
     } 
 }
 
+=begin pod
+
+=head3 sc alias
+
+=begin code :lang<bash>
+
+sc alias --help
+                                                                                                                                                      
+Usage:                                                                                                                                                
+  sc alias <key> <target>  [-s|--set|--force] [-d|--really-force|--overwrite-hosts] [-c|--comment=<Str>]
+
+=end code
+
+=item1 Where
+=item2 B«C«<key>»» is a new key to add or an exiting one to overwrite if you use B<-s>, B<--set> or B<--force>.
+=item3 B<NB:> B<-s>, B<--set> or B<--force> only work for B<aliases> to overwrite B<hosts> use B<-d>, B<--really-force> or B<--overwrite-hosts>.
+=item2 B«C«<target>»» Either a existing host or alias, it is an error if B«C«<target>»» does not exist.
+=item2 B<-s>, B<--set> or B<--force> mean overwrite any existing B«C«<key>»» if it is an alias.
+=item2 B<-d>, B<--really-force> or B<--overwrite-hosts> means overwrite anything regardless, use with care.
+
+L<Top of Document|#table-of-contents>
+
+=end pod
+
 multi sub MAIN('alias', Str:D $key, Str:D $target,
                                 Bool:D :s(:set(:$force)) = False,
                                 Bool:D :d(:really-force(:$overwrite-hosts)) = False,
@@ -796,6 +820,35 @@ multi sub MAIN('alias', Str:D $key, Str:D $target,
        exit 1;
    } 
 }
+
+=begin pod
+
+=head3 backup db
+
+Backup the file which is the db for this little app, I could use a I<real> db but as it's just one simple table, I don't need that.
+
+=begin code :lang<bash>
+
+ sc backup db --help
+                                                                                                                                                      
+Usage:
+  sc backup db  [-w|--win-format|--use-windows-formating]
+
+=end code
+
+=item1 Where
+=begin item2
+
+B<-w>, B<--win-format> or B<--use-windows-formating> means that the B<:> in the date time
+will be replaced with B<.> and the B<.> the decimal point between the seconds and fractions 
+of seconds will be maped to B<·>; as widows uses B<:> specially.
+
+=end item2
+=item3 under windows the this will always be the case, so you don't need it there.
+
+L<Top of Document|#table-of-contents>
+
+=end pod
 
 multi sub MAIN('backup', 'db', Bool:D :w(:win-format(:$use-windows-formating)) = False --> Bool) {
     if backup-db-file($use-windows-formating) {

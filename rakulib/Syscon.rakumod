@@ -1904,8 +1904,8 @@ sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy,
                 }
                 my IO::Handle:D $input  = "$config/hosts.h_ts".IO.open:     :r, :nl-in("\n")   :chomp;
                 my IO::Handle:D $output = "$config/hosts.h_ts.new".IO.open: :w, :nl-out("\n"), :chomp(True);
-                my Str $ln;
-                while $ln = $input.get {
+                my Str $ln = $input.get;
+                while !$input.eof {
                     if $ln ~~ rx/^ \s* $key \s* $<type> = [ '-->' | '=>' ] \s* .* $/ {
                         if ~$<type> eq 'alias' || $overwrite-hosts {
                             $output.say: $line;
@@ -1915,7 +1915,19 @@ sub add-alias(Str:D $key, Str:D $target, Bool:D $force is copy,
                     } else {
                         $output.say: $ln
                     }
-                }
+                    $ln = $input.get;
+                } # while $input.eof  #
+                if $ln { # left overs #
+                    if $ln ~~ rx/^ \s* $key \s* $<type> = [ '-->' | '=>' ] \s* .* $/ {
+                        if ~$<type> eq 'alias' || $overwrite-hosts {
+                            $output.say: $line;
+                        } else {
+                            $output.say: $ln
+                        }
+                    } else {
+                        $output.say: $ln
+                    }
+                } # if $ln #
                 $input.close;
                 $output.close;
                 if "$config/hosts.h_ts.new".IO.move: "$config/hosts.h_ts" {

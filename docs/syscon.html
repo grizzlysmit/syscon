@@ -602,6 +602,8 @@ footer {
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_delete">sc delete</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_del_">sc del </a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_comment">sc comment</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#sc_alias">sc alias</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#backup_db">backup db</a></td></tr>
 </table></div>
 </nav><div id="syscon"></div><div class="subtitle"><p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
 <ul>
@@ -639,7 +641,7 @@ footer {
 <li><p><a href="#sc-delete">sc delete</a></p></li>
 <li><p><a href="#sc-del">sc del</a></p></li>
 <li><p><a href="#sc-comment">sc comment</a></p></li>
-<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#backup-db">backup db</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
@@ -821,8 +823,8 @@ Usage:
 <li><p><strong><code>[-d|--delete|--do-not-trash]</code></strong> is a flag to really delete, not trash them see <a href="#sc-trash">see</a>.</p></li>
 </ul>
 </ul>
-<p>an alias for delete </p><h3 id="sc_del_"><a href="#syscon" class="u" title="go to top of document">sc del </a></h3>
-<pre class="pod-block-code"> sc del --help
+<h3 id="sc_del_"><a href="#syscon" class="u" title="go to top of document">sc del </a></h3>
+<p>An alias for delete </p><pre class="pod-block-code"> sc del --help
 
 Usage:                                                                                                                                                
   sc delete [&lt;keys&gt; ...] [-d|--delete|--do-not-trash]                                                                                                 
@@ -840,8 +842,41 @@ Usage:
 <li><p><strong><code>&lt;comment&gt;</code></strong> The comment to add.</p></li>
 </ul>
 </ul>
+<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_alias"><a href="#syscon" class="u" title="go to top of document">sc alias</a></h3>
+<pre class="pod-block-code">sc alias --help
+
+Usage:                                                                                                                                                
+  sc alias &lt;key&gt; &lt;target&gt;  [-s|--set|--force] [-d|--really-force|--overwrite-hosts] [-c|--comment=&lt;Str&gt;]
+
+</pre><ul>
+<li><p>Where</p></li>
+<ul>
+<li><p><strong><code>&lt;key&gt;</code></strong> is a new key to add or an exiting one to overwrite if you use <strong>-s</strong>, <strong>--set</strong> or <strong>--force</strong>.</p></li>
+<ul>
+<li><p><strong>NB:</strong> <strong>-s</strong>, <strong>--set</strong> or <strong>--force</strong> only work for <strong>aliases</strong> to overwrite <strong>hosts</strong> use <strong>-d</strong>, <strong>--really-force</strong> or <strong>--overwrite-hosts</strong>.</p></li>
+</ul>
+<li><p><strong><code>&lt;target&gt;</code></strong> Either a existing host or alias, it is an error if <strong><code>&lt;target&gt;</code></strong> does not exist.</p></li>
+<li><p><strong>-s</strong>, <strong>--set</strong> or <strong>--force</strong> mean overwrite any existing <strong><code>&lt;key&gt;</code></strong> if it is an alias.</p></li>
+<li><p><strong>-d</strong>, <strong>--really-force</strong> or <strong>--overwrite-hosts</strong> means overwrite anything regardless, use with care.</p></li>
+</ul>
+</ul>
+<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="backup_db"><a href="#syscon" class="u" title="go to top of document">backup db</a></h3>
+<p>Backup the file which is the db for this little app, I could use a <em>real</em> db but as it's just one simple table, I don't need that.</p><pre class="pod-block-code"> sc backup db --help
+
+Usage:
+  sc backup db  [-w|--win-format|--use-windows-formating]
+
+</pre><ul>
+<li><p>Where</p></li>
+<ul>
+<li><p><strong>-w</strong>, <strong>--win-format</strong> or <strong>--use-windows-formating</strong> means that the <strong>:</strong> in the date time will be replaced with <strong>.</strong> and the <strong>.</strong> the decimal point between the seconds and fractions of seconds will be maped to <strong>·</strong>; as widows uses <strong>:</strong> specially.</p></li>
+<ul>
+<li><p>under windows the this will always be the case, so you don't need it there.</p></li>
+</ul>
+</ul>
+</ul>
 <p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-27T21:01:16Z</span></div></footer>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-27T21:50:37Z</span></div></footer>
 	</body>
 </html>
 

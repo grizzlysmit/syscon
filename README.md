@@ -57,7 +57,7 @@ Table of Contents
 
       * [sc comment](#sc-comment)
 
-      * [USAGE](#usage)
+      * [backup db](#backup-db)
 
       * [USAGE](#usage)
 
@@ -444,9 +444,9 @@ Usage:
 
     * **`[-d|--delete|--do-not-trash]`** is a flag to really delete, not trash them see [see](#sc-trash).
 
-an alias for delete 
-
 ### sc del 
+
+An alias for delete 
 
 ```bash
  sc del --help
@@ -474,6 +474,48 @@ Usage:
     * **`<key>`** An existing key in the db.
 
     * **`<comment>`** The comment to add.
+
+[Top of Document](#table-of-contents)
+
+### sc alias
+
+```bash
+sc alias --help
+
+Usage:                                                                                                                                                
+  sc alias <key> <target>  [-s|--set|--force] [-d|--really-force|--overwrite-hosts] [-c|--comment=<Str>]
+```
+
+  * Where
+
+    * **`<key>`** is a new key to add or an exiting one to overwrite if you use **-s**, **--set** or **--force**.
+
+      * **NB:** **-s**, **--set** or **--force** only work for **aliases** to overwrite **hosts** use **-d**, **--really-force** or **--overwrite-hosts**.
+
+    * **`<target>`** Either a existing host or alias, it is an error if **`<target>`** does not exist.
+
+    * **-s**, **--set** or **--force** mean overwrite any existing **`<key>`** if it is an alias.
+
+    * **-d**, **--really-force** or **--overwrite-hosts** means overwrite anything regardless, use with care.
+
+[Top of Document](#table-of-contents)
+
+### backup db
+
+Backup the file which is the db for this little app, I could use a *real* db but as it's just one simple table, I don't need that.
+
+```bash
+ sc backup db --help
+
+Usage:
+  sc backup db  [-w|--win-format|--use-windows-formating]
+```
+
+  * Where
+
+    * **-w**, **--win-format** or **--use-windows-formating** means that the **:** in the date time will be replaced with **.** and the **.** the decimal point between the seconds and fractions of seconds will be maped to **·**; as widows uses **:** specially.
+
+      * under windows the this will always be the case, so you don't need it there.
 
 [Top of Document](#table-of-contents)
 
