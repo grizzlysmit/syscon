@@ -1,5 +1,5 @@
 .pc
-.TH syscon.raku 1 2023-12-27
+.TH syscon.raku 1 2023-12-28
 .SS Table of Contents
 .IP \(bu 2m
 NAME [#name]
@@ -111,6 +111,66 @@ sc statistics [#sc-statistics]
 .RS 2n
 .IP \(bu 2m
 sc add [#sc-add]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+sc delete [#sc-delete]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+sc del [#sc-del]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
 .RE
 .RE
 .RS 2n
@@ -592,3 +652,42 @@ Example use\&.
 .RE
 
 Top of Document [#table-of-contents]
+.SS sc delete
+
+A command to delete a row in the db i\&.e\&. a key and details, by default it just trashes the key but if \fB\-d\fR, \fB\-\-delete\fR or \fB\-\-do\-not\-trash\fR is present it will really delete\&. 
+
+.RS 4m
+.EX
+sc delete \-\-help
+
+Usage:                                                                                                                                                
+  sc delete [<keys> \&.\&.\&.] [\-d|\-\-delete|\-\-do\-not\-trash]                                          
+
+
+.EE
+.RE
+.IP \(bu 2m
+Where
+.RS 2n
+.IP \(bu 2m
+\fB[<keys> \&.\&.\&.]\fR is a optional list of keys if none are provided then the command does nothing 
+.RE
+.RS 2n
+.IP \(bu 2m
+\fB[\-d|\-\-delete|\-\-do\-not\-trash]\fR is a falg to really delete, not trash them see see [#sc-trash]\&.
+.RE
+
+an alias for delete 
+.SS sc del 
+
+.RS 4m
+.EX
+ sc del \-\-help
+
+Usage:                                                                                                                                                
+  sc delete [<keys> \&.\&.\&.] [\-d|\-\-delete|\-\-do\-not\-trash]                                                                                                 
+  sc del [<keys> \&.\&.\&.] [\-d|\-\-delete|\-\-do\-not\-trash]
+
+
+.EE
+.RE

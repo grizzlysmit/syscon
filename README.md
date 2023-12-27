@@ -51,6 +51,26 @@ Table of Contents
 
       * [sc add](#sc-add)
 
+      * [sc delete](#sc-delete)
+
+      * [sc del](#sc-del)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
       * [USAGE](#usage)
 
       * [USAGE](#usage)
@@ -406,4 +426,33 @@ sc add <key> <host> [<port>]  [-s|--set|--force] [-c|--comment=<Str>]
         ![sc add ex grizzlysmit@example.com 344 --comment="an example host"](/docs/images/sc-add.png)
 
 [Top of Document](#table-of-contents)
+
+### sc delete
+
+A command to delete a row in the db i.e. a key and details, by default it just trashes the key but if **-d**, **--delete** or **--do-not-trash** is present it will really delete. 
+
+```bash
+sc delete --help
+
+Usage:                                                                                                                                                
+  sc delete [<keys> ...] [-d|--delete|--do-not-trash]
+```
+
+  * Where
+
+    * **`[<keys> ...]`** is a optional list of keys if none are provided then the command does nothing 
+
+    * **`[-d|--delete|--do-not-trash]`** is a falg to really delete, not trash them see [see](#sc-trash).
+
+an alias for delete 
+
+### sc del 
+
+```bash
+ sc del --help
+
+Usage:                                                                                                                                                
+  sc delete [<keys> ...] [-d|--delete|--do-not-trash]                                                                                                 
+  sc del [<keys> ...] [-d|--delete|--do-not-trash]
+```
 

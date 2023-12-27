@@ -39,6 +39,16 @@ Table of  Contents
 =item3 L<sc stats|#sc-stats>
 =item3 L<sc statistics|#sc-statistics>
 =item3 L<sc add|#sc-add>
+=item3 L<sc delete|#sc-delete>
+=item3 L<sc del|#sc-del>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -685,6 +695,45 @@ multi sub MAIN('add', Str:D $key, Str:D $host,
        exit 1;
    }
 }
+
+=begin pod
+
+=head3 sc delete
+
+A command to delete a row in the db i.e. a key and details, 
+by default it just trashes the key but if B<-d>,  B<--delete> or B<--do-not-trash> is present 
+it will really delete. 
+
+=begin code :lang<bash>
+
+sc delete --help
+                                                                                                                                                      
+Usage:                                                                                                                                                
+  sc delete [<keys> ...] [-d|--delete|--do-not-trash]                                          
+
+=end code
+
+=item1 Where
+=item2 B«C«[<keys> ...]»»                  is a optional list of keys if none are provided then the command does nothing 
+=item2 B<C<[-d|--delete|--do-not-trash]>>  is a falg to really delete, not trash them see L<see|#sc-trash>.
+
+an alias for delete 
+
+=head3 sc del 
+
+
+=begin code :lang<bash>
+
+ sc del --help
+                                                                                                                                                      
+Usage:                                                                                                                                                
+  sc delete [<keys> ...] [-d|--delete|--do-not-trash]                                                                                                 
+  sc del [<keys> ...] [-d|--delete|--do-not-trash]
+
+=end code
+
+
+=end pod
 
 multi sub MAIN('delete', Bool:D :d(:delete(:$do-not-trash)) = False, *@keys) returns Int {
     my Int:D $result = 0;

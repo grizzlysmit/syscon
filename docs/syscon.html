@@ -599,6 +599,8 @@ footer {
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_stats">sc stats</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_statistics">sc statistics</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_add">sc add</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#sc_delete">sc delete</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#sc_del_">sc del </a></td></tr>
 </table></div>
 </nav><div id="syscon"></div><div class="subtitle"><p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
 <ul>
@@ -633,6 +635,16 @@ footer {
 <li><p><a href="#sc-stats">sc stats</a></p></li>
 <li><p><a href="#sc-statistics">sc statistics</a></p></li>
 <li><p><a href="#sc-add">sc add</a></p></li>
+<li><p><a href="#sc-delete">sc delete</a></p></li>
+<li><p><a href="#sc-del">sc del</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
@@ -795,8 +807,28 @@ footer {
 </ul>
 </ul>
 </ul>
-<p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-26T22:57:50Z</span></div></footer>
+<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_delete"><a href="#syscon" class="u" title="go to top of document">sc delete</a></h3>
+<p>A command to delete a row in the db i.e. a key and details, by default it just trashes the key but if <strong>-d</strong>, <strong>--delete</strong> or <strong>--do-not-trash</strong> is present it will really delete. </p><pre class="pod-block-code">sc delete --help
+
+Usage:                                                                                                                                                
+  sc delete [&lt;keys&gt; ...] [-d|--delete|--do-not-trash]                                          
+
+</pre><ul>
+<li><p>Where</p></li>
+<ul>
+<li><p><strong><code>[&lt;keys&gt; ...]</code></strong> is a optional list of keys if none are provided then the command does nothing </p></li>
+<li><p><strong><code>[-d|--delete|--do-not-trash]</code></strong> is a falg to really delete, not trash them see <a href="#sc-trash">see</a>.</p></li>
+</ul>
+</ul>
+<p>an alias for delete </p><h3 id="sc_del_"><a href="#syscon" class="u" title="go to top of document">sc del </a></h3>
+<pre class="pod-block-code"> sc del --help
+
+Usage:                                                                                                                                                
+  sc delete [&lt;keys&gt; ...] [-d|--delete|--do-not-trash]                                                                                                 
+  sc del [&lt;keys&gt; ...] [-d|--delete|--do-not-trash]
+
+</pre></section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-27T19:33:23Z</span></div></footer>
 	</body>
 </html>
 
