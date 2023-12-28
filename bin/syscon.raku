@@ -841,7 +841,7 @@ Usage:
 
 B<-w>, B<--win-format> or B<--use-windows-formating> means that the 'B<:>' in the date time
 will be replaced with 'B<.>' and the 'B<.>' the decimal point between the seconds and fractions 
-of seconds will be maped to 'B<·>'; as widows uses B<:> specially.
+of seconds will be maped to 'B<·>'; as widows uses 'B<:>' specially.
 
 =end item2
 =item3 under windows the this will always be the case, so you don't need it there.
@@ -868,6 +868,17 @@ multi sub MAIN('restore', 'db', Str $restore-from = Str --> Bool) {
     } else {
         die "Error: restore backup failed!!!";
     }
+}
+
+multi sub MAIN('menu', 'restore', 'db',
+                Str:D $message = '',
+                Bool:D :c(:color(:$colour)) = False,
+                Bool:D :s(:$syntax) = False) returns Int {
+   if backups-menu-restore-db($colour, $syntax, $message) {
+       exit 0;
+   } else {
+       exit 1;
+   } 
 }
 
 multi sub MAIN('list', 'db', 'backups', Str:D $prefix = '',
@@ -997,7 +1008,7 @@ multi sub MAIN('set', 'override', 'GUI_EDITOR', Bool:D $value, Str $comment = St
 }
 
 multi sub MAIN('menu', 'restore', 'editors', Str:D $message = '', Bool:D :c(:color(:$colour)) = False, Bool:D :s(:$syntax) = False) returns Int {
-   if backups-menu-restore($colour, $syntax, $message) {
+   if backups-menu-restore-editors($colour, $syntax, $message) {
        exit 0;
    } else {
        exit 1;

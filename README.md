@@ -513,7 +513,7 @@ Usage:
 
   * Where
 
-    * **-w**, **--win-format** or **--use-windows-formating** means that the '**:**' in the date time will be replaced with '**.**' and the '**.**' the decimal point between the seconds and fractions of seconds will be maped to '**·**'; as widows uses **:** specially.
+    * **-w**, **--win-format** or **--use-windows-formating** means that the '**:**' in the date time will be replaced with '**.**' and the '**.**' the decimal point between the seconds and fractions of seconds will be maped to '**·**'; as widows uses '**:**' specially.
 
       * under windows the this will always be the case, so you don't need it there.
 

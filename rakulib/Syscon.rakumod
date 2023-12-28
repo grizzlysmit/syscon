@@ -2319,6 +2319,31 @@ sub restore-db-file(IO::Path $restore-from --> Bool) is export {
     }
 }
 
+sub backups-menu-restore-db(Bool:D $colour, Bool:D $syntax, Str:D $message = "" --> Bool:D) is export {
+    my IO::Path @backups = $config.IO.dir(:test(rx/ ^ 
+                                                           'hosts.h_ts.' \d ** 4 '-' \d ** 2 '-' \d ** 2
+                                                               [ 'T' \d **2 [ [ '.' || ':' ] \d ** 2 ] ** {0..2} [ [ '.' || '·' ] \d+ 
+                                                                   [ [ '+' || '-' ] \d ** 2 [ '.' || ':' ] \d ** 2 || 'z' ]?  ]?
+                                                               ]?
+                                                           $
+                                                         /
+                                                       )
+                                                );
+    #dd @backups;
+    my $actions = HostFileActions;
+    @backups .=grep: -> IO::Path $fl { 
+                                my @file = $fl.slurp.split("\n");
+                                HostsFile.parse(@file.join("\x0A"), :enc('UTF-8'), :$actions).made;
+                            };
+    #dd @backups;
+    my Str:D @Backups = @backups.map: { .basename };
+    @Backups .=sort();
+    my Str $file = menu(@Backups, $message, :$colour, :$syntax);
+    return False without $file;
+    return False if $file eq '';
+    return restore-db-file($file.IO);
+} # sub backups-menu-restore-db(Bool:D $colour, Bool:D $syntax, Str:D $message = "" --> Bool:D) is export #
+
 sub list-db-backups(Str:D $prefix,
                     Bool:D $colour is copy,
                     Bool:D $syntax,
