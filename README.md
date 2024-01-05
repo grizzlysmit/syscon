@@ -248,7 +248,29 @@ Last login: Tue Jan  2 23:48:56 2024 from 192.168.188.11
 Runs
 
 ```bash
-$ sc ping $key
+7:02:58 θ83° grizzlysmit@pern:~ 7m29s $ sc ping kil
+ping killashandra.local
+PING killashandra.local (192.168.188.11) 56(84) bytes of data.
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=1 ttl=64 time=0.285 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=2 ttl=64 time=0.249 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=3 ttl=64 time=0.242 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=4 ttl=64 time=0.253 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=5 ttl=64 time=0.274 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=6 ttl=64 time=0.273 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=7 ttl=64 time=0.226 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=8 ttl=64 time=0.831 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=9 ttl=64 time=0.272 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=10 ttl=64 time=0.264 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=11 ttl=64 time=0.227 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=12 ttl=64 time=0.263 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=13 ttl=64 time=0.255 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=14 ttl=64 time=0.258 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=15 ttl=64 time=0.234 ms
+64 bytes from killashandra.local (192.168.188.11): icmp_seq=16 ttl=64 time=0.220 ms
+^C
+--- killashandra.local ping statistics ---
+16 packets transmitted, 16 received, 0% packet loss, time 15337ms
+rtt min/avg/max/mdev = 0.220/0.289/0.831/0.141 ms
 ```
 
   * Where
