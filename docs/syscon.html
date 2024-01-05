@@ -604,6 +604,8 @@ footer {
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_comment">sc comment</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_alias">sc alias</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#backup_db">backup db</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#sc_restore_db">sc restore db</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#sc_menu_restore_db">sc menu restore db</a></td></tr>
 </table></div>
 </nav><div id="syscon"></div><div class="subtitle"><p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
 <ul>
@@ -642,8 +644,8 @@ footer {
 <li><p><a href="#sc-del">sc del</a></p></li>
 <li><p><a href="#sc-comment">sc comment</a></p></li>
 <li><p><a href="#backup-db">backup db</a></p></li>
-<li><p><a href="#usage">USAGE</a></p></li>
-<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#sc-restore-db">sc restore db</a></p></li>
+<li><p><a href="#sc-menu-restore-db">sc menu restore db</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
@@ -688,19 +690,62 @@ footer {
 </ul>
 </ul>
 <p><a href="#table-of-contents">Top of Document</a></p><p>This is the app, you can find the modules docs <a href="/docs/Syscon.md.html">here</a></p></section><section name="pod"><h3 id="USAGE"><a href="#syscon" class="u" title="go to top of document">USAGE</a></h3>
-<pre class="pod-block-code">$ sc --help
+<pre class="pod-block-code">sc --help
+
+Usage:
+  sc ssh &lt;key&gt;
+  sc ping &lt;key&gt;
+  sc get home &lt;key&gt;  [&lt;args&gt; ...] [-r|--recursive]
+  sc put home &lt;key&gt;  [&lt;args&gt; ...] [-r|--recursive]
+  sc edit configs
+  sc list keys  [&lt;prefix&gt;]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;]
+  sc list by all  [&lt;prefix&gt;]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;]
+  sc list trash  [&lt;prefix&gt;]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;]
+  sc trash   [&lt;keys&gt; ...]
+  sc empty trash
+  sc undelete   [&lt;keys&gt; ...]
+  sc stats  [&lt;prefix&gt;]  [-c|--color|--colour] [-s|--syntax] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;]
+  sc statistics  [&lt;prefix&gt;]  [-c|--color|--colour] [-s|--syntax] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;]
+  sc add &lt;key&gt; &lt;host&gt; [&lt;port&gt;]  [-s|--set|--force] [-c|--comment=&lt;Str&gt;]
+  sc delete   [&lt;keys&gt; ...] [-d|--delete|--do-not-trash]
+  sc del   [&lt;keys&gt; ...] [-d|--delete|--do-not-trash]
+  sc comment &lt;key&gt; &lt;comment&gt;
+  sc alias &lt;key&gt; &lt;target&gt;   [-s|--set|--force] [-d|--really-force|--overwrite-hosts] [-c|--comment=&lt;Str&gt;]
+  sc backup db    [-w|--win-format|--use-windows-formating]
+  sc restore db  [&lt;restore-from&gt;]
+  sc menu restore db  [&lt;message&gt;]  [-c|--color|--colour] [-s|--syntax]
+  sc list db backups  [&lt;prefix&gt;]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;]
+  sc list editors    [-f|--prefix=&lt;Str&gt;] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;]
+  sc editors stats  [&lt;prefix&gt;]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;]
+  sc list editors backups  [&lt;prefix&gt;]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;]
+  sc backup editors    [-w|--use-windows-formatting]
+  sc restore editors &lt;restore-from&gt;
+  sc set editor &lt;editor&gt; [&lt;comment&gt;]
+  sc set override GUI_EDITOR &lt;value&gt; [&lt;comment&gt;]
+  sc menu restore editors  [&lt;message&gt;]  [-c|--color|--colour] [-s|--syntax]
+  sc tidy file
+  sc sort file
+  sc show file    [-c|--color|--colour]
+  sc help   [&lt;args&gt; ...] [-n|--nocolor|--nocolour] [--&lt;named-args&gt;=...]
 
 </pre><p>!<a href="/docs/images/usage.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h2 id="The_actual_work_horses_of_the_library"><a href="#syscon" class="u" title="go to top of document">The actual work horses of the library</a></h2>
 <h3 id="sc_ssh"><a href="#syscon" class="u" title="go to top of document">sc ssh</a></h3>
 <p>Runs</p><pre class="pod-block-code">ssh -p $port $host
 
-</pre><p>by the <strong><code>ssh(…)</code></strong> function defined in <strong>Syscon.rakumod</strong>.</p><pre class="pod-block-code">multi sub MAIN('ssh', Str:D $key --&gt; int){
-    if ssh($key) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
+</pre><p>by the <strong><code>ssh(…)</code></strong> function defined in <strong>Syscon.rakumod</strong>.</p><pre class="pod-block-code">22:22:06 θ76° grizzlysmit@pern:~ $ sc  ssh rak
+ssh -p 22 rakbat.local
+Welcome to Ubuntu 23.10 (GNU/Linux 6.5.0-14-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+0 updates can be applied immediately.
+
+
+
+Last login: Tue Jan  2 23:48:56 2024 from 192.168.188.11
+06:55:31 grizzlysmit@rakbat:~ $ 
 
 </pre><p>!<a href="/docs/images/sc-ssh.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_ping"><a href="#syscon" class="u" title="go to top of document">sc ping</a></h3>
 <p>Runs</p><pre class="pod-block-code">$ sc ping $key
@@ -875,8 +920,20 @@ Usage:
 </ul>
 </ul>
 </ul>
-<p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-28T23:58:11Z</span></div></footer>
+<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_restore_db"><a href="#syscon" class="u" title="go to top of document">sc restore db</a></h3>
+<pre class="pod-block-code">sc restore db --help
+
+Usage:
+  sc restore db [&lt;restore-from&gt;]
+
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_menu_restore_db"><a href="#syscon" class="u" title="go to top of document">sc menu restore db</a></h3>
+<p>Restore the db using a menu to make it easy to choose the db backup from the ones available in the configuration directory. </p><pre class="pod-block-code">sc menu restore db --help
+
+Usage:
+  sc menu restore db [&lt;message&gt;]  [-c|--color|--colour] [-s|--syntax]
+
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-05T19:58:28Z</span></div></footer>
 	</body>
 </html>
 

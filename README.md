@@ -59,9 +59,9 @@ Table of Contents
 
       * [backup db](#backup-db)
 
-      * [USAGE](#usage)
+      * [sc restore db](#sc-restore-db)
 
-      * [USAGE](#usage)
+      * [sc menu restore db](#sc-menu-restore-db)
 
       * [USAGE](#usage)
 
@@ -166,7 +166,43 @@ This is the app, you can find the modules docs [here](/docs/Syscon.md)
 ### USAGE
 
 ```bash
-$ sc --help
+sc --help
+
+Usage:
+  sc ssh <key>
+  sc ping <key>
+  sc get home <key>  [<args> ...] [-r|--recursive]
+  sc put home <key>  [<args> ...] [-r|--recursive]
+  sc edit configs
+  sc list keys  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc list by all  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc list trash  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc trash   [<keys> ...]
+  sc empty trash
+  sc undelete   [<keys> ...]
+  sc stats  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc statistics  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc add <key> <host> [<port>]  [-s|--set|--force] [-c|--comment=<Str>]
+  sc delete   [<keys> ...] [-d|--delete|--do-not-trash]
+  sc del   [<keys> ...] [-d|--delete|--do-not-trash]
+  sc comment <key> <comment>
+  sc alias <key> <target>   [-s|--set|--force] [-d|--really-force|--overwrite-hosts] [-c|--comment=<Str>]
+  sc backup db    [-w|--win-format|--use-windows-formating]
+  sc restore db  [<restore-from>]
+  sc menu restore db  [<message>]  [-c|--color|--colour] [-s|--syntax]
+  sc list db backups  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc list editors    [-f|--prefix=<Str>] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc editors stats  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc list editors backups  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc backup editors    [-w|--use-windows-formatting]
+  sc restore editors <restore-from>
+  sc set editor <editor> [<comment>]
+  sc set override GUI_EDITOR <value> [<comment>]
+  sc menu restore editors  [<message>]  [-c|--color|--colour] [-s|--syntax]
+  sc tidy file
+  sc sort file
+  sc show file    [-c|--color|--colour]
+  sc help   [<args> ...] [-n|--nocolor|--nocolour] [--<named-args>=...]
 ```
 
 ![image not available here go to the github page](/docs/images/usage.png)
@@ -186,14 +222,21 @@ ssh -p $port $host
 
 by the **`ssh(…)`** function defined in **Syscon.rakumod**.
 
-```raku
-multi sub MAIN('ssh', Str:D $key --> int){
-    if ssh($key) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
+```bash
+22:22:06 θ76° grizzlysmit@pern:~ $ sc  ssh rak
+ssh -p 22 rakbat.local
+Welcome to Ubuntu 23.10 (GNU/Linux 6.5.0-14-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+0 updates can be applied immediately.
+
+
+
+Last login: Tue Jan  2 23:48:56 2024 from 192.168.188.11
+06:55:31 grizzlysmit@rakbat:~ $
 ```
 
 ![image not available here go to the github page](/docs/images/sc-ssh.png)
@@ -518,4 +561,125 @@ Usage:
       * under windows the this will always be the case, so you don't need it there.
 
 [Top of Document](#table-of-contents)
+
+### sc restore db
+
+```bash
+sc restore db --help
+
+Usage:
+  sc restore db [<restore-from>]
+```
+
+[Top of Document](#table-of-contents)
+
+### sc menu restore db
+
+Restore the db using a menu to make it easy to choose the db backup from the ones available in the configuration directory. 
+
+```bash
+sc menu restore db --help
+
+Usage:
+  sc menu restore db [<message>]  [-c|--color|--colour] [-s|--syntax]
+```
+
+[Top of Document](#table-of-contents)
+
+Table of Contents
+-----------------
+
+  * [NAME](#name)
+
+  * [AUTHOR](#author)
+
+  * [VERSION](#version)
+
+  * [TITLE](#title)
+
+  * [SUBTITLE](#subtitle)
+
+  * [COPYRIGHT](#copyright)
+
+  * [Introduction](#introduction)
+
+    * [Motivations](#motivations)
+
+NAME
+====
+
+Syscon 
+
+AUTHOR
+======
+
+Francis Grizzly Smit (grizzly@smit.id.au)
+
+VERSION
+=======
+
+v0.1.18
+
+TITLE
+=====
+
+Syscon
+
+SUBTITLE
+========
+
+A module **`Syscon`** and a program **`syscon`** or **`sc`** for short, which keeps tarck of assorted servers and helps to connect to them.
+
+COPYRIGHT
+=========
+
+LGPL V3.0+ [LICENSE](https://github.com/grizzlysmit/syscon/blob/main/LICENSE)
+
+Introduction
+============
+
+A module **`Syscon`** and a program **`syscon`** or **`sc`** for short, which keeps tarck of assorted servers and helps to connect to them.
+
+[Top of Document](#table-of-contents)
+
+Motivations
+-----------
+
+I have to keep track of many servers (> 100) but who can remember all the host names, and ports?? That is where this app comes in I can connect to a server by ssh by.
+
+```bash
+$ syscon.raku ssh <key>
+```
+
+or for short
+
+```bash
+$ sc ssh <key>
+```
+
+Equally you can use
+
+```bash
+$ sc put home <key> <files> ……
+```
+
+To run 
+
+```bash
+$ scp -P $port <files> …… $host:
+```
+
+  * Where 
+
+    * **`$host`** is generally something like **`username@example.com`**
+
+    * **`$port`** is a port number.
+
+    * **key** is the key to retrieve the host and port form the server.
+
+      * It's put home because I may add put <other-place> at a later date.
+
+[Top of Document](#table-of-contents)
+
+This is the module, you can find the apps docs [here](https://github.com/grizzlysmit/syscon).
 

@@ -43,8 +43,8 @@ Table of  Contents
 =item3 L<sc del|#sc-del>
 =item3 L<sc comment|#sc-comment>
 =item3 L<backup db|#backup-db>
-=item3 L<USAGE|#usage>
-=item3 L<USAGE|#usage>
+=item3 L<sc restore db|#sc-restore-db>
+=item3 L<sc menu restore db|#sc-menu-restore-db>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -133,8 +133,44 @@ use Syscon;
 
 =begin code :lang<bash>
 
-$ sc --help
+sc --help
 
+Usage:
+  sc ssh <key>
+  sc ping <key>
+  sc get home <key>  [<args> ...] [-r|--recursive]
+  sc put home <key>  [<args> ...] [-r|--recursive]
+  sc edit configs
+  sc list keys  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc list by all  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc list trash  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc trash   [<keys> ...]
+  sc empty trash
+  sc undelete   [<keys> ...]
+  sc stats  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc statistics  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc add <key> <host> [<port>]  [-s|--set|--force] [-c|--comment=<Str>]
+  sc delete   [<keys> ...] [-d|--delete|--do-not-trash]
+  sc del   [<keys> ...] [-d|--delete|--do-not-trash]
+  sc comment <key> <comment>
+  sc alias <key> <target>   [-s|--set|--force] [-d|--really-force|--overwrite-hosts] [-c|--comment=<Str>]
+  sc backup db    [-w|--win-format|--use-windows-formating]
+  sc restore db  [<restore-from>]
+  sc menu restore db  [<message>]  [-c|--color|--colour] [-s|--syntax]
+  sc list db backups  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc list editors    [-f|--prefix=<Str>] [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc editors stats  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc list editors backups  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+  sc backup editors    [-w|--use-windows-formatting]
+  sc restore editors <restore-from>
+  sc set editor <editor> [<comment>]
+  sc set override GUI_EDITOR <value> [<comment>]
+  sc menu restore editors  [<message>]  [-c|--color|--colour] [-s|--syntax]
+  sc tidy file
+  sc sort file
+  sc show file    [-c|--color|--colour]
+  sc help   [<args> ...] [-n|--nocolor|--nocolour] [--<named-args>=...]
+ 
 =end code
 
 !L<image not available here go to the github page|/docs/images/usage.png>
@@ -167,15 +203,22 @@ ssh -p $port $host
 
 by the B<C<ssh(…)>> function defined in B<Syscon.rakumod>.
 
-=begin code :lang<raku>
+=begin code :lang<bash>
 
-multi sub MAIN('ssh', Str:D $key --> int){
-    if ssh($key) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
+22:22:06 θ76° grizzlysmit@pern:~ $ sc  ssh rak
+ssh -p 22 rakbat.local
+Welcome to Ubuntu 23.10 (GNU/Linux 6.5.0-14-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+0 updates can be applied immediately.
+
+
+
+Last login: Tue Jan  2 23:48:56 2024 from 192.168.188.11
+06:55:31 grizzlysmit@rakbat:~ $ 
 
 =end code
 
@@ -858,6 +901,23 @@ multi sub MAIN('backup', 'db', Bool:D :w(:win-format(:$use-windows-formating)) =
     }
 }
 
+=begin pod
+
+=head3 sc restore db
+
+=begin code :lang< bash>
+
+sc restore db --help
+
+Usage:
+  sc restore db [<restore-from>]
+
+=end code
+
+L<Top of Document|#table-of-contents>
+
+=end pod
+
 multi sub MAIN('restore', 'db', Str $restore-from = Str --> Bool) {
     my IO::Path $_restore-from;
     with $restore-from {
@@ -869,6 +929,26 @@ multi sub MAIN('restore', 'db', Str $restore-from = Str --> Bool) {
         die "Error: restore backup failed!!!";
     }
 }
+
+=begin pod
+
+=head3 sc menu restore db
+
+Restore the db using a menu to make it easy to choose the db
+backup from the ones available in the configuration directory. 
+
+=begin code :lang<bash>
+
+sc menu restore db --help
+
+Usage:
+  sc menu restore db [<message>]  [-c|--color|--colour] [-s|--syntax]
+
+=end code
+
+L<Top of Document|#table-of-contents>
+
+=end pod
 
 multi sub MAIN('menu', 'restore', 'db',
                 Str:D $message = '',

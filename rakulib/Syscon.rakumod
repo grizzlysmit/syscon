@@ -2336,11 +2336,77 @@ sub backups-menu-restore-db(Bool:D $colour, Bool:D $syntax, Str:D $message = "" 
                                 HostsFile.parse(@file.join("\x0A"), :enc('UTF-8'), :$actions).made;
                             };
     #dd @backups;
-    my Str:D @Backups = @backups.map: { .basename };
-    @Backups .=sort();
-    my Str $file = menu(@Backups, $message, :$colour, :$syntax);
+    my $highlight-bg-colour = t.bg-color(0, 0, 107) ~ t.bold;
+    my $highlight-fg-colour = t.color(255, 255, 0);
+    my @Backups = @backups.map: -> IO::Path $f {
+          my %elt = value => $f.Str, backup => $f.basename,
+                      perms => symbolic-perms($f, :$colour, :$syntax, :highlight-fg-colour(''),
+                                              :fg-colour0(''), :fg-colour1('')),
+                      user => uid2username($f.user), group => gid2groupname($f.group),
+                      size => format-bytes($f.s), modified => $f.modified.DateTime.local.Str;
+          %elt;
+    };
+    @Backups .=sort( -> %lhs, %rhs { %lhs«value».IO.basename cmp %rhs«value».IO.basename });
+    sub row(Int:D $cnt, Int:D $pos, @array,
+                                     Bool:D :$colour = False, Bool:D :$syntax = False,
+                                     Str:D :$highlight-bg-colour = '',
+                                     Str:D :$highlight-fg-colour = '',
+                                     Str:D :$bg-colour0 = '',
+                                     Str:D :$fg-colour0 = '', 
+                                     Str:D :$bg-colour1 = '',
+                                     Str:D :$fg-colour1 = ''  --> Str:D) {
+        my %r = @array[$cnt];
+        if $syntax {
+            if %r«value» eq 'cancel' {
+                return %r«name» if %r«name»:exists;
+                return %r«value»;
+            } 
+            my Str:D $name = %r«perms» ~ ' ';
+            if $cnt == $pos {
+                $name ~= $highlight-bg-colour ~ t.color(255, 0, 0)   ~ %r«size»     ~ ' ';
+                $name ~= $highlight-bg-colour ~ t.color(255, 255, 0) ~ %r«user»     ~ ' ';
+                $name ~= $highlight-bg-colour ~ t.color(255, 255, 0) ~ %r«group»    ~ ' ';
+                $name ~= $highlight-bg-colour ~ t.color(0, 0, 255)   ~ %r«modified» ~ ' ';
+                $name ~= $highlight-bg-colour ~ t.color(255, 0, 255) ~ %r«backup»   ~ ' ';
+            } elsif $cnt %% 2 {
+                $name ~= $bg-colour0 ~ t.color(255, 0, 0)   ~ %r«size»     ~ ' ';
+                $name ~= $bg-colour0 ~ t.color(255, 255, 0) ~ %r«user»     ~ ' ';
+                $name ~= $bg-colour0 ~ t.color(255, 255, 0) ~ %r«group»    ~ ' ';
+                $name ~= $bg-colour0 ~ t.color(0, 0, 255)   ~ %r«modified» ~ ' ';
+                $name ~= $bg-colour0 ~ t.color(255, 0, 255) ~ %r«backup»   ~ ' ';
+            } else {
+                $name ~= $bg-colour1 ~ t.color(255, 0, 0)   ~ %r«size»     ~ ' ';
+                $name ~= $bg-colour1 ~ t.color(255, 255, 0) ~ %r«user»     ~ ' ';
+                $name ~= $bg-colour1 ~ t.color(255, 255, 0) ~ %r«group»    ~ ' ';
+                $name ~= $bg-colour1 ~ t.color(0, 0, 255)   ~ %r«modified» ~ ' ';
+                $name ~= $bg-colour1 ~ t.color(255, 0, 255) ~ %r«backup»   ~ ' ';
+            }
+        } elsif $colour {
+            if %r«value» eq 'cancel' {
+                return %r«name» if %r«name»:exists;
+                return %r«value»;
+            } 
+            my Str:D $name = %r«size» ~ ' ' ~ %r«user» ~ ' ' ~ %r«group» ~ ' ' ~ %r«modified» ~ ' ' ~ %r«backup»;
+            if $cnt == $pos {
+                return $highlight-bg-colour ~ %r«perms» ~ ' ' ~ $highlight-fg-colour ~ $name;
+            } elsif $cnt %% 2 {
+                return $bg-colour0          ~ %r«perms» ~ ' ' ~ $fg-colour0          ~ $name;
+            } else {
+                return $bg-colour1          ~ %r«perms» ~ ' ' ~ $fg-colour1          ~ $name;
+            }
+        } else {
+            if %r«value» eq 'cancel' {
+                return %r«name» if %r«name»:exists;
+                return %r«value»;
+            } 
+            my Str:D $name = %r«perms» ~ ' ' ~ %r«size» ~ ' ' ~ %r«user» ~ ' ' ~ %r«group» ~ ' ' ~ %r«modified» ~ ' ' ~ %r«backup»;
+            return $name;
+        }
+    }
+    my Str $file = menu(@Backups, $message, :&row, :$colour, :$syntax, :$highlight-bg-colour, :$highlight-fg-colour, :wrap-around);
     return False without $file;
     return False if $file eq '';
+    return False if $file eq 'cancel';
     return restore-db-file($file.IO);
 } # sub backups-menu-restore-db(Bool:D $colour, Bool:D $syntax, Str:D $message = "" --> Bool:D) is export #
 
