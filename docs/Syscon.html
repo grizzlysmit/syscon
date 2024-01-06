@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Syscon</title>
+<title>UNNAMED</title>
 <meta charset="UTF-8" />
 <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAA/wAAAP8AAACGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAABA
@@ -23,9 +23,7 @@ Av8AAAD/AAAAAAAAAEAAAAAAAAAAGQAAAP/RAACR/35+/wAAAP8A+wL/AAAA2gAAAGX/AADa/35+
 //9+fv8AAAD/AAAAAAAAAAAAAAB7AAAAAAAAAEAAAAAAAAAA//0AAP//fn7//35+/wAAAGUAAAAP
 AAAAZQAAAP8AAAD/AAAAAAAAAAAAAABlAAAA/4WFhQEAAAD/AAAAQAAAAAAAAAD/AAAA2gAAAGUA
 AAAAj/kAAAZgAAADgAAAgAEAAOAHAADgBwAAwAMAAIABAACAAQAAAAEAAAAAAAAAAAAAAAAAAAPA
-AACH4QAAzrMAAA==" rel="icon" type="image/x-icon" /><meta name="author" value="Francis Grizzly Smit (grizzly@smit.id.au)" />
-<meta name="version" value="v0.1.18" />
-<style>.comment {
+AACH4QAAzrMAAA==" rel="icon" type="image/x-icon" /><style>.comment {
   color: #666; }
 
 .string {
@@ -575,58 +573,16 @@ footer {
 		<rect x="551.153" y="428.32" transform="matrix(0.4226 -0.9063 0.9063 0.4226 -70.9303 749.6747)" stroke="#000000" stroke-width="1.0588" stroke-miterlimit="10" width="3.517" height="4.372"/>
 </g>
 </svg>
-<h1 class="title">Syscon</h1></header><div class="pod-content"><nav><div id="TOC"><table>
+<h1 class="title">UNNAMED</h1></header><div class="pod-content"><nav><div id="TOC"><table>
 <caption>Table of Contents</caption>
-<tr class="toc-level-2"><td class="toc-text"><a href="#Table_of_Contents">Table of Contents</a></td></tr>
- <tr class="toc-level-1"><td class="toc-text"><a href="#Name">Name</a></td></tr>
- <tr class="toc-level-1"><td class="toc-text"><a href="#Copyright">Copyright</a></td></tr>
- <tr class="toc-level-1"><td class="toc-text"><a href="#Introduction">Introduction</a></td></tr>
- <tr class="toc-level-2"><td class="toc-text"><a href="#Motivations">Motivations</a></td></tr>
+<tr class="toc-level-2"><td class="toc-text"><a href="#$config">$config</a></td></tr>
 </table></div>
-</nav><div id="Syscon"></div><div class="subtitle"><p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
-<ul>
-<li><p><a href="#name">NAME</a></p></li>
-<li><p><a href="#author">AUTHOR</a></p></li>
-<li><p><a href="#version">VERSION</a></p></li>
-<li><p><a href="#title">TITLE</a></p></li>
-<li><p><a href="#subtitle">SUBTITLE</a></p></li>
-<li><p><a href="#copyright">COPYRIGHT</a></p></li>
-<li><p><a href="#introduction">Introduction</a></p></li>
-<ul>
-<li><p><a href="#motivations">Motivations</a></p></li>
-</ul>
-</ul>
-<section>
-<h1 id="Name"><a href="#___top" class="u" title="go to top of document">NAME</a></h1>
-<p>Syscon </p>
-</section>
-<section>
-<h1 id="Copyright"><a href="#Syscon" class="u" title="go to top of document">COPYRIGHT</a></h1>
-<p>LGPL V3.0+ <a href="https://github.com/grizzlysmit/syscon/blob/main/LICENSE">LICENSE</a></p>
-</section>
-<h1 id="Introduction"><a href="#Syscon" class="u" title="go to top of document">Introduction</a></h1>
-<p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p><p><a href="#table-of-contents">Top of Document</a></p><h2 id="Motivations"><a href="#Syscon" class="u" title="go to top of document">Motivations</a></h2>
-<p>I have to keep track of many servers (&gt; 100) but who can remember all the host names, and ports?? That is where this app comes in I can connect to a server by ssh by.</p><pre class="pod-block-code">$ syscon.raku ssh &lt;key&gt;
+</nav><div id="___top"></div><div class="pod-body"><section name="___top"><h2 id="$config"><a href="#___top" class="u" title="go to top of document"><strong><code>$config</code></strong></a></h2>
+<pre class="pod-block-code"># config files
+constant $config is export = &quot;$home/.local/share/syscon&quot;;
 
-</pre><p>or for short</p><pre class="pod-block-code">$ sc ssh &lt;key&gt;
-
-</pre><p>Equally you can use</p><pre class="pod-block-code">$ sc put home &lt;key&gt; &lt;files&gt; ……
-
-</pre><p>To run </p><pre class="pod-block-code">$ scp -P $port &lt;files&gt; …… $host:
-
-</pre><ul>
-<li><p>Where </p></li>
-<ul>
-<li><p><strong><code>$host</code></strong> is generally something like <strong><code>username@example.com</code></strong></p></li>
-<li><p><strong><code>$port</code></strong> is a port number.</p></li>
-<li><p><strong>key</strong> is the key to retrieve the host and port form the server.</p></li>
-<ul>
-<li><p>It's put home because I may add put &lt;other-place&gt; at a later date.</p></li>
-</ul>
-</ul>
-</ul>
-<p><a href="#table-of-contents">Top of Document</a></p><p>This is the module, you can find the apps docs <a href="https://github.com/grizzlysmit/syscon">here</a>.</p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-06T07:42:13Z</span></div></footer>
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-06T19:23:49Z</span></div></footer>
 	</body>
 </html>
 
