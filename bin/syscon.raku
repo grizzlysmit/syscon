@@ -325,8 +325,6 @@ $ sc get home $key --to=$to $files-on-remote-system……
 
 e.g.
 
-X<hash|hashes; fred; wilma>
-
 =begin code :lang<bash>
 
 $ sc get home rak --to=scratch .bashrc /etc/hosts 

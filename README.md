@@ -311,8 +311,6 @@ $ sc get home $key --to=$to $files-on-remote-system……
 
 e.g.
 
-hash
-
 ```bash
 $ sc get home rak --to=scratch .bashrc /etc/hosts 
 scp -P 22 rakbat.local:.bashrc .
