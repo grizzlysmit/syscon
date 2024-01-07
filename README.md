@@ -63,9 +63,9 @@ Table of Contents
 
       * [sc menu restore db](#sc-menu-restore-db)
 
-      * [USAGE](#usage)
+      * [USAGE](#fred)
 
-      * [USAGE](#usage)
+      * [USAGE](#wilma)
 
       * [USAGE](#usage)
 

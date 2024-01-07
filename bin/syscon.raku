@@ -46,8 +46,8 @@ Table of  Contents
 =item3 L<backup db|#backup-db>
 =item3 L<sc restore db|#sc-restore-db>
 =item3 L<sc menu restore db|#sc-menu-restore-db>
-=item3 L<USAGE|#usage>
-=item3 L<USAGE|#usage>
+=item3 L<USAGE|#fred>
+=item3 L<USAGE|#wilma>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -325,7 +325,7 @@ $ sc get home $key --to=$to $files-on-remote-system……
 
 e.g.
 
-X<hash|hashes; sc-get-home; sc-ping>
+X<hash|hashes; fred; wilma>
 
 =begin code :lang<bash>
 
