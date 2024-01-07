@@ -8,6 +8,8 @@ my %*SUB-MAIN-OPTS;
 
 =begin pod
 
+=Toc
+
 =begin head2
 
 Table of  Contents
