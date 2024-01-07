@@ -8,7 +8,7 @@ my %*SUB-MAIN-OPTS;
 
 =begin pod
 
-=Toc
+=Toc head head1 head2 head3
 
 =begin head2
 
