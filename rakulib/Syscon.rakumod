@@ -18,11 +18,10 @@ constant $home is export = %*ENV<HOME>.Str();
 
 =begin pod
 
-=head1 module Syscon
 
-=head2 The Syscon library
+=head1 The Syscon library
 
-=head3 B<C<$config>>
+=head2 B<C<$config>>
 
 =begin code :lang<raku>
 

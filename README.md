@@ -86,7 +86,7 @@ Table of Contents
 
       * [USAGE](#usage)
 
-    * [module Syscon](#module-syscon)
+    * [module Syscon](#the-syscon-library)
 
       * [USAGE](#usage)
 
@@ -650,13 +650,11 @@ Usage:
 
 [Top of Document](#table-of-contents)
 
-module Syscon
-=============
-
 The Syscon library
-------------------
+==================
 
-### **`$config`**
+**`$config`**
+-------------
 
 ```raku
 # config files

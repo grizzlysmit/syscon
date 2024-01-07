@@ -57,7 +57,7 @@ Table of  Contents
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
-=item2 L<module Syscon|#module-syscon>
+=item2 L<module Syscon|#the-syscon-library>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
