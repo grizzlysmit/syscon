@@ -821,8 +821,8 @@ hosts                     100%  313   228.8KB/s   00:00
 </ul>
 <pre class="pod-block-code">sc put home kil --to=tmp scratch/bug.raku  docs/Syscon.1 
 scp -P 22 scratch/bug.raku docs/Syscon.1 grizzlysmit@killashandra.local:tmp
-bug.raku                                                                    100% 3303   557.3KB/s   00:00
-Syscon.1                                                                    100%  485     1.0MB/s   00:00
+bug.raku                                           100% 3303   557.3KB/s   00:00
+Syscon.1                                           100%  485     1.0MB/s   00:00
 
 </pre><p>!<a href="/docs/images/sc-put-home.png.html">image not available here go to the github page</a></p><p>Implemented as</p><pre class="pod-block-code">multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
     if _put('home', $key, :$recursive, |@args) {
@@ -972,7 +972,7 @@ Usage:
   sc menu restore db [&lt;message&gt;]  [-c|--color|--colour] [-s|--syntax]
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-07T20:42:11Z</span></div></footer>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-07T20:44:51Z</span></div></footer>
 	</body>
 </html>
 

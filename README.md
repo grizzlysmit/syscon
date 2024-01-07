@@ -349,8 +349,8 @@ $ sc put home $key --to=$to --recursive $files……
 ```bash
 sc put home kil --to=tmp scratch/bug.raku  docs/Syscon.1 
 scp -P 22 scratch/bug.raku docs/Syscon.1 grizzlysmit@killashandra.local:tmp
-bug.raku                                                                    100% 3303   557.3KB/s   00:00
-Syscon.1                                                                    100%  485     1.0MB/s   00:00
+bug.raku                                           100% 3303   557.3KB/s   00:00
+Syscon.1                                           100%  485     1.0MB/s   00:00
 ```
 
 ![image not available here go to the github page](/docs/images/sc-put-home.png)
