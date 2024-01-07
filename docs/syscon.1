@@ -195,25 +195,25 @@ USAGE [#usage]
 .RS 2n
 .RS 2n
 .IP \(bu 2m
-USAGE [#usage]
+ssh(…) [#ssh]
 .RE
 .RE
 .RS 2n
 .RS 2n
 .IP \(bu 2m
-USAGE [#usage]
+ping(…) [#ping]
 .RE
 .RE
 .RS 2n
 .RS 2n
 .IP \(bu 2m
-USAGE [#usage]
+_get(…) [#_get] or on raku\&.land _get [#-get]
 .RE
 .RE
 .RS 2n
 .RS 2n
 .IP \(bu 2m
-USAGE [#usage]
+_put [#usage] or on raku\&.land _get [#-put]
 .RE
 .RE
 .SH "NAME"
@@ -555,7 +555,7 @@ multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args \
 Where
 .RS 2n
 .IP \(bu 2m
-\fBmulti sub _put('home', Str:D $key, Bool :r(:$recursive) = False, *@args \-\- Bool) is export\fR> is a function in \fBSysycon\&.rakumod\fR
+\fBmulti sub _put('home', Str:D $key, Bool :r(:$recursive) = False, Str:D :$to = '', *@args \-\- Bool) is export\fR> is a function in \fBSysycon\&.rakumod\fR See \fB_put(…)\fR [#_put] or on raku\&.land \fB_put(…)\fR [#-put]\&.
 .RE
 
 Top of Document [#table-of-contents]

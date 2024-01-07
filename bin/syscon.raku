@@ -54,10 +54,10 @@ Table of  Contents
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
-=item3 L<USAGE|#usage>
-=item3 L<USAGE|#usage>
-=item3 L<USAGE|#usage>
-=item3 L<USAGE|#usage>
+=item3 L<ssh(…)|#ssh>
+=item3 L<ping(…)|#ping>
+=item3 L<_get(…)|#_get> or L<on raku.land _get|#-get>
+=item3 L<_put|#usage> or L<on raku.land _get|#-put>
 
 =NAME syscon, sc
 =AUTHOR Francis Grizzly Smit (grizzly@smit.id.au)
@@ -398,8 +398,8 @@ multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args -
 =item1 Where
 =begin item2 
 
-B<C<multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, *@args --> Bool) is export>>
-is a function in B<Sysycon.rakumod>
+B<C<multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, Str:D :$to = '', *@args --> Bool) is export>>
+is a function in B<Sysycon.rakumod> See L<B<C<_put(…)>>|#_put> or L<on raku.land B<C<_put(…)>>|#-put>.
 
 =end item2
 

@@ -80,13 +80,13 @@ Table of Contents
 
       * [USAGE](#usage)
 
-      * [USAGE](#usage)
+      * [ssh(…)](#ssh)
 
-      * [USAGE](#usage)
+      * [ping(…)](#ping)
 
-      * [USAGE](#usage)
+      * [_get(…)](#_get) or [on raku.land _get](#-get)
 
-      * [USAGE](#usage)
+      * [_put](#usage) or [on raku.land _get](#-put)
 
 NAME
 ====
@@ -369,7 +369,7 @@ multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args -
 
   * Where
 
-    * **`multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, *@args --` Bool) is export**> is a function in **Sysycon.rakumod**
+    * **`multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, Str:D :$to = '', *@args --` Bool) is export**> is a function in **Sysycon.rakumod** See [**`_put(…)`**](#_put) or [on raku.land **`_put(…)`**](#-put).
 
 [Top of Document](#table-of-contents)
 
@@ -643,6 +643,22 @@ constant $config is export = "$home/.local/share/syscon";
 
 [Top of Document](#table-of-contents)
 
+### ssh(…)
+
+```raku
+sub ssh(Str:D $key --> Bool) is export
+```
+
+[Top of Document](#table-of-contents)
+
+### ping(…)
+
+```raku
+sub ping(Str:D $key --> Bool) is export
+```
+
+[Top of Document](#table-of-contents)
+
 ### _get(…)
 
 ```raku
@@ -653,6 +669,17 @@ multi sub _get('home', Str:D $key,
 ```
 
 [See sc get home](#sc-get-home)
+
+[Top of Document](#table-of-contents)
+
+### _put(…)
+
+```raku
+multi sub _put('home', Str:D $key,
+                Bool :r(:$recursive) = False,
+                Str:D :$to = '',
+                *@args --> Bool) is export
+```
 
 [Top of Document](#table-of-contents)
 

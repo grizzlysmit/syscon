@@ -655,10 +655,10 @@ footer {
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
-<li><p><a href="#usage">USAGE</a></p></li>
-<li><p><a href="#usage">USAGE</a></p></li>
-<li><p><a href="#usage">USAGE</a></p></li>
-<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#ssh">ssh(…)</a></p></li>
+<li><p><a href="#ping">ping(…)</a></p></li>
+<li><p><a href="#_get">_get(…)</a> or <a href="#-get">on raku.land _get</a></p></li>
+<li><p><a href="#usage">_put</a> or <a href="#-put">on raku.land _get</a></p></li>
 </ul>
 </ul>
 </ul>
@@ -835,7 +835,7 @@ Syscon.1                                           100%  485     1.0MB/s   00:00
 </pre><ul>
 <li><p>Where</p></li>
 <ul>
-<li><p><strong><code>multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, *@args --</code> Bool) is export</strong>&gt; is a function in <strong>Sysycon.rakumod</strong></p></li>
+<li><p><strong><code>multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, Str:D :$to = '', *@args --</code> Bool) is export</strong>&gt; is a function in <strong>Sysycon.rakumod</strong> See <a href="#_put"><strong><code>_put(…)</code></strong></a> or <a href="#-put">on raku.land <strong><code>_put(…)</code></strong></a>.</p></li>
 </ul>
 </ul>
 <p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h2 id="Utility_functions"><a href="#syscon,_sc" class="u" title="go to top of document">Utility functions</a></h2>
@@ -972,7 +972,7 @@ Usage:
   sc menu restore db [&lt;message&gt;]  [-c|--color|--colour] [-s|--syntax]
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-07T20:44:51Z</span></div></footer>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-07T21:20:01Z</span></div></footer>
 	</body>
 </html>
 

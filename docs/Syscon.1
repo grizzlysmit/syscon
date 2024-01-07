@@ -13,6 +13,28 @@ constant $config is export = "$home/\&.local/share/syscon";
 .RE
 .P
 Top of Document [#table-of-contents]
+.SS ssh(…)
+
+.RS 4m
+.EX
+sub ssh(Str:D $key \-\-> Bool) is export 
+
+
+.EE
+.RE
+.P
+Top of Document [#table-of-contents]
+.SS ping(…)
+
+.RS 4m
+.EX
+sub ping(Str:D $key \-\-> Bool) is export 
+
+
+.EE
+.RE
+.P
+Top of Document [#table-of-contents]
 .SS _get(…)
 
 .RS 4m
@@ -28,4 +50,18 @@ multi sub _get('home', Str:D $key,
 .P
 See sc get home [#sc-get-home]
 
+Top of Document [#table-of-contents]
+.SS _put(…)
+
+.RS 4m
+.EX
+multi sub _put('home', Str:D $key,
+                Bool :r(:$recursive) = False,
+                Str:D :$to = '',
+                *@args \-\-> Bool) is export 
+
+
+.EE
+.RE
+.P
 Top of Document [#table-of-contents]

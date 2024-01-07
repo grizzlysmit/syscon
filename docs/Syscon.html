@@ -577,12 +577,21 @@ footer {
 <caption>Table of Contents</caption>
 <tr class="toc-level-1"><td class="toc-text"><a href="#The_Syscon_library">The Syscon library</a></td></tr>
  <tr class="toc-level-2"><td class="toc-text"><a href="#$config">$config</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#ssh(…)">ssh(…)</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#ping(…)">ping(…)</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#_get(…)">_get(…)</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#_put(…)">_put(…)</a></td></tr>
 </table></div>
 </nav><div id="___top"></div><div class="pod-body"><section name="___top"><h1 id="The_Syscon_library"><a href="#___top" class="u" title="go to top of document">The Syscon library</a></h1>
 <h2 id="$config"><a href="#___top" class="u" title="go to top of document"><strong><code>$config</code></strong></a></h2>
 <pre class="pod-block-code"># config files
 constant $config is export = &quot;$home/.local/share/syscon&quot;;
+
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="___top"><h3 id="ssh(…)"><a href="#___top" class="u" title="go to top of document">ssh(…)</a></h3>
+<pre class="pod-block-code">sub ssh(Str:D $key --&gt; Bool) is export 
+
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="___top"><h3 id="ping(…)"><a href="#___top" class="u" title="go to top of document">ping(…)</a></h3>
+<pre class="pod-block-code">sub ping(Str:D $key --&gt; Bool) is export 
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="___top"><h3 id="_get(…)"><a href="#___top" class="u" title="go to top of document">_get(…)</a></h3>
 <pre class="pod-block-code">multi sub _get('home', Str:D $key,
@@ -590,8 +599,14 @@ constant $config is export = &quot;$home/.local/share/syscon&quot;;
                 Str:D :$to = '.',
                 *@args --&gt; Bool) is export 
 
-</pre><p><a href="#sc-get-home">See sc get home</a></p><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-07T20:45:03Z</span></div></footer>
+</pre><p><a href="#sc-get-home">See sc get home</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="___top"><h3 id="_put(…)"><a href="#___top" class="u" title="go to top of document">_put(…)</a></h3>
+<pre class="pod-block-code">multi sub _put('home', Str:D $key,
+                Bool :r(:$recursive) = False,
+                Str:D :$to = '',
+                *@args --&gt; Bool) is export 
+
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-07T21:20:12Z</span></div></footer>
 	</body>
 </html>
 

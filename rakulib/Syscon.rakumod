@@ -2609,6 +2609,20 @@ sub resolve-alias(Str:D $key --> Str:D) {
     return $KEY;
 } # sub resolve-alias(Str:D $key --> Str:D) #
 
+=begin pod
+
+=head3 ssh(…)
+
+=begin code :lang<raku>
+
+sub ssh(Str:D $key --> Bool) is export 
+
+=end code
+
+L<Top of Document|#table-of-contents>
+
+=end pod
+
 sub ssh(Str:D $key --> Bool) is export {
     if %the-lot{$key}:exists {
         my Str:D $type    = %the-lot{$key}«type»;
@@ -2628,6 +2642,20 @@ sub ssh(Str:D $key --> Bool) is export {
     }
     die "key $key not found";
 }
+
+=begin pod
+
+=head3 ping(…)
+
+=begin code :lang<raku>
+
+sub ping(Str:D $key --> Bool) is export 
+
+=end code
+
+L<Top of Document|#table-of-contents>
+
+=end pod
 
 sub ping(Str:D $key --> Bool) is export {
     if %the-lot{$key}:exists {
@@ -2703,7 +2731,27 @@ multi sub _get('home', Str:D $key,
     die "key $key not found";
 } # multi sub get('home', Str:D $key, Bool $recursive, *@args --> Bool) is export #
 
-multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, Str:D :$to = '', *@args --> Bool) is export {
+=begin pod
+
+=head3 _put(…)
+
+=begin code :lang<raku>
+
+multi sub _put('home', Str:D $key,
+                Bool :r(:$recursive) = False,
+                Str:D :$to = '',
+                *@args --> Bool) is export 
+
+=end code
+
+L<Top of Document|#table-of-contents>
+
+=end pod
+
+multi sub _put('home', Str:D $key,
+                Bool :r(:$recursive) = False,
+                Str:D :$to = '',
+                *@args --> Bool) is export {
     if %the-lot{$key}:exists {
         my Str:D $type    = %the-lot{$key}«type»;
         my Str:D $KEY = $key;
@@ -2731,6 +2779,4 @@ multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, Str:D :$to = ''
     }
     die "key $key not found";
 } # multi sub put('home', Str:D $key, Bool $recursive, *@args --> Bool) is export #
-
-
 
