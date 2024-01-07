@@ -236,7 +236,7 @@ Last login: Tue Jan  2 23:48:56 2024 from 192.168.188.11
 
 !L<image not available here go to the github page|/docs/images/sc-ssh.png>
 
-Implemented as L<B<C<ssh(…)>>|ssh> in L<module Syscon|#the-syscon-library>.
+Implemented as L<B<C<ssh(…)>>|#ssh> in L<module Syscon|#the-syscon-library>.
 
 L<Top of Document|#table-of-contents>
 
@@ -292,7 +292,7 @@ rtt min/avg/max/mdev = 0.220/0.289/0.831/0.141 ms
 !L<image not available here go to the github page|/docs/images/ping.png>
 
 
-Implemented as L<B<C<ping(…)>>|ping> in L<module Syscon|#the-syscon-library>.
+Implemented as L<B<C<ping(…)>>|#ping> in L<module Syscon|#the-syscon-library>.
 
 =begin code :lang<raku>
 
@@ -351,7 +351,7 @@ hosts                     100%  313   228.8KB/s   00:00
 !L<image not available here go to the github page|/docs/images/sc-get-home.png>
 
 
-Using the L<B<C<_get(…)>>|#_get> or L<on raku.land B<C<_get(…)>>|#-get> function defined in B<Syscon.rakumod>.
+Using the B<_get> function defined in B<Syscon.rakumod> L<See B<C<_get(…)>>|#_get> or L<on raku.land B<C<_get(…)>>|#-get>.
 
 L<Top of Document|#table-of-contents>
 
