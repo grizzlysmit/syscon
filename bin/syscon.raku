@@ -8,7 +8,6 @@ my %*SUB-MAIN-OPTS;
 
 =begin pod
 
-=Toc head head1 head2 head3
 
 =begin head2
 
@@ -325,6 +324,8 @@ $ sc get home $key --to=$to $files-on-remote-system……
 =item2 B<C<$files-on-remote-system……>>  A list of files on the remote system to copy can be anywhere on the remote system.
 
 e.g.
+
+X<hash|sc-get-home sc-ping>
 
 =begin code :lang<bash>
 

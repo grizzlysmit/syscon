@@ -1,8 +1,3 @@
-Toc
-===
-
-head head1 head2 head3
-
 Table of Contents
 -----------------
 
@@ -315,6 +310,8 @@ $ sc get home $key --to=$to $files-on-remote-system……
     * **`$files-on-remote-system……`** A list of files on the remote system to copy can be anywhere on the remote system.
 
 e.g.
+
+hash
 
 ```bash
 $ sc get home rak --to=scratch .bashrc /etc/hosts 
