@@ -303,11 +303,11 @@ This is the app, you can find the modules docs here [/docs/Syscon.md]
 .EX
 sc \-\-help
 
-Usage:
+Usage:                                                                                                                                                
   sc ssh <key>
   sc ping <key>
-  sc get home <key>  [<args> \&.\&.\&.] [\-r|\-\-recursive]
-  sc put home <key>  [<args> \&.\&.\&.] [\-r|\-\-recursive]
+  sc get home <key>  [<args> \&.\&.\&.] [\-r|\-\-recursive] [\-t|\-\-to=<Str>]
+  sc put home <key>  [<args> \&.\&.\&.] [\-r|\-\-recursive] [\-t|\-\-to=<Str>]
   sc edit configs
   sc list keys  [<prefix>]  [\-c|\-\-color|\-\-colour] [\-s|\-\-syntax] [\-l|\-\-page\-length[=Int]] [\-p|\-\-pattern=<Str>] [\-e|\-\-ecma\-pattern=<Str>]
   sc list by all  [<prefix>]  [\-c|\-\-color|\-\-colour] [\-s|\-\-syntax] [\-l|\-\-page\-length[=Int]] [\-p|\-\-pattern=<Str>] [\-e|\-\-ecma\-pattern=<Str>]
@@ -451,7 +451,33 @@ Get some files on the remote system and deposit them here (in the directory the 
 
 .RS 4m
 .EX
-$ sc get home $key $files\-on\-remote\-system……
+$ sc get home $key \-\-to=$to $files\-on\-remote\-system……
+
+
+.EE
+.RE
+.IP \(bu 2m
+Where
+.RS 2n
+.IP \(bu 2m
+\fB$key\fR The key of the host to get files from\&.
+.RE
+.RS 2n
+.IP \(bu 2m
+\fB$to\fR The place to put the files defaults to \fB\&.\fR or here\&.
+.RE
+.RS 2n
+.IP \(bu 2m
+\fB$files\-on\-remote\-system……\fR A list of files on the remote system to copy can be anywhere on the remote system\&.
+.RE
+
+.RS 4m
+.EX
+$ sc get home rak \-\-to=scratch \&.bashrc /etc/hosts 
+scp \-P 22 rakbat\&.local:\&.bashrc \&.
+\&.bashrc                   100%   11KB   6\&.9MB/s   00:00
+scp \-P 22 rakbat\&.local:/etc/hosts \&.
+hosts                     100%  313   228\&.8KB/s   00:00
 
 
 .EE
@@ -463,13 +489,9 @@ Defined as
 
 .RS 4m
 .EX
-multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args \-\-> int){
-    if _get('home', $key, :$recursive, |@args) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
+$ sc get home rak \&.bashrc
+scp \-P 22 rakbat\&.local:\&.bashrc \&.
+\&.bashrc                            100%   11KB   6\&.9MB/s   00:00
 
 
 .EE

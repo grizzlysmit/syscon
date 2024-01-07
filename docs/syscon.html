@@ -692,11 +692,11 @@ footer {
 <p><a href="#table-of-contents">Top of Document</a></p><p>This is the app, you can find the modules docs <a href="/docs/Syscon.md.html">here</a></p></section><section name="pod"><h3 id="USAGE"><a href="#syscon" class="u" title="go to top of document">USAGE</a></h3>
 <pre class="pod-block-code">sc --help
 
-Usage:
+Usage:                                                                                                                                                
   sc ssh &lt;key&gt;
   sc ping &lt;key&gt;
-  sc get home &lt;key&gt;  [&lt;args&gt; ...] [-r|--recursive]
-  sc put home &lt;key&gt;  [&lt;args&gt; ...] [-r|--recursive]
+  sc get home &lt;key&gt;  [&lt;args&gt; ...] [-r|--recursive] [-t|--to=&lt;Str&gt;]
+  sc put home &lt;key&gt;  [&lt;args&gt; ...] [-r|--recursive] [-t|--to=&lt;Str&gt;]
   sc edit configs
   sc list keys  [&lt;prefix&gt;]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;]
   sc list by all  [&lt;prefix&gt;]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;]
@@ -788,15 +788,25 @@ rtt min/avg/max/mdev = 0.220/0.289/0.831/0.141 ms
 }
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_get_home"><a href="#syscon" class="u" title="go to top of document">sc get home</a></h3>
-<p>Get some files on the remote system and deposit them here (in the directory the user is currently in).</p><pre class="pod-block-code">$ sc get home $key $files-on-remote-system……
+<p>Get some files on the remote system and deposit them here (in the directory the user is currently in).</p><pre class="pod-block-code">$ sc get home $key --to=$to $files-on-remote-system……
 
-</pre><p>!<a href="/docs/images/sc-get-home.png.html">image not available here go to the github page</a></p><p>Defined as </p><pre class="pod-block-code">multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --&gt; int){
-    if _get('home', $key, :$recursive, |@args) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
+</pre><ul>
+<li><p>Where</p></li>
+<ul>
+<li><p><strong><code>$key</code></strong> The key of the host to get files from.</p></li>
+<li><p><strong><code>$to</code></strong> The place to put the files defaults to <strong><code>.</code></strong> or here.</p></li>
+<li><p><strong><code>$files-on-remote-system……</code></strong> A list of files on the remote system to copy can be anywhere on the remote system.</p></li>
+</ul>
+</ul>
+<pre class="pod-block-code">$ sc get home rak --to=scratch .bashrc /etc/hosts 
+scp -P 22 rakbat.local:.bashrc .
+.bashrc                   100%   11KB   6.9MB/s   00:00
+scp -P 22 rakbat.local:/etc/hosts .
+hosts                     100%  313   228.8KB/s   00:00
+
+</pre><p>!<a href="/docs/images/sc-get-home.png.html">image not available here go to the github page</a></p><p>Defined as </p><pre class="pod-block-code">$ sc get home rak .bashrc
+scp -P 22 rakbat.local:.bashrc .
+.bashrc                            100%   11KB   6.9MB/s   00:00
 
 </pre><p>Using the <strong><code>_get(…)</code></strong> function defined in <strong>Syscon.rakumod</strong>.</p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_put_home"><a href="#syscon" class="u" title="go to top of document">sc put home</a></h3>
 <pre class="pod-block-code">$ sc put home $key $files……
@@ -956,7 +966,7 @@ Usage:
   sc menu restore db [&lt;message&gt;]  [-c|--color|--colour] [-s|--syntax]
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-06T19:23:38Z</span></div></footer>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-07T08:12:46Z</span></div></footer>
 	</body>
 </html>
 

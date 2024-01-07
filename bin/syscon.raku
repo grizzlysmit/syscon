@@ -135,11 +135,11 @@ use Syscon;
 
 sc --help
 
-Usage:
+Usage:                                                                                                                                                
   sc ssh <key>
   sc ping <key>
-  sc get home <key>  [<args> ...] [-r|--recursive]
-  sc put home <key>  [<args> ...] [-r|--recursive]
+  sc get home <key>  [<args> ...] [-r|--recursive] [-t|--to=<Str>]
+  sc put home <key>  [<args> ...] [-r|--recursive] [-t|--to=<Str>]
   sc edit configs
   sc list keys  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
   sc list by all  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
@@ -313,7 +313,22 @@ Get some files on the remote system and deposit them here (in the directory the 
 
 =begin code :lang<bash>
 
-$ sc get home $key $files-on-remote-system……
+$ sc get home $key --to=$to $files-on-remote-system……
+
+=end code
+
+=item1 Where
+=item2 B<C<$key>>                       The key of the host to get files from.
+=item2 B<C<$to>>                        The place to put the files defaults to B<C<.>> or here.
+=item2 B<C<$files-on-remote-system……>>  A list of files on the remote system to copy can be anywhere on the remote system.
+
+=begin code :lang<bash>
+
+$ sc get home rak --to=scratch .bashrc /etc/hosts 
+scp -P 22 rakbat.local:.bashrc .
+.bashrc                   100%   11KB   6.9MB/s   00:00
+scp -P 22 rakbat.local:/etc/hosts .
+hosts                     100%  313   228.8KB/s   00:00
 
 =end code
 
@@ -321,15 +336,11 @@ $ sc get home $key $files-on-remote-system……
 
 Defined as 
 
-=begin code :lang<raku>
+=begin code :lang<bash>
 
-multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --> int){
-    if _get('home', $key, :$recursive, |@args) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
+$ sc get home rak .bashrc
+scp -P 22 rakbat.local:.bashrc .
+.bashrc                            100%   11KB   6.9MB/s   00:00
 
 =end code
 
@@ -339,8 +350,8 @@ L<Top of Document|#table-of-contents>
 
 =end pod
 
-multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --> int){
-    if _get('home', $key, :$recursive, |@args) {
+multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, Str:D :t(:$to) = '.', *@args --> int){
+    if _get('home', $key, :$recursive, :$to, |@args) {
         return 0;
     } else {
         return 1;
@@ -389,8 +400,8 @@ L<Top of Document|#table-of-contents>
 
 =end pod
 
-multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --> int){
-    if _put('home', $key, :$recursive, |@args) {
+multi sub MAIN('put', 'home', Str:D $key, Bool :r(:$recursive) = False, Str:D :t(:$to) = '', *@args --> int){
+    if _put('home', $key, :$recursive, :$to, |@args) {
         return 0;
     } else {
         return 1;

@@ -18,6 +18,8 @@ constant $home is export = %*ENV<HOME>.Str();
 
 =begin pod
 
+=head1 The Syscon library
+
 =head2 B<C<$config>>
 
 =begin code :lang<raku>
@@ -2648,7 +2650,7 @@ sub ping(Str:D $key --> Bool) is export {
     die "key $key not found";
 }
 
-multi sub _get('home', Str:D $key, Bool :r(:$recursive) = False, *@args --> Bool) is export {
+multi sub _get('home', Str:D $key, Bool :r(:$recursive) = False, Str:D :$to = '.', *@args --> Bool) is export {
     if %the-lot{$key}:exists {
         my Str:D $type    = %the-lot{$key}«type»;
         my Str:D $KEY = $key;
@@ -2662,11 +2664,11 @@ multi sub _get('home', Str:D $key, Bool :r(:$recursive) = False, *@args --> Bool
         for @args -> $arg {
             if $recursive {
                 ('scp', '-r', '-P', $port, "$host:$arg", '.').join(' ').say;
-                my Proc $r = run 'scp', '-r', '-P', $port, "$host:$arg", '.';
+                my Proc $r = run 'scp', '-r', '-P', $port, "$host:$arg", $to;
                 $result +&= $r.exitcode;
             } else {
                 ('scp', '-P', $port, "$host:$arg", '.').join(' ').say;
-                my Proc $r = run 'scp', '-P', $port, "$host:$arg", '.';
+                my Proc $r = run 'scp', '-P', $port, "$host:$arg", $to;
                 $result +&= $r.exitcode;
             }
         }
@@ -2679,7 +2681,7 @@ multi sub _get('home', Str:D $key, Bool :r(:$recursive) = False, *@args --> Bool
     die "key $key not found";
 } # multi sub get('home', Str:D $key, Bool $recursive, *@args --> Bool) is export #
 
-multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, *@args --> Bool) is export {
+multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, Str:D :$to = '', *@args --> Bool) is export {
     if %the-lot{$key}:exists {
         my Str:D $type    = %the-lot{$key}«type»;
         my Str:D $KEY = $key;
@@ -2690,15 +2692,15 @@ multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, *@args --> Bool
         my Str $host      = %the-lot{$KEY}«host»;
         my Int $port      = %the-lot{$KEY}«port»;
         if $recursive {
-            ('scp', '-r', '-P', $port, |@args, "$host:").join(' ').say;
-            my Proc $r = run 'scp', '-r', '-P', $port, |@args, "$host:";
+            ('scp', '-r', '-P', $port, |@args, "$host:$to").join(' ').say;
+            my Proc $r = run 'scp', '-r', '-P', $port, |@args, "$host:$to";
             if $r.exitcode == 0 {
                 return True;
             }
             die "non-zero exit code";
         } else {
-            ('scp', '-P', $port, |@args, "$host:").join(' ').say;
-            my Proc $r = run 'scp', '-P', $port, |@args, "$host:";
+            ('scp', '-P', $port, |@args, "$host:$to").join(' ').say;
+            my Proc $r = run 'scp', '-P', $port, |@args, "$host:$to";
             if $r.exitcode == 0 {
                 return True;
             }

@@ -168,11 +168,11 @@ This is the app, you can find the modules docs [here](/docs/Syscon.md)
 ```bash
 sc --help
 
-Usage:
+Usage:                                                                                                                                                
   sc ssh <key>
   sc ping <key>
-  sc get home <key>  [<args> ...] [-r|--recursive]
-  sc put home <key>  [<args> ...] [-r|--recursive]
+  sc get home <key>  [<args> ...] [-r|--recursive] [-t|--to=<Str>]
+  sc put home <key>  [<args> ...] [-r|--recursive] [-t|--to=<Str>]
   sc edit configs
   sc list keys  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
   sc list by all  [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
@@ -298,21 +298,33 @@ multi sub MAIN('ping', Str:D $key --> int){
 Get some files on the remote system and deposit them here (in the directory the user is currently in).
 
 ```bash
-$ sc get home $key $files-on-remote-system……
+$ sc get home $key --to=$to $files-on-remote-system……
+```
+
+  * Where
+
+    * **`$key`** The key of the host to get files from.
+
+    * **`$to`** The place to put the files defaults to **`.`** or here.
+
+    * **`$files-on-remote-system……`** A list of files on the remote system to copy can be anywhere on the remote system.
+
+```bash
+$ sc get home rak --to=scratch .bashrc /etc/hosts 
+scp -P 22 rakbat.local:.bashrc .
+.bashrc                   100%   11KB   6.9MB/s   00:00
+scp -P 22 rakbat.local:/etc/hosts .
+hosts                     100%  313   228.8KB/s   00:00
 ```
 
 ![image not available here go to the github page](/docs/images/sc-get-home.png)
 
 Defined as 
 
-```raku
-multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, *@args --> int){
-    if _get('home', $key, :$recursive, |@args) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
+```bash
+$ sc get home rak .bashrc
+scp -P 22 rakbat.local:.bashrc .
+.bashrc                            100%   11KB   6.9MB/s   00:00
 ```
 
 Using the **`_get(…)`** function defined in **Syscon.rakumod**.
@@ -607,6 +619,9 @@ Usage:
 ```
 
 [Top of Document](#table-of-contents)
+
+The Syscon library
+==================
 
 **`$config`**
 -------------
