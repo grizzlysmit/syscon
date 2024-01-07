@@ -337,7 +337,7 @@ hosts                     100%  313   228.8KB/s   00:00
 !L<image not available here go to the github page|/docs/images/sc-get-home.png>
 
 
-Using the L<B<C<_get(…)>>|_get> or L<on raku.land B<C<_get(…)>>|-get> function defined in B<Syscon.rakumod>.
+Using the L<B<C<_get(…)>>|#_get> or L<on raku.land B<C<_get(…)>>|#-get> function defined in B<Syscon.rakumod>.
 
 L<Top of Document|#table-of-contents>
 

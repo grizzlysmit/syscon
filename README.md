@@ -321,7 +321,7 @@ hosts                     100%  313   228.8KB/s   00:00
 
 ![image not available here go to the github page](/docs/images/sc-get-home.png)
 
-Using the [**`_get(…)`**](_get) or [on raku.land **`_get(…)`**](-get) function defined in **Syscon.rakumod**.
+Using the [**`_get(…)`**](#_get) or [on raku.land **`_get(…)`**](#-get) function defined in **Syscon.rakumod**.
 
 [Top of Document](#table-of-contents)
 
@@ -636,7 +636,7 @@ multi sub _get('home', Str:D $key,
                 *@args --> Bool) is export
 ```
 
-[See sc get home](sc-get-home)
+[See sc get home](#sc-get-home)
 
 [Top of Document](#table-of-contents)
 

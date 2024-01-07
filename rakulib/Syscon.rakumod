@@ -2663,7 +2663,7 @@ multi sub _get('home', Str:D $key,
 
 =end code
 
-L<See sc get home|sc-get-home>
+L<See sc get home|#sc-get-home>
 
 L<Top of Document|#table-of-contents>
 
