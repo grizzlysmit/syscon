@@ -325,7 +325,7 @@ $ sc get home $key --to=$to $files-on-remote-system……
 
 e.g.
 
-X<hash|sc-get-home sc-ping>
+X<hash|hashes; sc-get-home; sc-ping>
 
 =begin code :lang<bash>
 
