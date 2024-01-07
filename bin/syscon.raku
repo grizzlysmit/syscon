@@ -234,9 +234,9 @@ Last login: Tue Jan  2 23:48:56 2024 from 192.168.188.11
 
 =end code
 
-
-
 !L<image not available here go to the github page|/docs/images/sc-ssh.png>
+
+Implemented as L<B<C<ssh(…)>>|ssh> in L<module Syscon|#the-syscon-library>.
 
 L<Top of Document|#table-of-contents>
 
@@ -291,7 +291,8 @@ rtt min/avg/max/mdev = 0.220/0.289/0.831/0.141 ms
 
 !L<image not available here go to the github page|/docs/images/ping.png>
 
-by the B<C<sc ping $key>>
+
+Implemented as L<B<C<ping(…)>>|ping> in L<module Syscon|#the-syscon-library>.
 
 =begin code :lang<raku>
 

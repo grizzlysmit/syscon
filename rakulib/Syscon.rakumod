@@ -2620,6 +2620,8 @@ sub ssh(Str:D $key --> Bool) is export
 
 =end code
 
+L<See sc ssh|#sc-ssh>
+
 L<Top of Document|#table-of-contents>
 
 =end pod
@@ -2653,6 +2655,8 @@ sub ssh(Str:D $key --> Bool) is export {
 sub ping(Str:D $key --> Bool) is export 
 
 =end code
+
+L<See sc ping|#sc-ping>
 
 L<Top of Document|#table-of-contents>
 
@@ -2744,6 +2748,8 @@ multi sub _put('home', Str:D $key,
                 *@args --> Bool) is export 
 
 =end code
+
+L<See sc put home|#sc-put-home>
 
 L<Top of Document|#table-of-contents>
 

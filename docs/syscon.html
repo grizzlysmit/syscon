@@ -761,7 +761,7 @@ Welcome to Ubuntu 23.10 (GNU/Linux 6.5.0-14-generic x86_64)
 Last login: Tue Jan  2 23:48:56 2024 from 192.168.188.11
 06:55:31 grizzlysmit@rakbat:~ $ 
 
-</pre><p>!<a href="/docs/images/sc-ssh.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_ping"><a href="#syscon,_sc" class="u" title="go to top of document">sc ping</a></h3>
+</pre><p>!<a href="/docs/images/sc-ssh.png.html">image not available here go to the github page</a></p><p>Implemented as <a href="ssh.html"><strong><code>ssh(…)</code></strong></a> in <a href="#the-syscon-library">module Syscon</a>.</p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_ping"><a href="#syscon,_sc" class="u" title="go to top of document">sc ping</a></h3>
 <p>Runs</p><pre class="pod-block-code">7:02:58 θ83° grizzlysmit@pern:~ 7m29s $ sc ping kil
 ping killashandra.local
 PING killashandra.local (192.168.188.11) 56(84) bytes of data.
@@ -793,7 +793,7 @@ rtt min/avg/max/mdev = 0.220/0.289/0.831/0.141 ms
 <li><p><strong><code>$key</code></strong> a key in the db.</p></li>
 </ul>
 </ul>
-<p>!<a href="/docs/images/ping.png.html">image not available here go to the github page</a></p><p>by the <strong><code>sc ping $key</code></strong></p><pre class="pod-block-code">multi sub MAIN('ping', Str:D $key --&gt; int){
+<p>!<a href="/docs/images/ping.png.html">image not available here go to the github page</a></p><p>Implemented as <a href="ping.html"><strong><code>ping(…)</code></strong></a> in <a href="#the-syscon-library">module Syscon</a>.</p><pre class="pod-block-code">multi sub MAIN('ping', Str:D $key --&gt; int){
     if ping($key) {
         return 0;
     } else {
@@ -984,7 +984,7 @@ Usage:
   sc menu restore db [&lt;message&gt;]  [-c|--color|--colour] [-s|--syntax]
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-07T21:30:24Z</span></div></footer>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-07T22:30:45Z</span></div></footer>
 	</body>
 </html>
 

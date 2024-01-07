@@ -264,6 +264,8 @@ Last login: Tue Jan  2 23:48:56 2024 from 192.168.188.11
 
 ![image not available here go to the github page](/docs/images/sc-ssh.png)
 
+Implemented as [**`ssh(…)`**](ssh) in [module Syscon](#the-syscon-library).
+
 [Top of Document](#table-of-contents)
 
 ### sc ping
@@ -302,7 +304,7 @@ rtt min/avg/max/mdev = 0.220/0.289/0.831/0.141 ms
 
 ![image not available here go to the github page](/docs/images/ping.png)
 
-by the **`sc ping $key`**
+Implemented as [**`ping(…)`**](ping) in [module Syscon](#the-syscon-library).
 
 ```raku
 multi sub MAIN('ping', Str:D $key --> int){
@@ -669,6 +671,8 @@ constant $config is export = "$home/.local/share/syscon";
 sub ssh(Str:D $key --> Bool) is export
 ```
 
+[See sc ssh](#sc-ssh)
+
 [Top of Document](#table-of-contents)
 
 ### ping(…)
@@ -676,6 +680,8 @@ sub ssh(Str:D $key --> Bool) is export
 ```raku
 sub ping(Str:D $key --> Bool) is export
 ```
+
+[See sc ping](#sc-ping)
 
 [Top of Document](#table-of-contents)
 
@@ -700,6 +706,8 @@ multi sub _put('home', Str:D $key,
                 Str:D :$to = '',
                 *@args --> Bool) is export
 ```
+
+[See sc put home](#sc-put-home)
 
 [Top of Document](#table-of-contents)
 
