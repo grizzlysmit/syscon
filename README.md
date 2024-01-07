@@ -80,6 +80,26 @@ Table of Contents
 
       * [USAGE](#usage)
 
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+    * [module Syscon](#module-syscon)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
+      * [USAGE](#usage)
+
       * [ssh(…)](#ssh)
 
       * [ping(…)](#ping)
@@ -630,11 +650,13 @@ Usage:
 
 [Top of Document](#table-of-contents)
 
-The Syscon library
-==================
+module Syscon
+=============
 
-**`$config`**
--------------
+The Syscon library
+------------------
+
+### **`$config`**
 
 ```raku
 # config files

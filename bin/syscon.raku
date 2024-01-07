@@ -54,6 +54,16 @@ Table of  Contents
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item2 L<module Syscon|#module-syscon>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
 =item3 L<ssh(…)|#ssh>
 =item3 L<ping(…)|#ping>
 =item3 L<_get(…)|#_get> or L<on raku.land _get|#-get>
