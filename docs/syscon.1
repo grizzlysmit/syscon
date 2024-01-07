@@ -452,7 +452,7 @@ Get some files on the remote system and deposit them here (in the directory the 
 
 .RS 4m
 .EX
-$ sc get home $key \-\-to=$to $files\-on\-remote\-system……
+$ sc get home $key \-\-to=$to \-\-recursive $files\-on\-remote\-system……
 
 
 .EE
@@ -466,6 +466,10 @@ Where
 .RS 2n
 .IP \(bu 2m
 \fB$to\fR The place to put the files defaults to \fB\&.\fR or here\&.
+.RE
+.RS 2n
+.IP \(bu 2m
+\fB\-\-recursive\fR sets the recursive flag so the files will be copied recursively, allowing a whole file sub tree to be copied\&.
 .RE
 .RS 2n
 .IP \(bu 2m
@@ -495,7 +499,7 @@ Top of Document [#table-of-contents]
 
 .RS 4m
 .EX
-$ sc put home $key $files……
+$ sc put home $key \-\-to=$to \-\-recursive $files……
 
 
 .EE
@@ -508,9 +512,28 @@ Where
 .RE
 .RS 2n
 .IP \(bu 2m
+\fB$to\fR is the place to put the files on the rmote system\&.
+.RE
+.RS 2n
+.IP \(bu 2m
+\fB\-\-recursive\fR sets the recursive flag so the files will be copied recursively, allowing a whole file sub tree to be copied\&.
+.RE
+.RS 2n
+.IP \(bu 2m
 \fB$files\fR…… is a list of files to copy to the remote server\&.
 .RE
 
+.RS 4m
+.EX
+sc put home kil \-\-to=tmp scratch/bug\&.raku  docs/Syscon\&.1 
+scp \-P 22 scratch/bug\&.raku docs/Syscon\&.1 grizzlysmit@killashandra\&.local:tmp
+bug\&.raku                                                                    100% 3303   557\&.3KB/s   00:00
+Syscon\&.1                                                                    100%  485     1\&.0MB/s   00:00
+
+
+.EE
+.RE
+.P
 !image not available here go to the github page [/docs/images/sc-put-home.png]
 
 Implemented as

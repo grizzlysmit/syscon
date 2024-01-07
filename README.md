@@ -301,7 +301,7 @@ multi sub MAIN('ping', Str:D $key --> int){
 Get some files on the remote system and deposit them here (in the directory the user is currently in).
 
 ```bash
-$ sc get home $key --to=$to $files-on-remote-system……
+$ sc get home $key --to=$to --recursive $files-on-remote-system……
 ```
 
   * Where
@@ -309,6 +309,8 @@ $ sc get home $key --to=$to $files-on-remote-system……
     * **`$key`** The key of the host to get files from.
 
     * **`$to`** The place to put the files defaults to **`.`** or here.
+
+    * **`--recursive`** sets the recursive flag so the files will be copied recursively, allowing a whole file sub tree to be copied.
 
     * **`$files-on-remote-system……`** A list of files on the remote system to copy can be anywhere on the remote system.
 
@@ -331,14 +333,25 @@ Using the [**`_get(…)`**](#_get) or [on raku.land **`_get(…)`**](#-get) func
 ### sc put home
 
 ```bash
-$ sc put home $key $files……
+$ sc put home $key --to=$to --recursive $files……
 ```
 
   * Where
 
     * **`$key`** is as always the key to identify the host in question.
 
+    * **`$to`** is the place to put the files on the rmote system.
+
+    * **`--recursive`** sets the recursive flag so the files will be copied recursively, allowing a whole file sub tree to be copied.
+
     * **`$files`**…… is a list of files to copy to the remote server.
+
+```bash
+sc put home kil --to=tmp scratch/bug.raku  docs/Syscon.1 
+scp -P 22 scratch/bug.raku docs/Syscon.1 grizzlysmit@killashandra.local:tmp
+bug.raku                                                                    100% 3303   557.3KB/s   00:00
+Syscon.1                                                                    100%  485     1.0MB/s   00:00
+```
 
 ![image not available here go to the github page](/docs/images/sc-put-home.png)
 

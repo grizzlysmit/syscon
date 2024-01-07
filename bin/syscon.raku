@@ -315,13 +315,14 @@ Get some files on the remote system and deposit them here (in the directory the 
 
 =begin code :lang<bash>
 
-$ sc get home $key --to=$to $files-on-remote-system……
+$ sc get home $key --to=$to --recursive $files-on-remote-system……
 
 =end code
 
 =item1 Where
 =item2 B<C<$key>>                       The key of the host to get files from.
 =item2 B<C<$to>>                        The place to put the files defaults to B<C<.>> or here.
+=item2 B<C<--recursive>>                sets the recursive flag so the files will be copied recursively, allowing a whole file sub tree to be copied.
 =item2 B<C<$files-on-remote-system……>>  A list of files on the remote system to copy can be anywhere on the remote system.
 
 e.g.
@@ -359,13 +360,24 @@ multi sub MAIN('get', 'home', Str:D $key, Bool :r(:$recursive) = False, Str:D :t
 
 =begin code :lang<bash>
 
-$ sc put home $key $files……
+$ sc put home $key --to=$to --recursive $files……
 
 =end code
 
 =item1 Where
 =item2 B<C<$key>> is as always the key to identify the host in question.
+=item2 B<C<$to>> is the place to put the files on the rmote system.
+=item2 B<C<--recursive>> sets the recursive flag so the files will be copied recursively, allowing a whole file sub tree to be copied.
 =item2 B<C<$files>>…… is a list of files to copy to the remote server.
+
+=begin code :lang<bash>
+
+sc put home kil --to=tmp scratch/bug.raku  docs/Syscon.1 
+scp -P 22 scratch/bug.raku docs/Syscon.1 grizzlysmit@killashandra.local:tmp
+bug.raku                                                                    100% 3303   557.3KB/s   00:00
+Syscon.1                                                                    100%  485     1.0MB/s   00:00
+
+=end code
 
 !L<image not available here go to the github page|/docs/images/sc-put-home.png>
 
