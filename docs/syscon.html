@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>syscon</title>
+<title>syscon, sc</title>
 <meta charset="UTF-8" />
 <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAA/wAAAP8AAACGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAABA
@@ -575,7 +575,7 @@ footer {
 		<rect x="551.153" y="428.32" transform="matrix(0.4226 -0.9063 0.9063 0.4226 -70.9303 749.6747)" stroke="#000000" stroke-width="1.0588" stroke-miterlimit="10" width="3.517" height="4.372"/>
 </g>
 </svg>
-<h1 class="title">syscon</h1></header><div class="pod-content"><nav><div id="TOC"><table>
+<h1 class="title">syscon, sc</h1></header><div class="pod-content"><nav><div id="TOC"><table>
 <caption>Table of Contents</caption>
 <tr class="toc-level-1"><td class="toc-text"><a href="#Syscon,_sc">Syscon, sc</a></td></tr>
  <tr class="toc-level-2"><td class="toc-text"><a href="#Table_of_Contents">Table of Contents</a></td></tr>
@@ -608,7 +608,7 @@ footer {
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_restore_db">sc restore db</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_menu_restore_db">sc menu restore db</a></td></tr>
 </table></div>
-</nav><div id="syscon"></div><div class="subtitle"><p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p></div><div class="pod-body"><section name="___top"><h1 id="Syscon,_sc"><a href="#___top" class="u" title="go to top of document">Syscon, sc</a></h1>
+</nav><div id="syscon,_sc"></div><div class="subtitle"><p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p></div><div class="pod-body"><section name="___top"><h1 id="Syscon,_sc"><a href="#___top" class="u" title="go to top of document">Syscon, sc</a></h1>
 <h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
 <ul>
 <li><p><a href="#name">NAME</a></p></li>
@@ -667,11 +667,11 @@ footer {
 <p>syscon, sc</p>
 </section>
 <section>
-<h1 id="Copyright"><a href="#syscon" class="u" title="go to top of document">COPYRIGHT</a></h1>
+<h1 id="Copyright"><a href="#syscon,_sc" class="u" title="go to top of document">COPYRIGHT</a></h1>
 <p>LGPL V3.0+ <a href="/LICENSE.html">LICENSE</a></p>
 </section>
-<h1 id="Introduction"><a href="#syscon" class="u" title="go to top of document">Introduction</a></h1>
-<p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p><p><a href="#table-of-contents">Top of Document</a></p><h2 id="Motivations"><a href="#syscon" class="u" title="go to top of document">Motivations</a></h2>
+<h1 id="Introduction"><a href="#syscon,_sc" class="u" title="go to top of document">Introduction</a></h1>
+<p>A module <strong><code>Syscon</code></strong> and a program <strong><code>syscon</code></strong> or <strong><code>sc</code></strong> for short, which keeps tarck of assorted servers and helps to connect to them.</p><p><a href="#table-of-contents">Top of Document</a></p><h2 id="Motivations"><a href="#syscon,_sc" class="u" title="go to top of document">Motivations</a></h2>
 <p>I have to keep track of many servers (&gt; 100) but who can remember all the host names, and ports?? That is where this app comes in I can connect to a server by ssh by.</p><pre class="pod-block-code">$ syscon.raku ssh &lt;key&gt;
 
 </pre><p>or for short</p><pre class="pod-block-code">$ sc ssh &lt;key&gt;
@@ -691,7 +691,7 @@ footer {
 </ul>
 </ul>
 </ul>
-<p><a href="#table-of-contents">Top of Document</a></p><p>This is the app, you can find the modules docs <a href="/docs/Syscon.md.html">here</a></p></section><section name="pod"><h3 id="USAGE"><a href="#syscon" class="u" title="go to top of document">USAGE</a></h3>
+<p><a href="#table-of-contents">Top of Document</a></p><p>This is the app, you can find the modules docs <a href="/docs/Syscon.md.html">here</a></p></section><section name="pod"><h3 id="USAGE"><a href="#syscon,_sc" class="u" title="go to top of document">USAGE</a></h3>
 <pre class="pod-block-code">sc --help
 
 Usage:                                                                                                                                                
@@ -730,8 +730,8 @@ Usage:
   sc show file    [-c|--color|--colour]
   sc help   [&lt;args&gt; ...] [-n|--nocolor|--nocolour] [--&lt;named-args&gt;=...]
 
-</pre><p>!<a href="/docs/images/usage.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h2 id="The_actual_work_horses_of_the_library"><a href="#syscon" class="u" title="go to top of document">The actual work horses of the library</a></h2>
-<h3 id="sc_ssh"><a href="#syscon" class="u" title="go to top of document">sc ssh</a></h3>
+</pre><p>!<a href="/docs/images/usage.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h2 id="The_actual_work_horses_of_the_library"><a href="#syscon,_sc" class="u" title="go to top of document">The actual work horses of the library</a></h2>
+<h3 id="sc_ssh"><a href="#syscon,_sc" class="u" title="go to top of document">sc ssh</a></h3>
 <p>Runs</p><pre class="pod-block-code">ssh -p $port $host
 
 </pre><p>by the <strong><code>ssh(…)</code></strong> function defined in <strong>Syscon.rakumod</strong>.</p><pre class="pod-block-code">22:22:06 θ76° grizzlysmit@pern:~ $ sc  ssh rak
@@ -749,7 +749,7 @@ Welcome to Ubuntu 23.10 (GNU/Linux 6.5.0-14-generic x86_64)
 Last login: Tue Jan  2 23:48:56 2024 from 192.168.188.11
 06:55:31 grizzlysmit@rakbat:~ $ 
 
-</pre><p>!<a href="/docs/images/sc-ssh.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_ping"><a href="#syscon" class="u" title="go to top of document">sc ping</a></h3>
+</pre><p>!<a href="/docs/images/sc-ssh.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_ping"><a href="#syscon,_sc" class="u" title="go to top of document">sc ping</a></h3>
 <p>Runs</p><pre class="pod-block-code">7:02:58 θ83° grizzlysmit@pern:~ 7m29s $ sc ping kil
 ping killashandra.local
 PING killashandra.local (192.168.188.11) 56(84) bytes of data.
@@ -789,7 +789,7 @@ rtt min/avg/max/mdev = 0.220/0.289/0.831/0.141 ms
     }
 }
 
-</pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_get_home"><a href="#syscon" class="u" title="go to top of document">sc get home</a></h3>
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_get_home"><a href="#syscon,_sc" class="u" title="go to top of document">sc get home</a></h3>
 <p>Get some files on the remote system and deposit them here (in the directory the user is currently in).</p><pre class="pod-block-code">$ sc get home $key --to=$to $files-on-remote-system……
 
 </pre><ul>
@@ -806,7 +806,7 @@ scp -P 22 rakbat.local:.bashrc .
 scp -P 22 rakbat.local:/etc/hosts .
 hosts                     100%  313   228.8KB/s   00:00
 
-</pre><p>!<a href="/docs/images/sc-get-home.png.html">image not available here go to the github page</a></p><p>Using the <a href="#_get"><strong><code>_get(…)</code></strong></a> or <a href="#-get">on raku.land <strong><code>_get(…)</code></strong></a> function defined in <strong>Syscon.rakumod</strong>.</p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_put_home"><a href="#syscon" class="u" title="go to top of document">sc put home</a></h3>
+</pre><p>!<a href="/docs/images/sc-get-home.png.html">image not available here go to the github page</a></p><p>Using the <a href="#_get"><strong><code>_get(…)</code></strong></a> or <a href="#-get">on raku.land <strong><code>_get(…)</code></strong></a> function defined in <strong>Syscon.rakumod</strong>.</p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_put_home"><a href="#syscon,_sc" class="u" title="go to top of document">sc put home</a></h3>
 <pre class="pod-block-code">$ sc put home $key $files……
 
 </pre><ul>
@@ -830,8 +830,8 @@ hosts                     100%  313   228.8KB/s   00:00
 <li><p><strong><code>multi sub _put('home', Str:D $key, Bool :r(:$recursive) = False, *@args --</code> Bool) is export</strong>&gt; is a function in <strong>Sysycon.rakumod</strong></p></li>
 </ul>
 </ul>
-<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h2 id="Utility_functions"><a href="#syscon" class="u" title="go to top of document">Utility functions</a></h2>
-<h3 id="sc_edit_configs"><a href="#syscon" class="u" title="go to top of document">sc edit configs</a></h3>
+<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h2 id="Utility_functions"><a href="#syscon,_sc" class="u" title="go to top of document">Utility functions</a></h2>
+<h3 id="sc_edit_configs"><a href="#syscon,_sc" class="u" title="go to top of document">sc edit configs</a></h3>
 <pre class="pod-block-code">$ sc edit configs
 
 </pre><p>Implemented by the <strong><code>edit-configs</code></strong> function in the <strong>GUI::Editors.rakumod</strong> module. This open your configuration files in your preferred GUI editor, if you have one, if you don't have one of those setup it will try for a good substitute, failing that it will Fail and print an error message. </p><p>Do not use this it's for experts only, instead use the <strong>set-*(…)</strong> functions below.</p><pre class="pod-block-code">multi sub MAIN('edit', 'configs') returns Int {
@@ -842,35 +842,35 @@ hosts                     100%  313   228.8KB/s   00:00
    } 
 }
 
-</pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_keys_"><a href="#syscon" class="u" title="go to top of document">sc list keys </a></h3>
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_keys_"><a href="#syscon,_sc" class="u" title="go to top of document">sc list keys </a></h3>
 <pre class="pod-block-code">$ sc list keys --help
 
-</pre><p>!<a href="/docs/images/sc-list-keys.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_by_all"><a href="#syscon" class="u" title="go to top of document">sc list by all</a></h3>
+</pre><p>!<a href="/docs/images/sc-list-keys.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_by_all"><a href="#syscon,_sc" class="u" title="go to top of document">sc list by all</a></h3>
 <pre class="pod-block-code">sc list by all --help
 
 </pre><p>!<a href="/docs/images/sc-list-by-all.png.html">image not available here go to the github page</a></p><pre class="pod-block-code">sc list by all
 
-</pre><p>!<a href="/docs/images/sc-list-by-all-pattern.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_trash"><a href="#syscon" class="u" title="go to top of document">sc list trash</a></h3>
+</pre><p>!<a href="/docs/images/sc-list-by-all-pattern.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_trash"><a href="#syscon,_sc" class="u" title="go to top of document">sc list trash</a></h3>
 <pre class="pod-block-code">sc list trash --help
 
 </pre><p>!<a href="/docs/images/sc-list-trash--help.png.html">image not available here go to the github page</a></p><pre class="pod-block-code">sc list trash --help
 
-</pre><p>!<a href="/docs/images/sc-list-trash.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_trash"><a href="#syscon" class="u" title="go to top of document">sc trash</a></h3>
+</pre><p>!<a href="/docs/images/sc-list-trash.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_trash"><a href="#syscon,_sc" class="u" title="go to top of document">sc trash</a></h3>
 <pre class="pod-block-code">sc trash --help
 
 </pre><p>!<a href="/docs/images/sc-trash--help.png.html">image not available here go to the github page</a></p><pre class="pod-block-code">sc trash
 
-</pre><p>!<a href="/docs/images/sc-trash.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_empty_trash"><a href="#syscon" class="u" title="go to top of document">sc empty trash</a></h3>
+</pre><p>!<a href="/docs/images/sc-trash.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_empty_trash"><a href="#syscon,_sc" class="u" title="go to top of document">sc empty trash</a></h3>
 <pre class="pod-block-code">sc empty trash --help
 
-</pre><p>!<a href="/docs/images/sc-empty-trash.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_undelete"><a href="#syscon" class="u" title="go to top of document">sc undelete</a></h3>
+</pre><p>!<a href="/docs/images/sc-empty-trash.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_undelete"><a href="#syscon,_sc" class="u" title="go to top of document">sc undelete</a></h3>
 <pre class="pod-block-code">sc undelete --help
 
-</pre><p>!<a href="/docs/images/sc-undelete.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_stats"><a href="#syscon" class="u" title="go to top of document">sc stats</a></h3>
+</pre><p>!<a href="/docs/images/sc-undelete.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_stats"><a href="#syscon,_sc" class="u" title="go to top of document">sc stats</a></h3>
 <pre class="pod-block-code">sc stats
 
-</pre><p>!<a href="/docs/images/sc-stats.png.html">image not available here go to the github page</a></p></section><section name="pod"><h3 id="sc_statistics"><a href="#syscon" class="u" title="go to top of document">sc statistics</a></h3>
-<p>An alias of stats see above <a href="#sc-stats">sc stats</a>.</p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_add"><a href="#syscon" class="u" title="go to top of document">sc add</a></h3>
+</pre><p>!<a href="/docs/images/sc-stats.png.html">image not available here go to the github page</a></p></section><section name="pod"><h3 id="sc_statistics"><a href="#syscon,_sc" class="u" title="go to top of document">sc statistics</a></h3>
+<p>An alias of stats see above <a href="#sc-stats">sc stats</a>.</p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_add"><a href="#syscon,_sc" class="u" title="go to top of document">sc add</a></h3>
 <pre class="pod-block-code">sc add &lt;key&gt; &lt;host&gt; [&lt;port&gt;]  [-s|--set|--force] [-c|--comment=&lt;Str&gt;] 
 
 </pre><ul>
@@ -886,7 +886,7 @@ hosts                     100%  313   228.8KB/s   00:00
 </ul>
 </ul>
 </ul>
-<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_delete"><a href="#syscon" class="u" title="go to top of document">sc delete</a></h3>
+<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_delete"><a href="#syscon,_sc" class="u" title="go to top of document">sc delete</a></h3>
 <p>A command to delete a row in the db i.e. a key and details, by default it just trashes the key but if <strong>-d</strong>, <strong>--delete</strong> or <strong>--do-not-trash</strong> is present it will really delete. </p><pre class="pod-block-code">sc delete --help
 
 Usage:                                                                                                                                                
@@ -899,14 +899,14 @@ Usage:
 <li><p><strong><code>[-d|--delete|--do-not-trash]</code></strong> is a flag to really delete, not trash them see <a href="#sc-trash">see</a>.</p></li>
 </ul>
 </ul>
-<h3 id="sc_del_"><a href="#syscon" class="u" title="go to top of document">sc del </a></h3>
+<h3 id="sc_del_"><a href="#syscon,_sc" class="u" title="go to top of document">sc del </a></h3>
 <p>An alias for delete </p><pre class="pod-block-code"> sc del --help
 
 Usage:                                                                                                                                                
   sc delete [&lt;keys&gt; ...] [-d|--delete|--do-not-trash]                                                                                                 
   sc del [&lt;keys&gt; ...] [-d|--delete|--do-not-trash]
 
-</pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_comment"><a href="#syscon" class="u" title="go to top of document">sc comment</a></h3>
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_comment"><a href="#syscon,_sc" class="u" title="go to top of document">sc comment</a></h3>
 <p>Add or set a comment to a db entry. </p><pre class="pod-block-code">sc comment --help
 
 Usage:                                                                                                                                                
@@ -918,7 +918,7 @@ Usage:
 <li><p><strong><code>&lt;comment&gt;</code></strong> The comment to add.</p></li>
 </ul>
 </ul>
-<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_alias"><a href="#syscon" class="u" title="go to top of document">sc alias</a></h3>
+<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_alias"><a href="#syscon,_sc" class="u" title="go to top of document">sc alias</a></h3>
 <pre class="pod-block-code">sc alias --help
 
 Usage:                                                                                                                                                
@@ -936,7 +936,7 @@ Usage:
 <li><p><strong>-d</strong>, <strong>--really-force</strong> or <strong>--overwrite-hosts</strong> means overwrite anything regardless, use with care.</p></li>
 </ul>
 </ul>
-<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="backup_db"><a href="#syscon" class="u" title="go to top of document">backup db</a></h3>
+<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="backup_db"><a href="#syscon,_sc" class="u" title="go to top of document">backup db</a></h3>
 <p>Backup the file which is the db for this little app, I could use a <em>real</em> db but as it's just one simple table, I don't need that.</p><pre class="pod-block-code"> sc backup db --help
 
 Usage:
@@ -951,20 +951,20 @@ Usage:
 </ul>
 </ul>
 </ul>
-<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_restore_db"><a href="#syscon" class="u" title="go to top of document">sc restore db</a></h3>
+<p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_restore_db"><a href="#syscon,_sc" class="u" title="go to top of document">sc restore db</a></h3>
 <pre class="pod-block-code">sc restore db --help
 
 Usage:
   sc restore db [&lt;restore-from&gt;]
 
-</pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_menu_restore_db"><a href="#syscon" class="u" title="go to top of document">sc menu restore db</a></h3>
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_menu_restore_db"><a href="#syscon,_sc" class="u" title="go to top of document">sc menu restore db</a></h3>
 <p>Restore the db using a menu to make it easy to choose the db backup from the ones available in the configuration directory. </p><pre class="pod-block-code">sc menu restore db --help
 
 Usage:
   sc menu restore db [&lt;message&gt;]  [-c|--color|--colour] [-s|--syntax]
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-07T20:02:06Z</span></div></footer>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-07T20:06:28Z</span></div></footer>
 	</body>
 </html>
 

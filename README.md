@@ -106,7 +106,7 @@ v0.1.18
 TITLE
 =====
 
-syscon
+syscon, sc
 
 SUBTITLE
 ========

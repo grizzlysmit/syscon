@@ -62,7 +62,7 @@ Table of  Contents
 =NAME syscon, sc
 =AUTHOR Francis Grizzly Smit (grizzly@smit.id.au)
 =VERSION v0.1.18
-=TITLE syscon
+=TITLE syscon, sc
 =SUBTITLE A module B<C<Syscon>> and a program B<C<syscon>> or B<C<sc>> for short, which keeps tarck of assorted servers and helps to connect to them.
 
 =COPYRIGHT
