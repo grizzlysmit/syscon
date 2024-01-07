@@ -91,7 +91,7 @@ Table of Contents
 NAME
 ====
 
-syscon 
+syscon, sc
 
 AUTHOR
 ======

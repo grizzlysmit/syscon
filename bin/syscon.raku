@@ -59,7 +59,7 @@ Table of  Contents
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 
-=NAME syscon 
+=NAME syscon, sc
 =AUTHOR Francis Grizzly Smit (grizzly@smit.id.au)
 =VERSION v0.1.18
 =TITLE syscon
