@@ -2650,7 +2650,29 @@ sub ping(Str:D $key --> Bool) is export {
     die "key $key not found";
 }
 
-multi sub _get('home', Str:D $key, Bool :r(:$recursive) = False, Str:D :$to = '.', *@args --> Bool) is export {
+=begin pod
+
+=head3 _get(…)
+
+=begin code :lang<raku>
+
+multi sub _get('home', Str:D $key,
+                Bool :r(:$recursive) = False,
+                Str:D :$to = '.',
+                *@args --> Bool) is export 
+
+=end code
+
+L<See sc get home|sc-get-home>
+
+L<Top of Document|#table-of-contents>
+
+=end pod
+
+multi sub _get('home', Str:D $key,
+                Bool :r(:$recursive) = False,
+                Str:D :$to = '.',
+                *@args --> Bool) is export {
     if %the-lot{$key}:exists {
         my Str:D $type    = %the-lot{$key}«type»;
         my Str:D $KEY = $key;

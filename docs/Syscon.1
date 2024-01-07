@@ -13,3 +13,19 @@ constant $config is export = "$home/\&.local/share/syscon";
 .RE
 .P
 Top of Document [#table-of-contents]
+.SS _get(…)
+
+.RS 4m
+.EX
+multi sub _get('home', Str:D $key,
+                Bool :r(:$recursive) = False,
+                Str:D :$to = '\&.',
+                *@args \-\-> Bool) is export 
+
+
+.EE
+.RE
+.P
+See sc get home [sc-get-home]
+
+Top of Document [#table-of-contents]

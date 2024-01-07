@@ -322,6 +322,8 @@ $ sc get home $key --to=$to $files-on-remote-system……
 =item2 B<C<$to>>                        The place to put the files defaults to B<C<.>> or here.
 =item2 B<C<$files-on-remote-system……>>  A list of files on the remote system to copy can be anywhere on the remote system.
 
+e.g.
+
 =begin code :lang<bash>
 
 $ sc get home rak --to=scratch .bashrc /etc/hosts 
@@ -334,17 +336,8 @@ hosts                     100%  313   228.8KB/s   00:00
 
 !L<image not available here go to the github page|/docs/images/sc-get-home.png>
 
-Defined as 
 
-=begin code :lang<bash>
-
-$ sc get home rak .bashrc
-scp -P 22 rakbat.local:.bashrc .
-.bashrc                            100%   11KB   6.9MB/s   00:00
-
-=end code
-
-Using the B<C<_get(…)>> function defined in B<Syscon.rakumod>.
+Using the L<B<C<_get(…)>>|_get> or L<on raku.land B<C<_get(…)>>|-get> function defined in B<Syscon.rakumod>.
 
 L<Top of Document|#table-of-contents>
 

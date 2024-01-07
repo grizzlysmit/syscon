@@ -471,6 +471,8 @@ Where
 \fB$files\-on\-remote\-system……\fR A list of files on the remote system to copy can be anywhere on the remote system\&.
 .RE
 
+e\&.g\&.
+
 .RS 4m
 .EX
 $ sc get home rak \-\-to=scratch \&.bashrc /etc/hosts 
@@ -485,19 +487,7 @@ hosts                     100%  313   228\&.8KB/s   00:00
 .P
 !image not available here go to the github page [/docs/images/sc-get-home.png]
 
-Defined as 
-
-.RS 4m
-.EX
-$ sc get home rak \&.bashrc
-scp \-P 22 rakbat\&.local:\&.bashrc \&.
-\&.bashrc                            100%   11KB   6\&.9MB/s   00:00
-
-
-.EE
-.RE
-.P
-Using the \fB_get(…)\fR function defined in \fBSyscon\&.rakumod\fR\&.
+Using the \fB_get(…)\fR [_get] or on raku\&.land \fB_get(…)\fR [-get] function defined in \fBSyscon\&.rakumod\fR\&.
 
 Top of Document [#table-of-contents]
 .SS sc put home

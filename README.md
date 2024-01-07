@@ -309,6 +309,8 @@ $ sc get home $key --to=$to $files-on-remote-system……
 
     * **`$files-on-remote-system……`** A list of files on the remote system to copy can be anywhere on the remote system.
 
+e.g.
+
 ```bash
 $ sc get home rak --to=scratch .bashrc /etc/hosts 
 scp -P 22 rakbat.local:.bashrc .
@@ -319,15 +321,7 @@ hosts                     100%  313   228.8KB/s   00:00
 
 ![image not available here go to the github page](/docs/images/sc-get-home.png)
 
-Defined as 
-
-```bash
-$ sc get home rak .bashrc
-scp -P 22 rakbat.local:.bashrc .
-.bashrc                            100%   11KB   6.9MB/s   00:00
-```
-
-Using the **`_get(…)`** function defined in **Syscon.rakumod**.
+Using the [**`_get(…)`**](_get) or [on raku.land **`_get(…)`**](-get) function defined in **Syscon.rakumod**.
 
 [Top of Document](#table-of-contents)
 
@@ -630,6 +624,19 @@ The Syscon library
 # config files
 constant $config is export = "$home/.local/share/syscon";
 ```
+
+[Top of Document](#table-of-contents)
+
+### _get(…)
+
+```raku
+multi sub _get('home', Str:D $key,
+                Bool :r(:$recursive) = False,
+                Str:D :$to = '.',
+                *@args --> Bool) is export
+```
+
+[See sc get home](sc-get-home)
 
 [Top of Document](#table-of-contents)
 

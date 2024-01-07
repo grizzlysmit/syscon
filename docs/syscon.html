@@ -798,17 +798,13 @@ rtt min/avg/max/mdev = 0.220/0.289/0.831/0.141 ms
 <li><p><strong><code>$files-on-remote-system……</code></strong> A list of files on the remote system to copy can be anywhere on the remote system.</p></li>
 </ul>
 </ul>
-<pre class="pod-block-code">$ sc get home rak --to=scratch .bashrc /etc/hosts 
+<p>e.g.</p><pre class="pod-block-code">$ sc get home rak --to=scratch .bashrc /etc/hosts 
 scp -P 22 rakbat.local:.bashrc .
 .bashrc                   100%   11KB   6.9MB/s   00:00
 scp -P 22 rakbat.local:/etc/hosts .
 hosts                     100%  313   228.8KB/s   00:00
 
-</pre><p>!<a href="/docs/images/sc-get-home.png.html">image not available here go to the github page</a></p><p>Defined as </p><pre class="pod-block-code">$ sc get home rak .bashrc
-scp -P 22 rakbat.local:.bashrc .
-.bashrc                            100%   11KB   6.9MB/s   00:00
-
-</pre><p>Using the <strong><code>_get(…)</code></strong> function defined in <strong>Syscon.rakumod</strong>.</p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_put_home"><a href="#syscon" class="u" title="go to top of document">sc put home</a></h3>
+</pre><p>!<a href="/docs/images/sc-get-home.png.html">image not available here go to the github page</a></p><p>Using the <a href="_get.html"><strong><code>_get(…)</code></strong></a> or <a href="-get.html">on raku.land <strong><code>_get(…)</code></strong></a> function defined in <strong>Syscon.rakumod</strong>.</p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_put_home"><a href="#syscon" class="u" title="go to top of document">sc put home</a></h3>
 <pre class="pod-block-code">$ sc put home $key $files……
 
 </pre><ul>
@@ -966,7 +962,7 @@ Usage:
   sc menu restore db [&lt;message&gt;]  [-c|--color|--colour] [-s|--syntax]
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-07T08:19:54Z</span></div></footer>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-07T08:30:58Z</span></div></footer>
 	</body>
 </html>
 
