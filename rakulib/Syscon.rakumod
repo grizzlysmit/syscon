@@ -2718,11 +2718,11 @@ multi sub _get('home', Str:D $key,
         my Int:D $result = 0;
         for @args -> $arg {
             if $recursive {
-                ('scp', '-r', '-P', $port, "$host:$arg", '.').join(' ').say;
+                ('scp', '-r', '-P', $port, "$host:$arg", $to).join(' ').say;
                 my Proc $r = run 'scp', '-r', '-P', $port, "$host:$arg", $to;
                 $result +&= $r.exitcode;
             } else {
-                ('scp', '-P', $port, "$host:$arg", '.').join(' ').say;
+                ('scp', '-P', $port, "$host:$arg", $to).join(' ').say;
                 my Proc $r = run 'scp', '-P', $port, "$host:$arg", $to;
                 $result +&= $r.exitcode;
             }

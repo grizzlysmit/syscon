@@ -340,11 +340,17 @@ e.g.
 
 =begin code :lang<bash>
 
-$ sc get home rak --to=scratch .bashrc /etc/hosts 
-scp -P 22 rakbat.local:.bashrc .
-.bashrc                   100%   11KB   6.9MB/s   00:00
-scp -P 22 rakbat.local:/etc/hosts .
-hosts                     100%  313   228.8KB/s   00:00
+13:39:03 θ65° grizzlysmit@pern:~/tmp $ sc get home rak --to=scratch .bashrc /etc/hosts  
+scp -P 22 rakbat.local:.bashrc scratch
+.bashrc                                                                     100%   11KB   5.6MB/s   00:00    
+scp -P 22 rakbat.local:/etc/hosts scratch
+hosts                                                                       100%  313   294.9KB/s   00:00    
+13:41:48 θ69° grizzlysmit@pern:~/tmp 9s $ exa -FlaahigHb --colour-scale --time-style=full-iso  scratch/
+   inode Permissions Links Size User        Group       Date Modified                       Name
+21366408 drwxrwxr-x      2    - grizzlysmit grizzlysmit 2024-01-10 13:41:48.618577861 +1100 ./
+20447359 drwxr-xr-x     25    - grizzlysmit grizzlysmit 2024-01-10 13:39:03.449870034 +1100 ../
+21380247 .rw-rw-r--      1 11Ki grizzlysmit grizzlysmit 2024-01-10 13:41:47.958559032 +1100 .bashrc
+21380261 .rw-r--r--      1  313 grizzlysmit grizzlysmit 2024-01-10 13:41:48.622577975 +1100 hosts
 
 =end code
 
