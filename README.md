@@ -339,10 +339,12 @@ $ sc get home $key --to=$to --recursive $files-on-remote-system……
 e.g.
 
 ```bash
-13:39:03 θ65° grizzlysmit@pern:~/tmp $ sc get home rak --to=scratch .bashrc /etc/hosts  
-scp -P 22 rakbat.local:.bashrc scratch
+13:38:11 θ62° grizzlysmit@pern:~/tmp $ mkdir scratch
+mkdir: created directory 'scratch'
+13:39:03 θ65° grizzlysmit@pern:~/tmp $ sc get home rak --to=scratch/ .bashrc /etc/hosts  
+scp -P 22 rakbat.local:.bashrc scratch/
 .bashrc                                                                     100%   11KB   5.6MB/s   00:00    
-scp -P 22 rakbat.local:/etc/hosts scratch
+scp -P 22 rakbat.local:/etc/hosts scratch/
 hosts                                                                       100%  313   294.9KB/s   00:00    
 13:41:48 θ69° grizzlysmit@pern:~/tmp 9s $ exa -FlaahigHb --colour-scale --time-style=full-iso  scratch/
    inode Permissions Links Size User        Group       Date Modified                       Name
