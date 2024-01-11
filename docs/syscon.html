@@ -592,7 +592,7 @@ footer {
  <tr class="toc-level-2"><td class="toc-text"><a href="#Utility_functions">Utility functions</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_edit_configs">sc edit configs</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_list_keys_">sc list keys </a></td></tr>
- <tr class="toc-level-3"><td class="toc-text"><a href="#sc_list_by_all">sc list by all</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#sc_list_all">sc list all</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_list_trash">sc list trash</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_trash">sc trash</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#sc_empty_trash">sc empty trash</a></td></tr>
@@ -810,7 +810,7 @@ rtt min/avg/max/mdev = 0.220/0.289/0.831/0.141 ms
 <li><p><strong><code>$key</code></strong> The key of the host to get files from.</p></li>
 <li><p><strong><code>$to</code></strong> The place to put the files defaults to <strong><code>.</code></strong> or here.</p></li>
 <li><p><strong><code>--recursive</code></strong> sets the recursive flag so the files will be copied recursively, allowing a whole file sub tree to be copied.</p></li>
-<li><p><strong><code>$files-on-remote-system……</code></strong> A list of files on the remote system to copy can be anywhere on the remote system.</p></li>
+<li><p><strong><code>$files-on-remote-system……</code></strong> A list of files on the remote system to copy can be anywhere on the remote system (defaults to the logins home directory).</p></li>
 </ul>
 </ul>
 <p>e.g.</p><pre class="pod-block-code">13:38:11 θ62° grizzlysmit@pern:~/tmp $ mkdir scratch
@@ -873,10 +873,10 @@ Syscon.1                                           100%  485     1.0MB/s   00:00
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_keys_"><a href="#syscon,_sc" class="u" title="go to top of document">sc list keys </a></h3>
 <pre class="pod-block-code">$ sc list keys --help
 
-</pre><p>!<a href="/docs/images/sc-list-keys.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_by_all"><a href="#syscon,_sc" class="u" title="go to top of document">sc list by all</a></h3>
-<pre class="pod-block-code">sc list by all --help
+</pre><p>!<a href="/docs/images/sc-list-keys.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_all"><a href="#syscon,_sc" class="u" title="go to top of document">sc list all</a></h3>
+<pre class="pod-block-code">sc list all --help
 
-</pre><p>!<a href="/docs/images/sc-list-by-all.png.html">image not available here go to the github page</a></p><pre class="pod-block-code">sc list by all
+</pre><p>!<a href="/docs/images/sc-list-by-all.png.html">image not available here go to the github page</a></p><pre class="pod-block-code">sc list all
 
 </pre><p>!<a href="/docs/images/sc-list-by-all-pattern.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_trash"><a href="#syscon,_sc" class="u" title="go to top of document">sc list trash</a></h3>
 <pre class="pod-block-code">sc list trash --help
@@ -992,7 +992,7 @@ Usage:
   sc menu restore db [&lt;message&gt;]  [-c|--color|--colour] [-s|--syntax]
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-10T03:00:07Z</span></div></footer>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-11T22:56:42Z</span></div></footer>
 	</body>
 </html>
 

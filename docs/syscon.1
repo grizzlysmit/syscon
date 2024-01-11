@@ -1,5 +1,5 @@
 .pc
-.TH syscon.raku 1 2024-01-10
+.TH syscon.raku 1 2024-01-12
 .SH Syscon, sc
 .SS Table of Contents
 .IP \(bu 2m
@@ -533,7 +533,7 @@ Where
 .RE
 .RS 2n
 .IP \(bu 2m
-\fB$files\-on\-remote\-system……\fR A list of files on the remote system to copy can be anywhere on the remote system\&.
+\fB$files\-on\-remote\-system……\fR A list of files on the remote system to copy can be anywhere on the remote system (defaults to the logins home directory)\&.
 .RE
 
 e\&.g\&.
@@ -670,11 +670,11 @@ $ sc list keys \-\-help
 !image not available here go to the github page [/docs/images/sc-list-keys.png]
 
 Top of Document [#table-of-contents]
-.SS sc list by all
+.SS sc list all
 
 .RS 4m
 .EX
-sc list by all \-\-help
+sc list all \-\-help
 
 
 .EE
@@ -684,7 +684,7 @@ sc list by all \-\-help
 
 .RS 4m
 .EX
-sc list by all
+sc list all
 
 
 .EE

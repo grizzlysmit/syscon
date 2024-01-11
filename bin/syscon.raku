@@ -334,7 +334,7 @@ $ sc get home $key --to=$to --recursive $files-on-remote-system……
 =item2 B<C<$key>>                       The key of the host to get files from.
 =item2 B<C<$to>>                        The place to put the files defaults to B<C<.>> or here.
 =item2 B<C<--recursive>>                sets the recursive flag so the files will be copied recursively, allowing a whole file sub tree to be copied.
-=item2 B<C<$files-on-remote-system……>>  A list of files on the remote system to copy can be anywhere on the remote system.
+=item2 B<C<$files-on-remote-system……>>  A list of files on the remote system to copy can be anywhere on the remote system (defaults to the logins home directory).
 
 e.g.
 
@@ -526,11 +526,11 @@ multi sub MAIN('list', 'keys', Str $prefix = '',
 
 =begin pod
 
-=head3 sc list by all
+=head3 sc list all
 
 =begin code :lang<bash>
 
-sc list by all --help
+sc list all --help
 
 =end code
 
@@ -538,7 +538,7 @@ sc list by all --help
 
 =begin code :lang<bash>
 
-sc list by all
+sc list all
 
 =end code
 
@@ -548,7 +548,7 @@ L<Top of Document|#table-of-contents>
 
 =end pod
 
-multi sub MAIN('list', 'by', 'all', Str:D $prefix = '', Bool:D :c(:color(:$colour)) = False,
+multi sub MAIN('list', 'all', Str:D $prefix = '', Bool:D :c(:color(:$colour)) = False,
                     Bool:D :s(:$syntax) = False, Int:D :l(:$page-length) = 50, Str :p(:$pattern) = Str,
                                                                 Str :e(:$ecma-pattern) = Str) returns Int {
     my Regex $_pattern;

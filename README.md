@@ -334,7 +334,7 @@ $ sc get home $key --to=$to --recursive $files-on-remote-system……
 
     * **`--recursive`** sets the recursive flag so the files will be copied recursively, allowing a whole file sub tree to be copied.
 
-    * **`$files-on-remote-system……`** A list of files on the remote system to copy can be anywhere on the remote system.
+    * **`$files-on-remote-system……`** A list of files on the remote system to copy can be anywhere on the remote system (defaults to the logins home directory).
 
 e.g.
 
@@ -438,16 +438,16 @@ $ sc list keys --help
 
 [Top of Document](#table-of-contents)
 
-### sc list by all
+### sc list all
 
 ```bash
-sc list by all --help
+sc list all --help
 ```
 
 ![image not available here go to the github page](/docs/images/sc-list-by-all.png)
 
 ```bash
-sc list by all
+sc list all
 ```
 
 ![image not available here go to the github page](/docs/images/sc-list-by-all-pattern.png)
