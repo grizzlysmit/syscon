@@ -441,7 +441,35 @@ $ sc list keys --help
 ### sc list all
 
 ```bash
-sc list all --help
+10:11:16 θ68° grizzlysmit@pern:~/Projects/raku/syscon main 2s ± sc list all --pattern=" ^ .* 'sc' .* $ "
+
+key     sep host                                                         : port # comment              
+=======================================================================================================
+scripts  => scripts@man0-agent-quuvoo4ohcequuox.quuvoo4ohcequuox.0.88.io : 22   # The scripts server.  
+=======================================================================================================
+10:11:25 θ62° grizzlysmit@pern:~/Projects/raku/syscon main 2s ± sc list all --syntax
+
+key     sep host                                                                             : port  # comment
+==========================================================================================================================================================
+a-qu     => agent@man0-agent-quuvoo4ohcequuox.quuvoo4ohcequuox.0.88.io                       : 22    # diverse stuff including /functions/organiser/*.pl
+a1-dev   => api@man0-nodea0-contact0-dev.contacttrace.com.au                                 : 22    # a1-dev old system
+boh      => bohcif8iew8e@agent-bohcif8iew8e.jeiheaxi2iu4phea.1.88.io                         : 54271 # bohcif8iew8e@agent-bohcif8iew8e
+bronze   => bronze-aus@man0-bronze0-contact0.y21coin.com                                     : 22    # stuff like importnewaddress
+infi     => vahfoom3iquahfah@man0-appnode-vahfoom3iquahfah.vahfoom3iquahfah.infinitedisk.com : 22    # inifidisk
+jei      => jeiheaxi2iu4phea@appnode-jeiheaxi2iu4phea.jeiheaxi2iu4phea.1.88.io               : 22    # old jei
+jei-app --> jei                                                                                      # old jei
+kil     --> kill                                                                                     # killashandra.local on my lan
+kill     => grizzlysmit@killashandra.local                                                   : 22    # killashandra.local on my lan
+killa   --> kil                                                                                      # killashandra.local on my lan
+per      => grizzlysmit@pern.local                                                           : 22    # pern.local on my lan
+ph      --> phone                                                                                    # Errbot is here
+phone    => agent@man0-agent-quuvoo4ohcequuox.quuvoo4ohcequuox.0.88.io                       : 22    # Errbot is here
+pknock   => oztralia.com@man0-appnode0-oztralia0.oztralia.com                                : 22    # the old port knocking
+rak      => rakbat.local                                                                     : 22    # rakbat.local on my lan
+rel      => relation@man0-app0-contact0.contacttrace.com.au                                  : 22    # The relation stuff
+rk      --> rak                                                                                      # rakbat.local on my lan
+scripts  => scripts@man0-agent-quuvoo4ohcequuox.quuvoo4ohcequuox.0.88.io                     : 22    # The scripts server.
+==========================================================================================================================================================
 ```
 
 ![image not available here go to the github page](/docs/images/sc-list-by-all.png)

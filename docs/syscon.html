@@ -874,7 +874,35 @@ Syscon.1                                           100%  485     1.0MB/s   00:00
 <pre class="pod-block-code">$ sc list keys --help
 
 </pre><p>!<a href="/docs/images/sc-list-keys.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_all"><a href="#syscon,_sc" class="u" title="go to top of document">sc list all</a></h3>
-<pre class="pod-block-code">sc list all --help
+<pre class="pod-block-code">10:11:16 θ68° grizzlysmit@pern:~/Projects/raku/syscon main 2s ± sc list all --pattern=&quot; ^ .* 'sc' .* $ &quot;
+
+key     sep host                                                         : port # comment              
+=======================================================================================================
+scripts  =&gt; scripts@man0-agent-quuvoo4ohcequuox.quuvoo4ohcequuox.0.88.io : 22   # The scripts server.  
+=======================================================================================================
+10:11:25 θ62° grizzlysmit@pern:~/Projects/raku/syscon main 2s ± sc list all --syntax
+
+key     sep host                                                                             : port  # comment
+==========================================================================================================================================================
+a-qu     =&gt; agent@man0-agent-quuvoo4ohcequuox.quuvoo4ohcequuox.0.88.io                       : 22    # diverse stuff including /functions/organiser/*.pl
+a1-dev   =&gt; api@man0-nodea0-contact0-dev.contacttrace.com.au                                 : 22    # a1-dev old system
+boh      =&gt; bohcif8iew8e@agent-bohcif8iew8e.jeiheaxi2iu4phea.1.88.io                         : 54271 # bohcif8iew8e@agent-bohcif8iew8e
+bronze   =&gt; bronze-aus@man0-bronze0-contact0.y21coin.com                                     : 22    # stuff like importnewaddress
+infi     =&gt; vahfoom3iquahfah@man0-appnode-vahfoom3iquahfah.vahfoom3iquahfah.infinitedisk.com : 22    # inifidisk
+jei      =&gt; jeiheaxi2iu4phea@appnode-jeiheaxi2iu4phea.jeiheaxi2iu4phea.1.88.io               : 22    # old jei
+jei-app --&gt; jei                                                                                      # old jei
+kil     --&gt; kill                                                                                     # killashandra.local on my lan
+kill     =&gt; grizzlysmit@killashandra.local                                                   : 22    # killashandra.local on my lan
+killa   --&gt; kil                                                                                      # killashandra.local on my lan
+per      =&gt; grizzlysmit@pern.local                                                           : 22    # pern.local on my lan
+ph      --&gt; phone                                                                                    # Errbot is here
+phone    =&gt; agent@man0-agent-quuvoo4ohcequuox.quuvoo4ohcequuox.0.88.io                       : 22    # Errbot is here
+pknock   =&gt; oztralia.com@man0-appnode0-oztralia0.oztralia.com                                : 22    # the old port knocking
+rak      =&gt; rakbat.local                                                                     : 22    # rakbat.local on my lan
+rel      =&gt; relation@man0-app0-contact0.contacttrace.com.au                                  : 22    # The relation stuff
+rk      --&gt; rak                                                                                      # rakbat.local on my lan
+scripts  =&gt; scripts@man0-agent-quuvoo4ohcequuox.quuvoo4ohcequuox.0.88.io                     : 22    # The scripts server.
+==========================================================================================================================================================
 
 </pre><p>!<a href="/docs/images/sc-list-by-all.png.html">image not available here go to the github page</a></p><pre class="pod-block-code">sc list all
 
@@ -992,7 +1020,7 @@ Usage:
   sc menu restore db [&lt;message&gt;]  [-c|--color|--colour] [-s|--syntax]
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-11T23:08:16Z</span></div></footer>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-11T23:16:23Z</span></div></footer>
 	</body>
 </html>
 
