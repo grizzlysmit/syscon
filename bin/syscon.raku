@@ -33,7 +33,7 @@ Table of  Contents
 =item2 L<Utility functions|#utility-functions>
 =item3 L<sc edit configs|#sc-edit-configs>
 =item3 L<sc list keys|#sc-list-keys>
-=item3 L<sc list by all|#sc-list-by-all>
+=item3 L<sc list all|#sc-list-all>
 =item3 L<sc list trash|#sc-list-trash>
 =item3 L<sc trash|#sc-trash>
 =item3 L<sc empty trash|#sc-empty-trash>

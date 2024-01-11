@@ -38,7 +38,7 @@ Table of Contents
 
       * [sc list keys](#sc-list-keys)
 
-      * [sc list by all](#sc-list-by-all)
+      * [sc list all](#sc-list-all)
 
       * [sc list trash](#sc-list-trash)
 
