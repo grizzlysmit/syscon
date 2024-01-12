@@ -564,14 +564,6 @@ scripts  => scripts@man0-agent-quuvoo4ohcequuox.quuvoo4ohcequuox.0.88.io        
 
 !L<image not available here go to the github page|/docs/images/sc-list-by-all.png>
 
-=begin code :lang<bash>
-
-sc list all
-
-=end code
-
-!L<image not available here go to the github page|/docs/images/sc-list-by-all-pattern.png>
-
 L<Top of Document|#table-of-contents>
 
 =end pod

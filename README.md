@@ -474,12 +474,6 @@ scripts  => scripts@man0-agent-quuvoo4ohcequuox.quuvoo4ohcequuox.0.88.io        
 
 ![image not available here go to the github page](/docs/images/sc-list-by-all.png)
 
-```bash
-sc list all
-```
-
-![image not available here go to the github page](/docs/images/sc-list-by-all-pattern.png)
-
 [Top of Document](#table-of-contents)
 
 ### sc list trash
