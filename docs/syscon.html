@@ -667,7 +667,7 @@ footer {
 <li><p><a href="#the-syscon-library">module Syscon</a></p></li>
 <ul>
 <li><p><a href="#say-list-keys">say-list-keys(…)</a></p></li>
-<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#list-by-all">list-by-all(…)</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
@@ -910,7 +910,7 @@ rk      # rakbat.local on my lan
 scripts # The scripts server.                                
 =============================================================
 
-</pre><p>!<a href="/docs/images/sc-list-keys.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_all"><a href="#syscon,_sc" class="u" title="go to top of document">sc list all</a></h3>
+</pre><p>!<a href="/docs/images/sc-list-keys.png.html">image not available here go to the github page</a></p><p><a href="#sc-list-keys">For the implemention see sc list keys</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_all"><a href="#syscon,_sc" class="u" title="go to top of document">sc list all</a></h3>
 <pre class="pod-block-code">10:11:16 θ68° grizzlysmit@pern:~/Projects/raku/syscon main 2s ± sc list all --pattern=&quot; ^ .* 'sc' .* $ &quot;
 
 key     sep host                                                         : port # comment              
@@ -941,12 +941,25 @@ rk      --&gt; rak                                                              
 scripts  =&gt; scripts@man0-agent-quuvoo4ohcequuox.quuvoo4ohcequuox.0.88.io                     : 22    # The scripts server.
 ==========================================================================================================================================================
 
-</pre><p>!<a href="/docs/images/sc-list-by-all.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_trash"><a href="#syscon,_sc" class="u" title="go to top of document">sc list trash</a></h3>
+</pre><p>!<a href="/docs/images/sc-list-by-all.png.html">image not available here go to the github page</a></p><p><a href="#list-by-all">For the implemention see list-by-all(…)</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_trash"><a href="#syscon,_sc" class="u" title="go to top of document">sc list trash</a></h3>
 <pre class="pod-block-code">sc list trash --help
 
-</pre><p>!<a href="/docs/images/sc-list-trash--help.png.html">image not available here go to the github page</a></p><pre class="pod-block-code">sc list trash --help
+Usage:
+  sc list trash [&lt;prefix&gt;]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;]
 
-</pre><p>!<a href="/docs/images/sc-list-trash.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_trash"><a href="#syscon,_sc" class="u" title="go to top of document">sc trash</a></h3>
+18:14:34 θ69° grizzlysmit@pern:~/Projects/raku/syscon main 2s ± sc list trash --syntax
+
+#key        sep host                        : port # comment          
+======================================================================
+#dmy        --&gt; dummy                              # an example line  
+#dummy       =&gt; dummy@example.com           : 22   # an example line  
+#dund       --&gt; dunderhead                         # an example line  
+#dunderhead  =&gt; dunderhead@again.emaple.com : 345  # an example line  
+#ex          =&gt; grizzlysmit@example.com     : 344  # an example host  
+======================================================================
+
+
+</pre><p>!<a href="/docs/images/sc-list-trash--help.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_trash"><a href="#syscon,_sc" class="u" title="go to top of document">sc trash</a></h3>
 <pre class="pod-block-code">sc trash --help
 
 </pre><p>!<a href="/docs/images/sc-trash--help.png.html">image not available here go to the github page</a></p><pre class="pod-block-code">sc trash
@@ -1056,7 +1069,7 @@ Usage:
   sc menu restore db [&lt;message&gt;]  [-c|--color|--colour] [-s|--syntax]
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-13T04:41:42Z</span></div></footer>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-13T07:32:28Z</span></div></footer>
 	</body>
 </html>
 

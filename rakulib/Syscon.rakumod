@@ -759,7 +759,29 @@ sub say-list-keys(Str $prefix, Bool:D $colour, Bool:D $syntax, Regex:D $pattern,
                   :&row-formatting);
 } # sub say-list-keys(Str $prefix, Bool:D $colour is copy, Bool:D $syntax, Regex:D $pattern, Int:D $page-length --> Bool:D) is export #
 
-sub list-by-all(Str:D $prefix, Bool:D $colour, Bool:D $syntax, Int:D $page-length, Regex:D $pattern --> Bool:D) is export {
+=begin pod
+
+=head3 list-by-all
+
+=begin code :lang<raku>
+
+sub list-by-all(Str:D $prefix,
+                Bool:D $colour,
+                Bool:D $syntax,
+                Int:D $page-length,
+                Regex:D $pattern --> Bool:D) is export {
+
+=end code
+
+L<Top of Document|#table-of-contents>
+
+=end pod
+
+sub list-by-all(Str:D $prefix,
+                Bool:D $colour,
+                Bool:D $syntax,
+                Int:D $page-length,
+                Regex:D $pattern --> Bool:D) is export {
     my Str:D $key-name = 'key';
     my Str:D @fields = 'host', 'port', 'comment';
     my   %defaults = port => 22;

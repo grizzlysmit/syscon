@@ -100,7 +100,7 @@ Table of Contents
 
       * [say-list-keys(…)](#say-list-keys)
 
-      * [USAGE](#usage)
+      * [list-by-all(…)](#list-by-all)
 
       * [USAGE](#usage)
 
@@ -483,6 +483,8 @@ scripts # The scripts server.
 
 ![image not available here go to the github page](/docs/images/sc-list-keys.png)
 
+[For the implemention see sc list keys](#sc-list-keys)
+
 [Top of Document](#table-of-contents)
 
 ### sc list all
@@ -521,21 +523,31 @@ scripts  => scripts@man0-agent-quuvoo4ohcequuox.quuvoo4ohcequuox.0.88.io        
 
 ![image not available here go to the github page](/docs/images/sc-list-by-all.png)
 
+[For the implemention see list-by-all(…)](#list-by-all)
+
 [Top of Document](#table-of-contents)
 
 ### sc list trash
 
 ```bash
 sc list trash --help
+
+Usage:
+  sc list trash [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+
+18:14:34 θ69° grizzlysmit@pern:~/Projects/raku/syscon main 2s ± sc list trash --syntax
+
+#key        sep host                        : port # comment          
+======================================================================
+#dmy        --> dummy                              # an example line  
+#dummy       => dummy@example.com           : 22   # an example line  
+#dund       --> dunderhead                         # an example line  
+#dunderhead  => dunderhead@again.emaple.com : 345  # an example line  
+#ex          => grizzlysmit@example.com     : 344  # an example host  
+======================================================================
 ```
 
 ![image not available here go to the github page](/docs/images/sc-list-trash--help.png)
-
-```bash
-sc list trash --help
-```
-
-![image not available here go to the github page](/docs/images/sc-list-trash.png)
 
 [Top of Document](#table-of-contents)
 
@@ -746,6 +758,18 @@ constant $config is export = "$home/.local/share/syscon";
 
 ```raku
 
+```
+
+[Top of Document](#table-of-contents)
+
+### list-by-all
+
+```raku
+sub list-by-all(Str:D $prefix,
+                Bool:D $colour,
+                Bool:D $syntax,
+                Int:D $page-length,
+                Regex:D $pattern --> Bool:D) is export {
 ```
 
 [Top of Document](#table-of-contents)

@@ -64,7 +64,7 @@ Table of  Contents
 =item3 L<USAGE|#usage>
 =item2 L<module Syscon|#the-syscon-library>
 =item3 L<say-list-keys(…)|#say-list-keys>
-=item3 L<USAGE|#usage>
+=item3 L<list-by-all(…)|#list-by-all>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -536,6 +536,8 @@ scripts # The scripts server.
 
 !L<image not available here go to the github page|/docs/images/sc-list-keys.png>
 
+L<For the implemention see sc list keys|#sc-list-keys>
+
 L<Top of Document|#table-of-contents>
 
 =end pod
@@ -601,6 +603,8 @@ scripts  => scripts@man0-agent-quuvoo4ohcequuox.quuvoo4ohcequuox.0.88.io        
 
 !L<image not available here go to the github page|/docs/images/sc-list-by-all.png>
 
+L<For the implemention see list-by-all(…)|#list-by-all>
+
 L<Top of Document|#table-of-contents>
 
 =end pod
@@ -633,17 +637,25 @@ multi sub MAIN('list', 'all', Str:D $prefix = '', Bool:D :c(:color(:$colour)) = 
 
 sc list trash --help
 
+Usage:
+  sc list trash [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+
+18:14:34 θ69° grizzlysmit@pern:~/Projects/raku/syscon main 2s ± sc list trash --syntax
+                                                                      
+#key        sep host                        : port # comment          
+======================================================================
+#dmy        --> dummy                              # an example line  
+#dummy       => dummy@example.com           : 22   # an example line  
+#dund       --> dunderhead                         # an example line  
+#dunderhead  => dunderhead@again.emaple.com : 345  # an example line  
+#ex          => grizzlysmit@example.com     : 344  # an example host  
+======================================================================
+
+
 =end code
 
 !L<image not available here go to the github page|/docs/images/sc-list-trash--help.png>
 
-=begin code :lang<bash>
-
-sc list trash --help
-
-=end code
-
-!L<image not available here go to the github page|/docs/images/sc-list-trash.png>
 
 L<Top of Document|#table-of-contents>
 
