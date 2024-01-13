@@ -658,9 +658,19 @@ footer {
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
 </ul>
 <li><p><a href="#the-syscon-library">module Syscon</a></p></li>
 <ul>
+<li><p><a href="#say-list-keys">say-list-keys(…)</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
+<li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
 <li><p><a href="#usage">USAGE</a></p></li>
@@ -706,7 +716,7 @@ footer {
 <p><a href="#table-of-contents">Top of Document</a></p><p>This is the app, you can find the modules docs <a href="/docs/Syscon.md.html">here</a></p></section><section name="pod"><h3 id="USAGE"><a href="#syscon,_sc" class="u" title="go to top of document">USAGE</a></h3>
 <pre class="pod-block-code">sc --help
 
-Usage:                                                                                                                                                
+Usage:
   sc ssh &lt;key&gt;
   sc ping &lt;key&gt;
   sc get home &lt;key&gt;  [&lt;args&gt; ...] [-r|--recursive] [-t|--to=&lt;Str&gt;]
@@ -873,6 +883,33 @@ Syscon.1                                           100%  485     1.0MB/s   00:00
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_keys_"><a href="#syscon,_sc" class="u" title="go to top of document">sc list keys </a></h3>
 <pre class="pod-block-code">$ sc list keys --help
 
+Usage:
+  sc list keys [&lt;prefix&gt;]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=&lt;Str&gt;] [-e|--ecma-pattern=&lt;Str&gt;]
+
+$ sc list keys
+
+key     # comment                                            
+=============================================================
+a-qu    # diverse stuff including /functions/organiser/*.pl  
+a1-dev  # a1-dev old system                                  
+boh     # bohcif8iew8e@agent-bohcif8iew8e                    
+bronze  # stuff like importnewaddress                        
+infi    # inifidisk                                          
+jei     # old jei                                            
+jei-app # old jei                                            
+kil     # killashandra.local on my lan                       
+kill    # killashandra.local on my lan                       
+killa   # killashandra.local on my lan                       
+per     # pern.local on my lan                               
+ph      # Errbot is here                                     
+phone   # Errbot is here                                     
+pknock  # the old port knocking                              
+rak     # rakbat.local on my lan                             
+rel     # The relation stuff                                 
+rk      # rakbat.local on my lan                             
+scripts # The scripts server.                                
+=============================================================
+
 </pre><p>!<a href="/docs/images/sc-list-keys.png.html">image not available here go to the github page</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_list_all"><a href="#syscon,_sc" class="u" title="go to top of document">sc list all</a></h3>
 <pre class="pod-block-code">10:11:16 θ68° grizzlysmit@pern:~/Projects/raku/syscon main 2s ± sc list all --pattern=&quot; ^ .* 'sc' .* $ &quot;
 
@@ -963,8 +1000,9 @@ Usage:
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="sc_comment"><a href="#syscon,_sc" class="u" title="go to top of document">sc comment</a></h3>
 <p>Add or set a comment to a db entry. </p><pre class="pod-block-code">sc comment --help
 
-Usage:                                                                                                                                                
-  sc comment &lt;key&gt; &lt;comment&gt;                                                                                                                          
+Usage:
+  sc comment &lt;key&gt; &lt;comment&gt;
+
 </pre><ul>
 <li><p>Where</p></li>
 <ul>
@@ -1018,7 +1056,7 @@ Usage:
   sc menu restore db [&lt;message&gt;]  [-c|--color|--colour] [-s|--syntax]
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-12T00:00:30Z</span></div></footer>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-13T04:41:42Z</span></div></footer>
 	</body>
 </html>
 

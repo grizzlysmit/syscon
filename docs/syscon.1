@@ -1,5 +1,5 @@
 .pc
-.TH syscon.raku 1 2024-01-12
+.TH syscon.raku 1 2024-01-13
 .SH Syscon, sc
 .SS Table of Contents
 .IP \(bu 2m
@@ -211,8 +211,68 @@ USAGE [#usage]
 .RE
 .RE
 .RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
 .IP \(bu 2m
 module Syscon [#the-syscon-library]
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+say\-list\-keys(…) [#say-list-keys]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
+.RE
+.RS 2n
+.RS 2n
+.IP \(bu 2m
+USAGE [#usage]
+.RE
 .RE
 .RS 2n
 .RS 2n
@@ -362,7 +422,7 @@ This is the app, you can find the modules docs here [/docs/Syscon.md]
 .EX
 sc \-\-help
 
-Usage:                                                                                                                                                
+Usage:
   sc ssh <key>
   sc ping <key>
   sc get home <key>  [<args> \&.\&.\&.] [\-r|\-\-recursive] [\-t|\-\-to=<Str>]
@@ -663,6 +723,33 @@ Top of Document [#table-of-contents]
 .EX
 $ sc list keys \-\-help
 
+Usage:
+  sc list keys [<prefix>]  [\-c|\-\-color|\-\-colour] [\-s|\-\-syntax] [\-l|\-\-page\-length[=Int]] [\-p|\-\-pattern=<Str>] [\-e|\-\-ecma\-pattern=<Str>]
+
+$ sc list keys
+
+key     # comment                                            
+=============================================================
+a\-qu    # diverse stuff including /functions/organiser/*\&.pl  
+a1\-dev  # a1\-dev old system                                  
+boh     # bohcif8iew8e@agent\-bohcif8iew8e                    
+bronze  # stuff like importnewaddress                        
+infi    # inifidisk                                          
+jei     # old jei                                            
+jei\-app # old jei                                            
+kil     # killashandra\&.local on my lan                       
+kill    # killashandra\&.local on my lan                       
+killa   # killashandra\&.local on my lan                       
+per     # pern\&.local on my lan                               
+ph      # Errbot is here                                     
+phone   # Errbot is here                                     
+pknock  # the old port knocking                              
+rak     # rakbat\&.local on my lan                             
+rel     # The relation stuff                                 
+rk      # rakbat\&.local on my lan                             
+scripts # The scripts server\&.                                
+=============================================================
+
 
 .EE
 .RE
@@ -889,8 +976,9 @@ Add or set a comment to a db entry\&.
 .EX
 sc comment \-\-help
 
-Usage:                                                                                                                                                
-  sc comment <key> <comment>                                                                                                                          
+Usage:
+  sc comment <key> <comment>
+
 
 .EE
 .RE

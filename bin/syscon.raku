@@ -57,7 +57,17 @@ Table of  Contents
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
 =item2 L<module Syscon|#the-syscon-library>
+=item3 L<say-list-keys(…)|#say-list-keys>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
+=item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -147,7 +157,7 @@ use Syscon;
 
 sc --help
 
-Usage:                                                                                                                                                
+Usage:
   sc ssh <key>
   sc ping <key>
   sc get home <key>  [<args> ...] [-r|--recursive] [-t|--to=<Str>]
@@ -494,6 +504,33 @@ multi sub MAIN('edit', 'configs') returns Int {
 =begin code :lang<bash>
 
 $ sc list keys --help
+                                                                                                                                                      
+Usage:
+  sc list keys [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]
+
+$ sc list keys
+                                                             
+key     # comment                                            
+=============================================================
+a-qu    # diverse stuff including /functions/organiser/*.pl  
+a1-dev  # a1-dev old system                                  
+boh     # bohcif8iew8e@agent-bohcif8iew8e                    
+bronze  # stuff like importnewaddress                        
+infi    # inifidisk                                          
+jei     # old jei                                            
+jei-app # old jei                                            
+kil     # killashandra.local on my lan                       
+kill    # killashandra.local on my lan                       
+killa   # killashandra.local on my lan                       
+per     # pern.local on my lan                               
+ph      # Errbot is here                                     
+phone   # Errbot is here                                     
+pknock  # the old port knocking                              
+rak     # rakbat.local on my lan                             
+rel     # The relation stuff                                 
+rk      # rakbat.local on my lan                             
+scripts # The scripts server.                                
+=============================================================
 
 =end code
 
@@ -888,9 +925,10 @@ Add or set  a comment to a db entry.
 =begin code :lang<bash>
 
 sc comment --help
-                                                                                                                                                      
-Usage:                                                                                                                                                
-  sc comment <key> <comment>                                                                                                                          
+
+Usage:
+  sc comment <key> <comment>
+
 =end code
 
 =item1 Where

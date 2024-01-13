@@ -609,6 +609,18 @@ sub valid-key(Str:D $key --> Bool) is export {
     return $key eq $match;
 }
 
+=begin pod
+
+=head3 say-list-keys(…)
+
+=begin code :lang<raku>
+
+=end code
+
+L<Top of Document|#table-of-contents>
+
+=end pod
+
 
 sub make-array( --> Array) is export {
     my @results;
