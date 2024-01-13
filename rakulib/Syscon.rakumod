@@ -787,6 +787,8 @@ sub list-by-all(Str:D $prefix,
 
 =end code
 
+L<For usage see sc list all|#sc-list-all>
+
 L<Top of Document|#table-of-contents>
 
 =end pod

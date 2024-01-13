@@ -780,6 +780,8 @@ sub list-by-all(Str:D $prefix,
                 Regex:D $pattern --> Bool:D) is export {
 ```
 
+[For usage see sc list all](#sc-list-all)
+
 [Top of Document](#table-of-contents)
 
 ### ssh(…)
