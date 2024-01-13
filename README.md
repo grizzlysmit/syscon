@@ -483,7 +483,7 @@ scripts # The scripts server.
 
 ![image not available here go to the github page](/docs/images/sc-list-keys.png)
 
-[For the implemention see sc list keys](#sc-list-keys)
+[For the implemention see list-by-all(…)](#list-by-all)
 
 [Top of Document](#table-of-contents)
 
