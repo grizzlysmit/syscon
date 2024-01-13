@@ -757,7 +757,13 @@ constant $config is export = "$home/.local/share/syscon";
 ### say-list-keys(…)
 
 ```raku
+sub make-array( --> Array) is export 
 
+sub say-list-keys(Str $prefix,
+                  Bool:D $colour,
+                  Bool:D $syntax,
+                  Regex:D $pattern,
+                  Int:D $page-length --> Bool:D) is export
 ```
 
 [Top of Document](#table-of-contents)

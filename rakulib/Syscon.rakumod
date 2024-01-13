@@ -615,6 +615,14 @@ sub valid-key(Str:D $key --> Bool) is export {
 
 =begin code :lang<raku>
 
+sub make-array( --> Array) is export 
+
+sub say-list-keys(Str $prefix,
+                  Bool:D $colour,
+                  Bool:D $syntax,
+                  Regex:D $pattern,
+                  Int:D $page-length --> Bool:D) is export 
+
 =end code
 
 L<Top of Document|#table-of-contents>
@@ -640,7 +648,11 @@ sub make-array( --> Array) is export {
     return @results;
 }
 
-sub say-list-keys(Str $prefix, Bool:D $colour, Bool:D $syntax, Regex:D $pattern, Int:D $page-length --> Bool:D) is export {
+sub say-list-keys(Str $prefix,
+                  Bool:D $colour,
+                  Bool:D $syntax,
+                  Regex:D $pattern,
+                  Int:D $page-length --> Bool:D) is export {
     my @rows = make-array();
     my Str:D @fields = |qw[key comment];
     #dd @fields, @rows;
