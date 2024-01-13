@@ -536,7 +536,7 @@ scripts # The scripts server.
 
 !L<image not available here go to the github page|/docs/images/sc-list-keys.png>
 
-L<For the implemention see list-by-all(…)|#list-by-all>
+L<For the implemention see say-list-keys(…)|#say-list-keys>
 
 L<Top of Document|#table-of-contents>
 
