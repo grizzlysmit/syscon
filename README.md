@@ -766,6 +766,8 @@ sub say-list-keys(Str $prefix,
                   Int:D $page-length --> Bool:D) is export
 ```
 
+[For and example of use see sc list keys](#sc-list-keys)
+
 [Top of Document](#table-of-contents)
 
 ### list-by-all

@@ -625,6 +625,8 @@ sub say-list-keys(Str $prefix,
 
 =end code
 
+L<For and example of use see sc list keys|#sc-list-keys>
+
 L<Top of Document|#table-of-contents>
 
 =end pod
