@@ -579,6 +579,7 @@ footer {
  <tr class="toc-level-2"><td class="toc-text"><a href="#$config">$config</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#say-list-keys(…)">say-list-keys(…)</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#list-by-all">list-by-all</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#list-db-backups(…)">list-db-backups(…)</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#ssh(…)">ssh(…)</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#ping(…)">ping(…)</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#_get(…)">_get(…)</a></td></tr>
@@ -605,7 +606,14 @@ sub say-list-keys(Str $prefix,
                 Int:D $page-length,
                 Regex:D $pattern --&gt; Bool:D) is export {
 
-</pre><p><a href="#sc-list-all">For usage see sc list all</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="___top"><h3 id="ssh(…)"><a href="#___top" class="u" title="go to top of document">ssh(…)</a></h3>
+</pre><p><a href="#sc-list-all">For usage see sc list all</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="___top"><h3 id="list-db-backups(…)"><a href="#___top" class="u" title="go to top of document">list-db-backups(…)</a></h3>
+<pre class="pod-block-code">sub list-db-backups(Str:D $prefix,
+                    Bool:D $colour is copy,
+                    Bool:D $syntax,
+                    Regex:D $pattern,
+                    Int:D $page-length --&gt; Bool:D) is export 
+
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="___top"><h3 id="ssh(…)"><a href="#___top" class="u" title="go to top of document">ssh(…)</a></h3>
 <pre class="pod-block-code">sub ssh(Str:D $key --&gt; Bool) is export 
 
 </pre><p><a href="#sc-ssh">See sc ssh</a></p><p><a href="#table-of-contents">Top of Document</a></p></section><section name="___top"><h3 id="ping(…)"><a href="#___top" class="u" title="go to top of document">ping(…)</a></h3>
@@ -624,7 +632,7 @@ sub say-list-keys(Str $prefix,
                 *@args --&gt; Bool) is export 
 
 </pre><p><a href="#sc-put-home">See sc put home</a></p><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-01-15T05:10:55Z</span></div></footer>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2024-02-27T19:20:40Z</span></div></footer>
 	</body>
 </html>
 

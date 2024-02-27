@@ -2398,14 +2398,31 @@ sub backups-menu-restore-db(Bool:D $colour, Bool:D $syntax, Str:D $message = "" 
     return restore-db-file($file.IO);
 } # sub backups-menu-restore-db(Bool:D $colour, Bool:D $syntax, Str:D $message = "" --> Bool:D) is export #
 
+=begin pod
+
+=head3 list-db-backups(…)
+
+=begin code :lang<raku>
+
+sub list-db-backups(Str:D $prefix,
+                    Bool:D $colour is copy,
+                    Bool:D $syntax,
+                    Regex:D $pattern,
+                    Int:D $page-length --> Bool:D) is export 
+
+=end code
+
+L<Top of Document|#table-of-contents>
+
+=end pod
+
 sub list-db-backups(Str:D $prefix,
                     Bool:D $colour is copy,
                     Bool:D $syntax,
                     Regex:D $pattern,
                     Int:D $page-length --> Bool:D) is export {
     $colour = True if $syntax;
-    my IO::Path @backups = $config.IO.dir(:test(rx/ ^ 
-                                                           'hosts.h_ts.' \d ** 4 '-' \d ** 2 '-' \d ** 2
+    my IO::Path @backups = $config.IO.dir(:test(rx/ ^ 'hosts.h_ts.' \d ** 4 '-' \d ** 2 '-' \d ** 2
                                                                [ 'T' \d **2 [ [ '.' || ':' ] \d ** 2 ] ** {0..2} [ [ '.' || '·' ] \d+ 
                                                                    [ [ '+' || '-' ] \d ** 2 [ '.' || ':' ] \d ** 2 || 'z' ]?  ]?
                                                                ]?

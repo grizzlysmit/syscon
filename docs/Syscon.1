@@ -1,5 +1,5 @@
 .pc
-.TH Syscon.rakumod 1 2024-01-15
+.TH Syscon.rakumod 1 2024-02-28
 .SH The Syscon library
 .SS \fB$config\fR
 
@@ -48,6 +48,21 @@ sub list\-by\-all(Str:D $prefix,
 .P
 For usage see sc list all [#sc-list-all]
 
+Top of Document [#table-of-contents]
+.SS list\-db\-backups(…)
+
+.RS 4m
+.EX
+sub list\-db\-backups(Str:D $prefix,
+                    Bool:D $colour is copy,
+                    Bool:D $syntax,
+                    Regex:D $pattern,
+                    Int:D $page\-length \-\-> Bool:D) is export 
+
+
+.EE
+.RE
+.P
 Top of Document [#table-of-contents]
 .SS ssh(…)
 

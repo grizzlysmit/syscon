@@ -66,9 +66,9 @@ Table of Contents
 
       * [sc menu restore db](#sc-menu-restore-db)
 
-      * [USAGE](#fred)
+      * [sc list db backups](#sc-list-db-backups)
 
-      * [USAGE](#wilma)
+      * [list-db-backups(…)](#list-db-backups)
 
       * [USAGE](#usage)
 
@@ -741,6 +741,51 @@ Usage:
 
 [Top of Document](#table-of-contents)
 
+### sc list db backups
+
+List all the backups availble 
+
+```bash
+sc list db backups --help
+
+Usage:                                                                                                                                                
+  sc list db backups [<prefix>]  [-c|--color|--colour] [-s|--syntax] [-l|--page-length[=Int]] [-p|--pattern=<Str>] [-e|--ecma-pattern=<Str>]          
+
+06:05:06 θ73° grizzlysmit@pern:~/Projects/raku/syscon main(+16/-3) 2s ± sc list db backups --syntax 
+
+Permissions Size   User        Group       Date Modified                    Backup                                      
+========================================================================================================================
+.rw-rw-r--  119.0B grizzlysmit grizzlysmit 2023-12-22T08:12:27.099044+11:00 hosts.h_ts.2023-11-05                       
+.rw-rw-r--  819.0B grizzlysmit grizzlysmit 2023-12-22T05:55:00.266606+11:00 hosts.h_ts.2023-11-06                       
+.rw-rw-r--  817.0B grizzlysmit grizzlysmit 2023-12-22T05:55:11.410923+11:00 hosts.h_ts.2023-11-07                       
+.rw-rw-r--  817.0B grizzlysmit grizzlysmit 2023-12-22T05:55:19.519153+11:00 hosts.h_ts.2023-11-08                       
+.rw-rw-r--  819.0B grizzlysmit grizzlysmit 2023-12-22T05:56:07.548518+11:00 hosts.h_ts.2023-11-09                       
+.rw-rw-r--  1.1KiB grizzlysmit grizzlysmit 2023-12-22T05:56:07.564518+11:00 hosts.h_ts.2023-11-10                       
+.rw-rw-r--  1.6KiB grizzlysmit grizzlysmit 2023-11-23T23:09:31.135082+11:00 hosts.h_ts.2023-11-11                       
+.rw-rw-r--  1.7KiB grizzlysmit grizzlysmit 2023-11-23T23:09:31.135082+11:00 hosts.h_ts.2023-11-12                       
+.rw-rw-r--  2.3KiB grizzlysmit grizzlysmit 2023-11-23T23:09:31.135082+11:00 hosts.h_ts.2023-11-16                       
+.rw-rw-r--  3.1KiB grizzlysmit grizzlysmit 2023-11-23T23:09:31.135082+11:00 hosts.h_ts.2023-11-22T21:06:40.298049+11:00 
+.rw-rw-r--  3.1KiB grizzlysmit grizzlysmit 2023-11-23T23:09:31.135082+11:00 hosts.h_ts.2023-11-22T21:12:33.993733+11:00 
+.rw-rw-r--  1.9KiB grizzlysmit grizzlysmit 2023-12-22T01:36:57.851869+11:00 hosts.h_ts.2023-12-22T01:37:34.850866+11:00 
+.rw-rw-r--  2.0KiB grizzlysmit grizzlysmit 2023-12-22T05:09:41.221386+11:00 hosts.h_ts.2023-12-22T05:10:18.222608+11:00 
+.rw-rw-r--  2.0KiB grizzlysmit grizzlysmit 2023-12-22T05:25:47.976861+11:00 hosts.h_ts.2023-12-22T05:26:24.971369+11:00 
+.rw-rw-r--  2.1KiB grizzlysmit grizzlysmit 2023-12-25T13:35:13.848452+11:00 hosts.h_ts.2023-12-25T13:35:50.847566+11:00 
+.rw-rw-r--  2.2KiB grizzlysmit grizzlysmit 2023-12-25T13:38:11.509524+11:00 hosts.h_ts.2023-12-25T13:38:48.509083+11:00 
+.rw-rw-r--  2.5KiB grizzlysmit grizzlysmit 2023-12-26T04:43:12.073269+11:00 hosts.h_ts.2023-12-26T04:43:49.073219+11:00 
+.rw-rw-r--  3.2KiB grizzlysmit grizzlysmit 2023-12-28T07:37:44.880821+11:00 hosts.h_ts.2023-12-28T07:38:21.875751+11:00 
+.rw-rw-r--  2.8KiB grizzlysmit grizzlysmit 2023-12-28T08:40:10.167277+11:00 hosts.h_ts.2023-12-28T08:40:47.166191+11:00 
+.rw-rw-r--  2.9KiB grizzlysmit grizzlysmit 2023-12-28T22:08:43.954589+11:00 hosts.h_ts.2023-12-28T22:09:20.949994+11:00 
+.rw-rw-r--  2.9KiB grizzlysmit grizzlysmit 2023-12-30T08:25:15.130101+11:00 hosts.h_ts.2023-12-30T08:25:52.126298+11:00 
+.rw-rw-r--  2.9KiB grizzlysmit grizzlysmit 2023-12-31T16:37:17.175992+11:00 hosts.h_ts.2023-12-31T16:37:54.163543+11:00 
+.rw-rw-r--  2.9KiB grizzlysmit grizzlysmit 2024-01-01T11:50:09.886243+11:00 hosts.h_ts.2024-01-01T11:50:46.878720+11:00 
+.rw-rw-r--  2.9KiB grizzlysmit grizzlysmit 2024-01-02T23:56:12.089118+11:00 hosts.h_ts.2024-01-02T23:56:48.967417+11:00 
+========================================================================================================================
+```
+
+[See list-db-backups(…)](#list-db-backups) for the implementation
+
+[Top of Document](#table-of-contents)
+
 The Syscon library
 ==================
 
@@ -781,6 +826,18 @@ sub list-by-all(Str:D $prefix,
 ```
 
 [For usage see sc list all](#sc-list-all)
+
+[Top of Document](#table-of-contents)
+
+### list-db-backups(…)
+
+```raku
+sub list-db-backups(Str:D $prefix,
+                    Bool:D $colour is copy,
+                    Bool:D $syntax,
+                    Regex:D $pattern,
+                    Int:D $page-length --> Bool:D) is export
+```
 
 [Top of Document](#table-of-contents)
 
