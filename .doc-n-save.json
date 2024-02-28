@@ -1,0 +1,18 @@
+{
+    "comment": "using doc-n-save",
+    "only-app": false,
+    "name": "syscon",
+    "lib": "rakulib",
+    "docs": "docs",
+    "additional-pod-files": [
+        "Syscon"
+    ],
+    "bin": "bin",
+    "markdown-path": "README.md",
+    "separate-markdown-files": false,
+    "exts": [
+        "rakumod",
+        "raku",
+        "rakudoc"
+    ]
+}
