@@ -48,7 +48,6 @@ Table of  Contents
 =item3 L<sc restore db|#sc-restore-db>
 =item3 L<sc menu restore db|#sc-menu-restore-db>
 =item3 L<sc list db backups|#sc-list-db-backups>
-=item3 L<list-db-backups(…)|#list-db-backups>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -65,6 +64,7 @@ Table of  Contents
 =item2 L<module Syscon|#the-syscon-library>
 =item3 L<say-list-keys(…)|#say-list-keys>
 =item3 L<list-by-all(…)|#list-by-all>
+=item3 L<list-db-backups(…)|#list-db-backups>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
 =item3 L<USAGE|#usage>
@@ -1137,7 +1137,7 @@ Permissions Size   User        Group       Date Modified                    Back
 =end code
 
 
-L<See list-db-backups(…)|#list-db-backups> for the implementation
+L<See list-db-backups(…) for the implementation|#list-db-backups>
 
 L<Top of Document|#table-of-contents>
 

@@ -2412,6 +2412,8 @@ sub list-db-backups(Str:D $prefix,
 
 =end code
 
+L<See sc list db backups for usage|#sc-list-db-backups>
+
 L<Top of Document|#table-of-contents>
 
 =end pod

@@ -68,8 +68,6 @@ Table of Contents
 
       * [sc list db backups](#sc-list-db-backups)
 
-      * [list-db-backups(…)](#list-db-backups)
-
       * [USAGE](#usage)
 
       * [USAGE](#usage)
@@ -101,6 +99,8 @@ Table of Contents
       * [say-list-keys(…)](#say-list-keys)
 
       * [list-by-all(…)](#list-by-all)
+
+      * [list-db-backups(…)](#list-db-backups)
 
       * [USAGE](#usage)
 
@@ -782,7 +782,7 @@ Permissions Size   User        Group       Date Modified                    Back
 ========================================================================================================================
 ```
 
-[See list-db-backups(…)](#list-db-backups) for the implementation
+[See list-db-backups(…) for the implementation](#list-db-backups)
 
 [Top of Document](#table-of-contents)
 
@@ -838,6 +838,8 @@ sub list-db-backups(Str:D $prefix,
                     Regex:D $pattern,
                     Int:D $page-length --> Bool:D) is export
 ```
+
+[See sc list db backups for usage](#sc-list-db-backups)
 
 [Top of Document](#table-of-contents)
 
